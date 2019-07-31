@@ -5,4 +5,5 @@ Simple first person shooter inspired by oldschool games (such as DooM or Wolf3d)
 All resources (textures, sounds, arts, models) used in this project, are used as a placeholders! All rights belong to their respective owners! If you would like use any of them, please contact their representetive owners, since I don't own any rights for them.
 
 # Credit list
+- <b>Felix Queißner</b> aka <b>MasterQ32</b> (thank you for teaching me and just for being as awesome as you are bro!)
 - <b>Jose Miguel</b> aka <b>txesmi</b> (thank you for your awesome shader pipeline dude!)
