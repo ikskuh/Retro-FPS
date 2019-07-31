@@ -17,18 +17,15 @@ void set_level_settings(){
 	
 	fog_color = 4;
 	vec_set(&d3d_fogcolor4.blue, COLOR_WORLD_FOG);
+	vec_set(&d3d_fogcolor2.blue, COLOR_TOXIC_WATER_FOG);
 	vec_set(&sky_color.blue, &d3d_fogcolor4.blue);
-	
-	// fog color use for water and lava
-	vec_set(&d3d_fogcolor2.blue, COLOR_WATER_FOG);
-	vec_set(&d3d_fogcolor3.blue, COLOR_LAVA_FOG);
 }
 
 void reset_level(){
 	
 }
 
-void level_load_(STRING* map){
+void level_load_(STRING *map){
 	
 	if(proc_status(level_load_) > 0 || !is(camera, SHOW)){ return; }
 	

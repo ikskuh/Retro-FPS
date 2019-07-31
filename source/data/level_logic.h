@@ -5,7 +5,7 @@
 	
 	void reset_level();
 	
-	void level_load_(STRING* map);
+	void level_load_(STRING *map);
 
 	#include "level_logic.c"
 #endif

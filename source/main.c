@@ -10,7 +10,9 @@
 
 #include "defines.h"
 #include "level_logic.h"
-#include "cct_physics.h"
+#include "cct_base.h"
+#include "player_weapons.h"
+#include "player_camera.h"
 #include "player_behaviour.h"
 
 void on_ent_remove_event(ENTITY *ent){
@@ -18,6 +20,11 @@ void on_ent_remove_event(ENTITY *ent){
 	if(ent->obj_type == TYPE_PLAYER){
 		
 		delete_cct(ent);
+		
+		if(player_cam){
+			
+			delete_camera();
+		}
 	}
 }
 
