@@ -1,20 +1,20 @@
 
 void ent_vertical_movement(ENTITY *ent, CCT_PHYSICS *physics){
 	
-	if(ent->z > physics->soil_height + (5 + 20 * physics->soil_contact) * time_step || physics->force.z > 0){
+	if(ent->z > physics->soil_height + (5 + 20 * physics->is_grounded) * time_step || physics->force.z > 0){
 		
-		physics->soil_contact = false;
+		physics->is_grounded = false;
 		physics->force.z = maxv(physics->force.z - cct_gravity * time_step, -cct_gravity_max);
 	}
 	else{
 		
 		c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
 		c_move(ent, nullvector, vector(0, 0, physics->soil_height - ent->z), MOVE_FLAGS | IGNORE_YOU | GLIDE);
-		physics->soil_contact = true;
+		physics->is_grounded = true;
 		physics->force.z = 0;		
 	}
 	
-	if(physics->soil_contact == true){
+	if(physics->is_grounded == true){
 		
 		if(physics->jump == true){
 			
@@ -60,7 +60,7 @@ void ent_horizontal_movement(ENTITY *ent, CCT_PHYSICS *physics){
 	}
 	
 	// handle running and 'always running'
-	if(physics->always_run == 1){
+	if(physics->always_run == true){
 		
 		if(physics->run == true){
 			
@@ -96,7 +96,10 @@ void ent_horizontal_movement(ENTITY *ent, CCT_PHYSICS *physics){
 	}
 	
 	// first, decide whether the actor is standing on the floor or not
-	if(physics->soil_contact == true){
+	if(physics->is_grounded == true){
+		
+		// handle landing state
+		ent_set_land_state(ent, physics);
 		
 		// reset falling time
 		physics->falling_timer = 0;
@@ -113,8 +116,8 @@ void ent_horizontal_movement(ENTITY *ent, CCT_PHYSICS *physics){
 		// to prevent him from jumping or further moving in the air
 		physics->friction = cct_air_fric;
 		
-		physics->force.x *= 0.4; // don't set the force completely to zero, otherwise
-		physics->force.y *= 0.4; // player could be stuck on top of a non-wmb entity
+		physics->force.x *= cct_reduce_input_in_air_factor; // don't set the force completely to zero, otherwise
+		physics->force.y *= cct_reduce_input_in_air_factor; // player could be stuck on top of a non-wmb entity
 		
 		// reset absolute forces
 		vec_fill(&physics->abs_force, 0);
@@ -143,7 +146,7 @@ void ent_horizontal_movement(ENTITY *ent, CCT_PHYSICS *physics){
 	physics->abs_dist.z = physics->abs_force.z * time_step;
 	
 	// add the speed given by the ground elasticity and the jumping force
-	if(physics->soil_contact == true){
+	if(physics->is_grounded == true){
 		
 		// if the actor is standing on a moving platform, add it's horizontal displacement
 		physics->abs_dist.x += physics->surface_speed.x;
@@ -164,7 +167,7 @@ void ent_horizontal_movement(ENTITY *ent, CCT_PHYSICS *physics){
 	c_ignore(PLAYER_GROUP, PATHFIND_GROUP, 0);
 	physics->moving_distance = c_move(ent, nullvector, &physics->dist, MOVE_FLAGS | IGNORE_PUSH | IGNORE_YOU | GLIDE);
 	
-	if(physics->moving_distance > 0){
+	if(physics->moving_distance > 0.5){
 		
 		physics->moving_speed = physics->moving_distance / time_step;
 		physics->is_moving = true;

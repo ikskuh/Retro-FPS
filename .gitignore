@@ -5,3 +5,16 @@ map.$$w
 map.raw
 map.wed
 palette.pcx
+source/data/sounds/water_out.ogg
+source/data/sounds/water_in.ogg
+source/data/sounds/underwater.ogg
+source/data/sounds/player/p_drown_02.ogg
+source/data/sounds/player/p_drown_01.ogg
+source/data/sounds/player/p_death_underwater.ogg
+source/data/sounds/player/p_death_to_underwater.ogg
+source/data/sounds/player/p_death_03.ogg
+source/data/sounds/player/p_death_02.ogg
+source/data/sounds/player/p_death_01.ogg
+source/data/sounds/player/p_burn_02.ogg
+source/data/sounds/player/p_burn_01.ogg
+source/data/sounds/land_in_water.ogg

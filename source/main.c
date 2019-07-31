@@ -7,9 +7,16 @@
 #define PRAGMA_POINTER
 
 #define PRAGMA_PATH "data"
+#define PRAGMA_PATH "data\\fx"
+#define PRAGMA_PATH "data\\models"
+#define PRAGMA_PATH "data\\sounds"
+#define PRAGMA_PATH "data\\sounds\\player"
 
 #include "defines.h"
+#include "resources.h"
+#include "shader_pipeline.h"
 #include "level_logic.h"
+#include "level_props.h"
 #include "cct_base.h"
 #include "player_weapons.h"
 #include "player_camera.h"
@@ -20,7 +27,7 @@ void on_ent_remove_event(ENTITY *ent){
 	if(ent->obj_type == TYPE_PLAYER){
 		
 		delete_cct(ent);
-		
+
 		if(player_cam){
 			
 			delete_camera();
@@ -40,13 +47,11 @@ void mouse_lock_in_window(){
 		ClientToScreen(hWnd, &rect);
 		ClientToScreen(hWnd, &rect.right);
 		ClipCursor(&rect);
-		
 	}
 	if(autolock_mouse_locked && !window_focus){
 		
 		autolock_mouse_locked = false;
 		ClipCursor(NULL);
-		
 	}
 }
 
@@ -71,21 +76,26 @@ void set_engine_settings(){
 	
 	fps_max = 60;
 	fps_min = 30;
-	
 	time_smooth = 0.9;
 	
 	random_seed(0);
+	
+	mouse_pointer = 0;
 }
 
 void main(){
 	
 	on_ent_remove = on_ent_remove_event;
+	on_f4 = pipeline_update;
+	on_f5 = pipeline_resolution;
 	
 	game_running = true;
 	
+	set_level_names();
 	set_video_settings();
 	set_engine_settings();
-	level_load_("map.wmb");
+	level_load_();
+	pipeline_start();
 	
 	while(game_running == true){
 		

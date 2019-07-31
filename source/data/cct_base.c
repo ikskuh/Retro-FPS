@@ -35,7 +35,11 @@ void init_cct(CCT_PHYSICS *cct){
 	cct->jump_height = 16;
 	
 	cct->movement_speed = 5.5;
+	cct->land_timer_limit = 4.5;
 	cct->aqua_depth_factor = 1;
+	cct->aqua_snd_water_out = true;
+	cct->aqua_toxic_damage_timer_limit = 0.35;
+	cct->aqua_toxic_damage_def = 25;
 	
 	cct->always_run = 0;
 	
@@ -147,7 +151,7 @@ void ent_foot_push_from_normals(ENTITY *ent, CCT_PHYSICS *physics, VECTOR *hit_p
 	var ent_to_hit_distance = vec_dist(vector(ent->x, ent->y, 0), vector(hit_pos->x, hit_pos->y, 0));
 	var ent_bbox_size = ent->max_x;
 	
-	if(ent_to_hit_distance < ent_bbox_size && physics->soil_contact == false){
+	if(ent_to_hit_distance < ent_bbox_size && physics->is_grounded == false){
 		
 		ent_foot_push(&physics->force, surf_normal, strength);
 		ent_foot_push(&physics->speed, surf_normal, strength);
@@ -238,13 +242,136 @@ void ent_foot_check(ENTITY *ent, CCT_PHYSICS *physics){
 	}
 	
 	// different step height in air and on ground
-	if(physics->soil_contact == true){
+	if(physics->is_grounded == true){
 		
-		physics->foot_step_height = 8;
+		physics->foot_step_height = cct_def_foot_step_height;
 	}
 	else{
 		
 		physics->foot_step_height = 0;
+	}
+}
+
+void ent_state_machine(ENTITY *ent, CCT_PHYSICS *physics){
+	
+	// not in pain, or death or shooting state
+	if(ent->obj_state != PAIN && ent->obj_state != DEATH && ent->obj_state != SHOOT){
+		
+		// player jumped ?
+		if(physics->is_grounded == false && physics->jump_allowed == false){
+			
+			ent->obj_state = JUMPED;
+			
+			// if in air for way too long, then switch to IN AIR state
+			if(physics->falling_timer > 0.5){
+				
+				ent->obj_state = IN_AIR;
+			}
+		}
+		else{
+			
+			// on ground
+			if(physics->is_grounded == true){
+				
+				if(ent->obj_state == LANDED){
+					
+					physics->land_timer -= (physics->land_timer - 0) * 0.5 * time_step;
+					
+					if(physics->land_timer <= 0.5){
+						
+						ent->obj_state = IDLE;
+						physics->land_timer = 0;
+					}
+				}
+				else{
+					
+					// if we are moving
+					if(physics->is_moving == true){
+						
+						// handle WALK and RUN states
+						// according to "always_run"
+						if(physics->always_run == true){
+							
+							if(physics->run == true){
+								
+								ent->obj_state = WALK;
+							}
+							else{
+								
+								ent->obj_state = RUN;
+							}
+						}
+						else{
+							
+							if(physics->run == true){
+								
+								ent->obj_state = RUN;
+							}
+							else{
+								
+								ent->obj_state = WALK;
+							}
+						}
+					}
+					else{
+						
+						ent->obj_state = IDLE;
+					}
+				}
+			}
+		}
+	}
+}
+
+void ent_set_land_state(ENTITY *ent, CCT_PHYSICS *physics){
+	
+	if(ent->obj_state != PAIN && ent->obj_state != DEATH && ent->obj_state != SHOOT){
+		
+		if(physics->falling_timer > physics->land_timer_limit){
+			
+			if(physics->aqua_state == WADE){
+				
+				if(snd_playing(physics->aqua_snd_handle)){ snd_stop(physics->aqua_snd_handle); }
+				
+				// we need to handle sound playing differently for player and other npcs
+				// since for npcs we need to play 3d sound and for player not
+				if(ent->obj_type == TYPE_PLAYER){
+					
+					snd_play(land_in_water_ogg, cct_player_land_volume, 0);
+				}
+				else{
+					
+					ent_playsound(ent, land_in_water_ogg, cct_land_volume);
+				}
+			}
+			else if (physics->aqua_state == ABOVE){
+				
+				// we can play normal land sound here
+			}
+			
+			ent->obj_state = LANDED;
+			physics->land_timer = minv(physics->falling_timer * 6, 12);
+		}
+	}
+}
+
+void ent_toxic_water_damage(ENTITY *ent, CCT_PHYSICS *physics){
+	
+	if(physics->aqua_state != ABOVE){
+		
+		physics->aqua_toxic_damage_timer += time_frame / 16;
+		
+		if(physics->aqua_toxic_damage_timer >= physics->aqua_toxic_damage_timer_limit){
+			
+			ent->obj_health -= physics->aqua_toxic_damage_def + random(5);
+			ent->obj_death_type = TYPE_AQUA;
+			ent->obj_pain_type = TYPE_AQUA;
+			physics->aqua_toxic_damage_timer %= physics->aqua_toxic_damage_timer_limit;
+		}
+	}
+	else{
+		
+		physics->aqua_toxic_damage_timer = 0;
 	}
 }
 

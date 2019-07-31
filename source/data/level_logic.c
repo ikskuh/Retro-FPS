@@ -1,4 +1,11 @@
 
+void set_level_names(){
+	
+	// set names for each level
+	// sadly, but by hand
+	level_str[0] = "map.wmb";
+}
+
 void set_level_settings(){
 	
 	set(camera, NOFLAG1);
@@ -21,11 +28,11 @@ void set_level_settings(){
 	vec_set(&sky_color.blue, &d3d_fogcolor4.blue);
 }
 
-void reset_level(){
+void level_reset(){
 	
 }
 
-void level_load_(STRING *map){
+void level_load_(){
 	
 	if(proc_status(level_load_) > 0 || !is(camera, SHOW)){ return; }
 	
@@ -33,11 +40,11 @@ void level_load_(STRING *map){
 	
 	snd_stopall(4);
 	game_level_is_loaded = false;
-	reset_level();
-	wait_for(reset_level);
+	level_reset();
+	wait_for(level_reset);
 	
 	freeze_mode = true;
-	level_load(map);
+	level_load(level_str[level_id]);
 	wait(3);
 	freeze_mode = false;
 	
@@ -48,4 +55,9 @@ void level_load_(STRING *map){
 	game_level_is_loaded = true;
 	
 	set(camera, SHOW);
+}
+
+void level_restart(){
+	
+	level_load_();
 }

@@ -9,7 +9,7 @@ void register_camera(ENTITY *ent){
 	
 	player_cam = sys_malloc(sizeof(CAMERA));
 	
-	vec_set(&player_cam->cam_ang, &my->pan);
+	vec_set(&player_cam->cam_ang, &ent->pan);
 	player_cam->cam_height = 10;
 	player_cam->cam_fov = 90;
 	player_cam->cam_3d_dist = -128;
@@ -41,13 +41,7 @@ void camera_update(ENTITY *ent, CCT_PHYSICS *physics){
 			camera_get_input();
 			
 			// first, decide whether the actor is standing on the floor or not
-			if(physics->soil_contact == true){
-				
-				// landed
-				if(physics->falling_timer > player_cam->cam_land_timer_limit){
-					
-					player_cam->cam_land_z_effect = -minv(physics->falling_timer * 6, 12);
-				}
+			if(physics->is_grounded == true){
 				
 				// if we are moving, calculate bobbing effects
 				if(physics->is_moving == 1 && physics->moving_speed > 0.5){
@@ -76,7 +70,12 @@ void camera_update(ENTITY *ent, CCT_PHYSICS *physics){
 				weapon_bob_y -= (weapon_bob_y - 0) * 0.1 * time_step;
 				weapon_bob_z -= (weapon_bob_z - 0) * 0.1 * time_step;
 			}
+			
+			player_cam->cam_land_effect -= (player_cam->cam_land_effect - physics->land_timer) * time_step;
+			weapon_z_land = player_cam->cam_land_effect * 0.15;
 		}
+		
+		cam_aqua_damage(ent, physics);
 	}
 	else{
 		
@@ -89,24 +88,15 @@ void camera_update(ENTITY *ent, CCT_PHYSICS *physics){
 		if(player_cam->cam_bob > 180){ player_cam->cam_bob -= (player_cam->cam_bob - 182) * 0.5 * time_step; }
 		
 		// reset landing effect
-		player_cam->cam_land_z_effect = 0;
-		player_cam->cam_land_z_lerp = 0;
-	}
-	
-	// update landing effect
-	if(player_cam->cam_land_z_effect < 0){
+		player_cam->cam_land_effect = 0;
 		
-		player_cam->cam_land_z_effect -= (player_cam->cam_land_z_effect - 0) * 0.25 * time_step;
+		// reset camera damage effect from toxic water
+		camera_reset_aqua_damage();
 	}
-	
-	player_cam->cam_land_z_lerp -= (player_cam->cam_land_z_lerp - player_cam->cam_land_z_effect) * time_step;
-	weapon_z_land = player_cam->cam_land_z_lerp * 0.15;
 	
 	// handle different fog for IN and OUT of aqua
 	set_camera_fog();
-	
 	camera_recoil(ent);
-	
 	camera_explosion_shake();
 	
 	// camera FOV
@@ -115,7 +105,7 @@ void camera_update(ENTITY *ent, CCT_PHYSICS *physics){
 	
 	// set camera angles
 	camera->pan = player_cam->cam_ang.pan + player_cam->recoil_ang.pan;
-	camera->tilt = player_cam->cam_ang.tilt + player_cam->recoil_ang.tilt + (player_cam->cam_fluid_damage_roll * 0.5) + player_cam->cam_land_z_lerp;
+	camera->tilt = player_cam->cam_ang.tilt + player_cam->recoil_ang.tilt + (player_cam->cam_fluid_damage_roll * 0.5) - player_cam->cam_land_effect;
 	camera->roll = player_cam->cam_ang.roll + player_cam->cam_fluid_damage_roll;
 	
 	// handle third person camera mode
@@ -136,7 +126,7 @@ void camera_update(ENTITY *ent, CCT_PHYSICS *physics){
 	if(camera_mode != THIRD_PERSON){
 		
 		var cam_bobbing = fsin(player_cam->cam_bob * 2, player_cam->cam_bob_z_offset);
-		var cam_z_height = player_cam->cam_height + player_cam->cam_land_z_lerp - cam_bobbing;
+		var cam_z_height = player_cam->cam_height - player_cam->cam_land_effect - cam_bobbing;
 		
 		vec_set(&player_cam->cam_pos, vector(player_cam->explo_pos.x, player_cam->explo_pos.y, cam_z_height));
 		vec_rotate(&player_cam->cam_pos, vector(player_cam->cam_ang.pan, 0, 0));
@@ -157,7 +147,21 @@ void set_camera_fog(){
 		vec_set(&sky_color.blue, &d3d_fogcolor2.blue);
 		
 		camera->fog_start = TOXIC_WATER_FOG_START;
-		camera->fog_end = TOXIC_WATER_FOG_END;		
+		camera->fog_end = TOXIC_WATER_FOG_END;
+		
+		if(pp_underwater_is_on == false){
+			
+			if(!snd_playing(player_cam->cam_water_snd_handle)){
+				
+				player_cam->cam_water_snd_handle = snd_loop(underwater_ogg, camera_underwater_volume, 0);
+			}
+			
+			pp_add(pp_mtl_underwater, camera, camera->bmap);
+			pp_add(pp_mtl_colorintensity, camera, camera->bmap);
+			pp_colorintensity_set_value(0.5, 0.75, 0.25);
+			
+			pp_underwater_is_on = true;
+		}		
 	}
 	else{
 		
@@ -167,6 +171,18 @@ void set_camera_fog(){
 		
 		camera->fog_start = WORLD_FOG_START;
 		camera->fog_end = WORLD_FOG_END;
+		
+		if(snd_playing(player_cam->cam_water_snd_handle)){
+			
+			snd_stop(player_cam->cam_water_snd_handle);
+		}
+		
+		if(pp_underwater_is_on == true){
+			
+			pp_remove(pp_mtl_underwater, camera, camera);
+			pp_remove(pp_mtl_colorintensity, camera, camera);
+			pp_underwater_is_on = false;
+		}
 	}
 }
 
@@ -206,7 +222,20 @@ void camera_explosion_shake(){
 	}
 }
 
-void camera_aqua_damage(){
+void cam_aqua_damage(ENTITY *ent, CCT_PHYSICS *physics){
+	
+	if(ent->obj_pain_type == TYPE_AQUA){
+		
+		if(random(1) > 0.5){ player_cam->cam_fluid_damage_roll = 8 + random(2); }
+		else{ player_cam->cam_fluid_damage_roll = -(8 + random(2)); }
+		
+		ent->obj_pain_type = TYPE_UNDEFINED;
+	}
 	
 	player_cam->cam_fluid_damage_roll -= (player_cam->cam_fluid_damage_roll - 0) * time_step;
+}
+
+void camera_reset_aqua_damage(){
+	
+	player_cam->cam_fluid_damage_roll = 0;
 }

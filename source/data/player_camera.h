@@ -6,6 +6,7 @@
 
 	var mouse_speed_factor = 1; // speed factor for mouse, can be changed from settings menu
 	var camera_mode = 0; // 1 - third person camera, otherwise first person
+	var camera_underwater_volume = 65; // volume for underwater sound effect
 	
 	typedef struct {
 		
@@ -26,13 +27,12 @@
 		var cam_bob_speed;
 		var cam_bob_speed_factor;
 		
-		var cam_land_timer_limit;
-		var cam_land_z_effect;
-		var cam_land_z_lerp;
+		var cam_land_effect;
 		
 		var cam_explo_power;
 		
 		var cam_fluid_damage_roll;
+		var cam_water_snd_handle;
 		
 	} CAMERA;
 	
@@ -52,7 +52,9 @@
 	
 	void camera_explosion_shake();
 	
-	void camera_aqua_damage();
+	void cam_aqua_damage(ENTITY *ent, CCT_PHYSICS *physics);
+	
+	void camera_reset_aqua_damage();
 
 	#include "player_camera.c"
 #endif

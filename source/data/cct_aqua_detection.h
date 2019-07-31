@@ -5,5 +5,9 @@
 	
 	void ent_detect_aqua(ENTITY *ent, CCT_PHYSICS *physics);
 	
+	void ent_aqua_sounds(ENTITY *ent, CCT_PHYSICS *physics);
+	
+	void ent_aqua(ENTITY *ent, CCT_PHYSICS *physics);
+	
 	#include "cct_aqua_detection.c"
 #endif

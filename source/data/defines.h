@@ -19,7 +19,7 @@
 	// fog settings (start, end)
 	#define WORLD_FOG_END 2000
 	#define WORLD_FOG_START 100
-	#define TOXIC_WATER_FOG_END 300
+	#define TOXIC_WATER_FOG_END 100
 	#define TOXIC_WATER_FOG_START -50
 
 	// collusion groups/push values
@@ -49,6 +49,15 @@
 	#define obj_armor skill46
 	#define obj_move_npc skill47
 	#define obj_allow_move skill48
+	#define obj_state skill49
+	#define obj_death_type skill50
+	#define obj_pain_type skill51
+	#define TYPE_UNDEFINED 0
+	#define TYPE_SHOOT 1
+	#define TYPE_MELEE 2
+	#define TYPE_EXPLO 3
+	#define TYPE_SMASHED 4
+	#define TYPE_AQUA 5
 
 	// game logic stuff
 	var game_running = false; // 1 - when game is running, otherwise - 0 (used to stop main game loop)
