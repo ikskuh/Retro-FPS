@@ -24,3 +24,8 @@ https://github.com/freedoom/freedoom
 If you want to find out more about the license part, you can read this
 
 https://github.com/3RUN/Retro-FPS/blob/master/FREEDOOM_COPYING.adoc
+
+Few screens
+![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_0.jpg?raw=true "Movement testing level preview")
+
+![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_1.jpg?raw=true "Underwater fishing")
