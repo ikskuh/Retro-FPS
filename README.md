@@ -18,6 +18,7 @@ This project uses resources from Freedoom project (not source code, but game res
 If you want to find out more about Freedoom project, check out their github or webpage:
 
 https://freedoom.github.io/
+
 https://github.com/freedoom/freedoom
 
 If you want to find out more about the license part, you can read this
