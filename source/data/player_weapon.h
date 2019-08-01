@@ -7,5 +7,5 @@
 	var weapon_do_recoil = 0;
 	var weapon_recoil_rate = 0;
 	
-	#include "player_weapons.c"
+	#include "player_weapon.c"
 #endif

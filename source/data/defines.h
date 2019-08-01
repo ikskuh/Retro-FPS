@@ -14,13 +14,13 @@
 
 	// fog colors
 	#define COLOR_WORLD_FOG vector(128, 128, 128)
-	#define COLOR_TOXIC_WATER_FOG vector(11, 23, 31)
+	#define COLOR_WATER_FOG vector(11, 23, 31)
 
 	// fog settings (start, end)
 	#define WORLD_FOG_END 2000
 	#define WORLD_FOG_START 100
-	#define TOXIC_WATER_FOG_END 100
-	#define TOXIC_WATER_FOG_START -50
+	#define WATER_FOG_END 100
+	#define WATER_FOG_START -50
 
 	// collusion groups/push values
 	#define PUSH_GROUP 2
@@ -34,7 +34,7 @@
 	
 	// object skills
 	#define obj_struct skill40
-	#define obj_physics_struct skill41
+	#define obj_cct_struct skill41
 	#define obj_animator_struct skill42
 	#define obj_weapon_struct skill43
 	
@@ -58,6 +58,9 @@
 	#define TYPE_EXPLO 3
 	#define TYPE_SMASHED 4
 	#define TYPE_AQUA 5
+	
+	// water region
+	STRING *reg_water_str = "water_reg";
 
 	// game logic stuff
 	var game_running = false; // 1 - when game is running, otherwise - 0 (used to stop main game loop)

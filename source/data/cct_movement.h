@@ -1,17 +1,22 @@
 #ifndef _CCT_MOVEMENT_H_
 	#define _CCT_MOVEMENT_H_
 	
-	var cct_reduce_input_in_air_factor = 0.2; // when in air, input multiplied by this number
+	// Functions needed to perform all movement
 	
-	void ent_vertical_movement(ENTITY *ent, CCT_PHYSICS *physics);
+	// handle all gravity movement when out of the water
+	void ent_vertical_movement(ENTITY *ent, CCT *cct);
 	
-	void ent_horizontal_movement(ENTITY *ent, CCT_PHYSICS *physics);
+	// handle all horizontal (XY) movement when out of the water
+	void ent_horizontal_movement(ENTITY *ent, CCT *cct);
 	
-	void ent_movement(ENTITY *ent, CCT_PHYSICS *physics);
+	// handle all the movement
+	void ent_movement(ENTITY *ent, CCT *cct);
 	
-	void ent_slide_on_slopes(ENTITY *ent, CCT_PHYSICS *physics);
+	// slide on steep slopes, if we are allowed to
+	void ent_slide_on_slopes(ENTITY *ent, CCT *cct);
 	
-	void ent_stop_movement(CCT_PHYSICS *physics);
+	// stop all movement for the given cct
+	void ent_stop_movement(CCT *cct);
 	
 	#include "cct_movement.c"
 #endif

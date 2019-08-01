@@ -13,9 +13,9 @@ action props_toxic_water(){
 	my->ambient = 100;
 	my->alpha = 50;
 	
-	if(my->amplitude == 0){ my->amplitude = 200; }
-	if(my->speed == 0){ my->speed = 200; }
-	if(my->modulation == 0){ my->modulation = 200; }
+	if(my->amplitude == 0){ my->amplitude = 1000; }
+	if(my->speed == 0){ my->speed = 25; }
+	if(my->modulation == 0){ my->modulation = 300; }
 	
 	my->material = mtl_water;
 	my->skill41 = floatv(my->amplitude);	
