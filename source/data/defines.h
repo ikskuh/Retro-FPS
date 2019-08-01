@@ -19,7 +19,7 @@
 	// fog settings (start, end)
 	#define WORLD_FOG_END 2000
 	#define WORLD_FOG_START 100
-	#define WATER_FOG_END 100
+	#define WATER_FOG_END 300
 	#define WATER_FOG_START -50
 
 	// collusion groups/push values

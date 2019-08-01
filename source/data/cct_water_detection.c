@@ -46,18 +46,74 @@ void ent_set_water_state(CCT *cct){
 	}
 }
 
+// find surface to hop onto
+void ent_detect_water_edge(ENTITY *ent, CCT *cct){
+	
+	var trace_length = 4;
+	
+	vec_set(&cct->water_out_trace_mid, vector(cct->bbox_x + trace_length, 0, 0));
+	
+	// if player ?
+	if(ent->obj_type == TYPE_PLAYER){
+		
+		// rotate positions with camera PAN angle
+		vec_rotate(&cct->water_out_trace_mid, vector(camera->pan, 0, 0));
+	}
+	else{
+		
+		// for npcs rotate it with their bbox PAN angle
+		vec_rotate(&cct->water_out_trace_mid, vector(ent->pan, 0, 0));
+	}
+	
+	vec_add(&cct->water_out_trace_mid, &ent->x);
+	vec_set(&cct->water_out_trace_top, &cct->water_out_trace_mid);
+	cct->water_out_trace_top.z += cct->bbox_z + 4;
+	
+	c_ignore(PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+	c_trace(&ent->x, &cct->water_out_trace_mid, TRACE_FLAGS | IGNORE_PUSH);
+	cct->water_mid_trace_result = false;
+	if(HIT_TARGET){ cct->water_mid_trace_result = true; }
+	
+	c_ignore(PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+	c_trace(vector(ent->x, ent->y, cct->water_out_trace_top.z), &cct->water_out_trace_top, TRACE_FLAGS | IGNORE_PUSH);
+	cct->water_top_trace_result = false;
+	if(HIT_TARGET){ cct->water_top_trace_result = true; }
+	
+	// logic is pretty simple, if top trace doesn't hit anything, while the middle one does
+	// then it means that we can try to hop onto it
+	cct->jump_out_of_water = false;
+	if(cct->water_mid_trace_result == true && cct->water_top_trace_result == false){
+		
+		cct->jump_out_of_water = true;
+	}
+	
+	// and for npcs, we need to force them to jump up
+	if(ent->obj_type != TYPE_PLAYER){
+		
+		cct->jump = true;
+	}
+}
+
 // detect if entity is inside of the water region, or not
 void ent_detect_water_state(ENTITY *ent, CCT *cct){
 	
 	// detect water region
 	ent_detect_water(ent, cct);
 	
+	// detect surface to hop onto
+	ent_detect_water_edge(ent, cct);
+	
 	// if player ?
 	if(ent->obj_type == TYPE_PLAYER){
 		
+		// had to make this dirty trick with camera
+		// to avoid 'no fog' thing when just entered water
+		VECTOR temp_camera;
+		vec_set(&temp_camera, vector(camera->x, camera->y, camera->z - 0.5));
+		
 		// camera is inside of the water ?
 		// then our head is in water !
-		if(region_check(reg_water_str, &camera->x, &camera->x) != 0){
+		if(region_check(reg_water_str, &temp_camera, &temp_camera)){
 			
 			cct->water_state = HEAD_IN_WATER;
 		}

@@ -69,6 +69,9 @@
 		VECTOR water_reg_min;
 		VECTOR water_reg_max;
 		
+		VECTOR water_out_trace_mid;
+		VECTOR water_out_trace_top;
+		
 		var bbox_x;
 		var bbox_y;
 		var bbox_z;
@@ -111,6 +114,9 @@
 		var water_origin_diff_z;
 		var water_z_height;
 		var water_depth_factor;
+		
+		var water_mid_trace_result;
+		var water_top_trace_result;
 		
 		var swim_speed;
 		var swim_z_force;

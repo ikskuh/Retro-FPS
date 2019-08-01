@@ -52,10 +52,11 @@ void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct){
 		c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
 		c_move(ent, nullvector, vector(0, 0, cct->soil_height - ent->z), MOVE_FLAGS | IGNORE_YOU | GLIDE);
 		cct->is_grounded = true;
-		cct->force.z = 0;		
+		cct->force.z = 0;
+		cct->jump_out_of_water = false;		
 	}
 	
-	if(cct->is_grounded == true){
+	if(cct->is_grounded == true || cct->jump_out_of_water == true){
 		
 		if(cct->jump == true){
 			
@@ -63,7 +64,7 @@ void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct){
 				
 				cct->force.z = cct->jump_height;
 				cct->jump_allowed = false;
-				
+				if(cct->jump_out_of_water == true){ cct->jump_out_of_water = false; }
 			}
 		}
 		else{ cct->jump_allowed = true; }
@@ -110,7 +111,7 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct){
 	
 	// reset grounded and jumping
 	cct->is_grounded = false;
-	cct->jump_allowed = false;
+	cct->jump_allowed = true;
 	
 	// if alive
 	if(ent->obj_health > 0){
@@ -391,9 +392,6 @@ void ent_horizontal_movement_in_water(ENTITY *ent, CCT *cct){
 // handle all the movement
 void ent_movement(ENTITY *ent, CCT *cct){
 	
-	// detect water
-	ent_detect_water_state(ent, cct);
-	
 	// allowed to move?
 	if(ent->obj_allow_move == 1){
 		
@@ -421,6 +419,9 @@ void ent_movement(ENTITY *ent, CCT *cct){
 			ent_horizontal_movement_on_foot(ent, cct);
 		}
 	}
+	
+	// detect water
+	ent_detect_water_state(ent, cct);
 }
 
 // slide on steep slopes, if we are allowed to

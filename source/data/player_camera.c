@@ -65,7 +65,7 @@ void camera_update(ENTITY *ent, CCT *cct){
 				hero->cam->land_effect -= (hero->cam->land_effect - 0) * 0.25 * time_step;
 				
 				// sway a little bit up and down while we are underwater
-				hero->cam->water_z = 0 - 2 * sinv(8 * game_ticks);
+				hero->cam->water_z = 0 - 1 * sinv(8 * game_ticks);
 				hero->cam->water_z_lerp -= (hero->cam->water_z_lerp - hero->cam->water_z) * 0.25 * time_step;
 			}
 			else{
