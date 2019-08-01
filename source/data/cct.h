@@ -6,6 +6,7 @@
 	//
 	// This header also includes such headers as
 	// - cct_helper.h (all helper functions needed for proper cct behaviour)
+	// - cct_water_detection.h (all functions need to perform water detection)
 	// - cct_gravity.h (all functions needed to perform gravity traces etc)
 	// - cct_movement.h (all functions needed to perform all movement)
 	// - cct_state_machine.h (all functions needed to setup a state machine)
@@ -26,11 +27,19 @@
 	#define SHOOT 7
 	#define DEATH 8
 	
+	// water detection states
+	#define OUT_OF_WATER 0
+	#define ON_WATER 1
+	#define IN_WATER 2
+	#define HEAD_IN_WATER 3
+	
 	var cct_gravity = 4; // gravity strength
 	var cct_gravity_max = 90; // gravity strength max
+	var cct_gravity_fluid = 1; // gravity strength in fluid
 	
 	var cct_gnd_fric = 0.5; // ground friction
 	var cct_air_fric = 0.1; // air friction
+	var cct_water_fric = 0.75; // water friction
 	var cct_grav_trace_start_offset = 4; // offset for start position of the gravity trace
 	var cct_grav_trace_end_offset = 24; // length of the gravity trace
 	
@@ -52,12 +61,13 @@
 		VECTOR speed;
 		VECTOR velocity;
 		VECTOR push_force;
-		VECTOR push_velocity;
 		
 		VECTOR surface_normal;
 		VECTOR surface_speed;
 		
 		VECTOR origin;
+		VECTOR water_reg_min;
+		VECTOR water_reg_max;
 		
 		var bbox_x;
 		var bbox_y;
@@ -72,9 +82,18 @@
 		var soil_allow_sliding;
 		var is_grounded;
 		
-		var jump;
 		var jump_allowed;
+		var jump_out_of_water;
 		var jump_height;
+		
+		// input keys
+		var forward;
+		var backward;
+		var straif_left;
+		var straif_right;
+		var jump;
+		var run;
+		var dive;
 		
 		var movement_speed;
 		var friction;
@@ -82,12 +101,25 @@
 		var land_timer;
 		var land_timer_limit;
 		
-		var run;
 		var always_run;
 		
 		var walk_speed_factor;
 		var run_speed_factor;
+		
+		var water_state;
+		var water_reg_total;
+		var water_origin_diff_z;
+		var water_z_height;
 		var water_depth_factor;
+		
+		var swim_speed;
+		var swim_z_force;
+		var swim_z_speed;
+		var swim_z_abs_dist;
+		
+		var water_z_distance;
+		var water_z_speed;
+		var water_z_is_moving;
 		
 		var moving_distance;
 		var moving_speed;
@@ -114,6 +146,7 @@
 	void delete_cct(CCT *cct);
 	
 	#include "cct_helper.h"
+	#include "cct_water_detection.h"
 	#include "cct_gravity.h"
 	#include "cct_movement.h"
 	#include "cct.c"

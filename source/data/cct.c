@@ -39,6 +39,7 @@ void init_cct(CCT *cct){
 	cct->jump_height = 16;
 	
 	cct->movement_speed = 5.5;
+	cct->swim_speed = 3.5;
 	cct->land_timer_limit = 4.5;
 	
 	cct->always_run = 0;

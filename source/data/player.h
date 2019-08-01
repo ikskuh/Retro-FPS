@@ -8,6 +8,15 @@
 	// - player_camera.h (all functions used for player's camera)
 	// - player_behaviour.h (all functions needed for player action)
 	
+	// camera modes
+	#define FIRST_PERSON 0
+	#define THIRD_PERSON 1
+	
+	// player's camera stuff
+	var mouse_speed_factor = 1; // speed factor for mouse, can be changed from settings menu
+	var camera_mode = 0; // 1 - third person camera, otherwise first person
+	var camera_underwater_volume = 65; // volume for underwater sound effect
+	
 	// player's camera structure
 	typedef struct {
 		
@@ -31,6 +40,8 @@
 		var land_effect;
 		var explo_power;
 		var underwater_snd_handle;
+		var water_z;
+		var water_z_lerp;
 		
 	} CAMERA;
 	
@@ -48,15 +59,6 @@
 	
 	// player's structure
 	PLAYER *hero;
-	
-	// camera modes
-	#define FIRST_PERSON 0
-	#define THIRD_PERSON 1
-	
-	// player's camera stuff
-	var mouse_speed_factor = 1; // speed factor for mouse, can be changed from settings menu
-	var camera_mode = 0; // 1 - third person camera, otherwise first person
-	var camera_underwater_volume = 65; // volume for underwater sound effect
 	
 	// register and initializes new player's structure
 	// and save it's pointer into given entities obj_struct skill

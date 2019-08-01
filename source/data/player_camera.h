@@ -10,7 +10,7 @@
 	void camera_update(ENTITY *ent, CCT *cct);
 
 	// change camera's fog, if we are inside of the water region
-	void set_camera_fog();
+	void set_camera_fog(CCT *cct);
 
 	// handle recoil effect
 	void camera_recoil(ENTITY *ent);

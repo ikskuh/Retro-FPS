@@ -8,10 +8,9 @@
 // uses: amplitude, speed, modulation
 action props_toxic_water(){
 	
-	set(my, PASSABLE | NOFILTER | TRANSLUCENT);
+	set(my, PASSABLE | NOFILTER);
 	reset(my, DYNAMIC);
 	my->ambient = 100;
-	my->alpha = 50;
 	
 	if(my->amplitude == 0){ my->amplitude = 1000; }
 	if(my->speed == 0){ my->speed = 25; }

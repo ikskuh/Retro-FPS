@@ -40,10 +40,6 @@ void player_dead(){
 	// no events from here on
 	my->emask &= ~(ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);
 	my->event = NULL;
-	
-	// we aren't allowed to move
-	// because we are dead x_x
-	my->obj_allow_move = 0;
 }
 
 // main player's action, this one is used in WED
@@ -75,6 +71,7 @@ action player_controller(){
 		// for testing
 		if(key_q){ my->obj_health = -1; }
 		DEBUG_VAR(my->obj_health, 10);
+		DEBUG_VAR(cct->water_state, 30);
 		
 		// update our health, armor etc
 		// used globally - f.e. for gui
@@ -91,19 +88,17 @@ action player_controller(){
 		// alive?
 		if(my->obj_health > 0){
 			
-			// allowed to move?
+			// allowed to move ?
 			if(my->obj_allow_move == 1){
 				
-				// movement input from player
-				cct->force.x = cct->movement_speed * (key_w - key_s) * cct->water_depth_factor;
-				cct->force.y = cct->movement_speed * (key_a - key_d) * cct->water_depth_factor;
-				
-				// input for running and jumping
+				// set input keys and update every frame
+				cct->forward = key_w;
+				cct->backward = key_s;
+				cct->straif_left = key_a;
+				cct->straif_right = key_d;
 				cct->run = key_shift;
 				cct->jump = key_space;
-				
-				// gravity + X and Y movement
-				ent_movement(my, cct);
+				cct->dive = (key_ctrl || key_c);
 			}
 			else{
 				
@@ -112,11 +107,6 @@ action player_controller(){
 			}
 		}
 		else{
-			
-			// player does still move after death
-			// well.. at least his corpse does
-			// gravity + pushing forces
-			ent_movement(my, cct);
 			
 			// handle all stuff related to death
 			// f.e. disable lightrange, stop sounds etc
@@ -131,6 +121,9 @@ action player_controller(){
 			}
 		}
 		
+		// handle movement
+		ent_movement(my, cct);
+		
 		// handle sound effects
 		player_sounds(cct);
 		
@@ -144,8 +137,5 @@ action player_controller(){
 	}
 	
 	// if we wated to restart, then do so!
-	if(my->obj_state == -1){
-		
-		level_restart();
-	}
+	if(my->obj_state == -1){ level_restart(); }
 }
