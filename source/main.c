@@ -11,9 +11,11 @@
 #define PRAGMA_PATH "data\\models"
 #define PRAGMA_PATH "data\\sounds"
 #define PRAGMA_PATH "data\\sounds\\player"
+#define PRAGMA_PATH "data\\sprites"
 
 #include "defines.h"
 #include "resources.h"
+#include "particles.h"
 #include "shader_pipeline.h"
 #include "level_logic.h"
 #include "props.h"

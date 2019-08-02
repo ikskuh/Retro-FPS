@@ -3,6 +3,16 @@
 	
 	// Functions needed to perform all movement
 	
+	// perform gravity trace for the given entity with the given cct
+	void ent_gravity_trace(ENTITY *ent, CCT *cct);
+	
+	// calculate the damage from a fall and return that value:
+	function ent_fall_damage(CCT *cct);
+
+	// handle all stuff related to landing
+	// taking damage from landing etc
+	void ent_landed(ENTITY *ent, CCT *cct);
+
 	// handle stuff related movement speed
 	// f.e. don't allow cheating by holding forward and left-right keys
 	void ent_handle_movement_speed(CCT *cct, var spd);
@@ -18,7 +28,7 @@
 	
 	// same as above, but in water
 	void ent_horizontal_movement_in_water(ENTITY *ent, CCT *cct);
-	
+
 	// handle all the movement
 	void ent_movement(ENTITY *ent, CCT *cct);
 	

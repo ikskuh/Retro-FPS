@@ -6,6 +6,7 @@
 	// This header also includes such headers as
 	// - player_weapons.h (all functions used for player's weapon system)
 	// - player_camera.h (all functions used for player's camera)
+	// - player_state_machine.h (all functions used to setup player's state machine)
 	// - player_behaviour.h (all functions needed for player action)
 	
 	// camera modes
@@ -52,6 +53,7 @@
 		var armor;
 		var always_run;
 		var allow_movement;
+		var death_snd_switch;
 		
 		CAMERA *cam;
 		
@@ -81,5 +83,6 @@
 	#include "player.c"
 	#include "player_weapon.h"
 	#include "player_camera.h"
+	#include "player_state_machine.h"
 	#include "player_behaviour.h"
 #endif

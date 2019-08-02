@@ -12,6 +12,25 @@ void player_toggle_run(){
 // handles all voice sounds made by player
 void player_sounds(CCT *cct){
 	
+	if(my->obj_state == DEATH){
+		
+		if(hero->death_snd_switch == 0){
+			
+			if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
+			var rnd = integer(random(2));
+			if(rnd == 0){ my->obj_snd_handle = snd_play(player_death_ogg, player_snd_volume, 0); }
+			if(rnd == 1){ my->obj_snd_handle = snd_play(player_x_death_ogg, player_snd_volume, 0); }
+			
+			hero->death_snd_switch = 1;
+		}
+		
+		if(cct->water_state >= IN_WATER && hero->death_snd_switch == 1){
+			
+			if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
+			my->obj_snd_handle = snd_play(player_death_to_water_ogg, player_snd_volume, 0);
+			hero->death_snd_switch = -1;
+		}
+	}
 }
 
 // handles all events that player receives
@@ -71,13 +90,14 @@ action player_controller(){
 		// for testing
 		if(key_q){ my->obj_health = -1; }
 		DEBUG_VAR(my->obj_health, 10);
-		DEBUG_VAR(cct->water_state, 30);
+		DEBUG_VAR(cct->air_underwater, 30);
 		
 		// update our health, armor etc
 		// used globally - f.e. for gui
 		hero->health = my->obj_health;
 		hero->armor = my->obj_armor;
 		hero->allow_movement = my->obj_allow_move;
+		cct->always_run = hero->always_run;
 		
 		// perform gravity trace
 		ent_gravity_trace(my, cct);
@@ -123,6 +143,9 @@ action player_controller(){
 		
 		// handle movement
 		ent_movement(my, cct);
+		
+		// handle state machine
+		player_handle_state_machine(my, cct);
 		
 		// handle sound effects
 		player_sounds(cct);

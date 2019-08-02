@@ -73,6 +73,8 @@ void camera_update(ENTITY *ent, CCT *cct){
 				if(cct->is_grounded == true){
 					
 					camera_bobbing(cct);
+					hero->cam->bob_z_offset -= (hero->cam->bob_z_offset - 1.5) * 0.1 * time_step;
+					
 				}
 				else{
 					

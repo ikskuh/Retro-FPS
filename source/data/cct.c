@@ -38,8 +38,9 @@ void init_cct(CCT *cct){
 	cct->jump_allowed = false;
 	cct->jump_height = 16;
 	
-	cct->movement_speed = 6;
-	cct->swim_speed = 3;
+	cct->movement_speed = 4.5;
+	cct->swim_speed = 2;
+	cct->falling_damage_limit = cct_fall_damage_limit;
 	cct->land_timer_limit = 4.5;
 	
 	cct->always_run = 0;
@@ -47,6 +48,10 @@ void init_cct(CCT *cct){
 	cct->walk_speed_factor = 1;
 	cct->run_speed_factor = 2;
 	cct->water_depth_factor = 1;
+	cct->water_out_switch = true;
+	cct->air_underwater = 100;
+	cct->air_underwater_timer = 2;
+	cct->air_underwater_timer_limit = 2;
 }
 
 // returns pointer to the cct from given entity's obj_cct_struct skill

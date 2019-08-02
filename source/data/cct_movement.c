@@ -1,4 +1,109 @@
 
+// perform gravity trace for the given entity with the given cct
+void ent_gravity_trace(ENTITY *ent, CCT *cct){
+	
+	if(!ent){
+		diag("\nERROR! Can't create gravity trace for given entity, it doesn't exist!");
+		return;
+	}
+	
+	// start and end positions of the gravity trace
+	VECTOR from, to, target_vec;
+	vec_set(&from, vector(ent->x, ent->y, ent->z + cct_grav_trace_start_offset));
+	vec_set(&to, &from);
+	to.z -= cct_grav_trace_end_offset + cct->foot_height;
+	
+	// perform gravity trace
+	vec_set(&ent->min_x, vector(-(cct->bbox_x - 1), -(cct->bbox_y - 1), -0.1));
+	vec_set(&ent->max_x, vector((cct->bbox_x - 1), (cct->bbox_y - 1), 0.1));
+	c_ignore(PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+	c_trace(&from, &to, TRACE_FLAGS | IGNORE_PUSH | SCAN_TEXTURE | USE_BOX);
+	vec_set(&ent->min_x, vector(-cct->bbox_x, -cct->bbox_y, -0.1));
+	vec_set(&ent->max_x, vector(cct->bbox_x, cct->bbox_y, cct->bbox_z));
+	
+	vec_fill(&cct->surface_normal, 0);
+	vec_fill(&cct->surface_speed, 0);
+	
+	vec_set(&target_vec, &to);
+	
+	cct->ground_info = SOLID;
+	
+	if(HIT_TARGET){
+		
+		vec_set(&target_vec, &target);
+		vec_set(&cct->surface_normal, &normal);
+		
+		// level block
+		if(you == NULL){
+			
+			// we are on invisible slope ? 
+			// (which is used for stairs, so no sliding on stairs)
+			if(tex_flag1){ cct->ground_info = STAIRS; }
+		}
+		
+		// models
+		if(you != NULL){
+			
+			// if this entity can move us
+			if(your->obj_move_npc == true){
+				
+				// then add it's XY speed to our movement
+				// TODO !
+				// here we need to get structure of YOU entity
+				// then we need to take it's velocity and add it to our
+				// surface speed !
+				// cct->surface_speed.x = your->speed_x;
+				// cct->surface_speed.y = your->speed_y;
+				// Z speed is not necessary - this is done by the height adaption
+			}
+			
+			if(your->obj_type == TYPE_ELEVATOR || your->obj_type == TYPE_PLATFORM){
+				
+				// TODO !
+				// here we need to get structure of YOU entity
+				// then we need to get it's current state and if it's MOVING
+				// then we need to set our ground info to MOVING as well
+				// this could be used f.e. to shake player's camera
+				/*if(your->obj_state == 1 || your->obj_state == 2){
+					cct->ground_info = MOVING;
+				}*/
+			}
+		}
+	}
+	
+	cct->soil_height = target_vec.z - cct->foot_height;
+}
+
+// calculate the damage from a fall and return that value:
+function ent_fall_damage(CCT *cct){
+	
+	return(10 + integer(((cct->falling_timer - cct->falling_damage_limit) * cct_fall_damage_const)));
+}
+
+// handle all stuff related to landing
+// taking damage from landing etc
+void ent_landed(ENTITY *ent, CCT *cct){
+	
+	if(cct->falling_timer > cct->land_timer_limit){
+		
+		// if we need to take damage from falling
+		if(cct->falling_timer > cct->falling_damage_limit){
+			
+			// play damage sound from falling
+			if(ent->obj_type == TYPE_PLAYER){
+				
+				if(snd_playing(ent->obj_snd_handle)){ snd_stop(ent->obj_snd_handle); }
+				ent->obj_snd_handle = snd_play(player_land_ogg, player_snd_volume, 0);
+			}
+			
+			ent->obj_pain_type = TYPE_FALL_DAMAGE;
+			ent->obj_health -= ent_fall_damage(cct);
+		}
+		
+		cct->land_timer = minv(cct->falling_timer * 6, 12);
+	}
+}
+
 // handle stuff related movement speed
 // f.e. don't allow cheating by holding forward and left-right keys
 void ent_handle_movement_speed(CCT *cct, var spd){
@@ -85,27 +190,6 @@ void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct){
 // handle all gravity movement when in water
 void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct){
 	
-	// this is a dirty trick, to stop all voices from the 'on foot' state
-	// trick - because it will run only once
-	if(cct->falling_timer != 0){
-		
-		// stop all voice sounds
-		
-	}
-	
-	// we jumped into the water?
-	if(cct->falling_timer > 1){
-		
-		// play water splash sound
-		// add some bubbles under the water
-		// add water splash fx on water plane
-	}
-	else{
-		
-		// we walked into the water slowly
-		// so play in water slowly sound here		
-	}
-	
 	// reset falling timer
 	cct->falling_timer = 0;
 	
@@ -148,7 +232,7 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct){
 	cct->friction = cct_water_fric;
 	
 	// get input
-	cct->swim_z_force = (cct->swim_speed * 0.75) * (cct->jump - (cct->dive));
+	cct->swim_z_force = (cct->swim_speed) * (cct->jump - (cct->dive));
 	
 	// handle running and 'always running'
 	if(cct->always_run == true){
@@ -159,14 +243,14 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct){
 		}
 		else{
 			
-			cct->swim_z_force *= cct->run_speed_factor;
+			cct->swim_z_force *= cct->run_speed_factor * 0.75;
 		}
 	}
 	else{
 		
 		if(cct->run == true){
 			
-			cct->swim_z_force *= cct->run_speed_factor;
+			cct->swim_z_force *= cct->run_speed_factor * 0.75;
 		}
 		else{
 			
@@ -231,6 +315,9 @@ void ent_horizontal_movement_on_foot(ENTITY *ent, CCT *cct){
 	
 	// first, decide whether the actor is standing on the floor or not
 	if(cct->is_grounded == true){
+		
+		// landed on ground
+		ent_landed(ent, cct);
 		
 		// reset falling time
 		cct->falling_timer = 0;
@@ -420,6 +507,10 @@ void ent_movement(ENTITY *ent, CCT *cct){
 		}
 	}
 	
+	// reset landing timer
+	cct->land_timer -= (cct->land_timer - 0) * 0.5 * time_step;
+	if(ent->obj_health <= 0){ cct->land_timer = 0; }
+	
 	// detect water
 	ent_detect_water_state(ent, cct);
 }
@@ -499,10 +590,18 @@ void ent_stop_movement_on_foot(CCT *cct){
 	cct->abs_force.x -= (cct->abs_force.x - 0) * 0.25 * time_step;
 	cct->abs_force.y -= (cct->abs_force.y - 0) * 0.25 * time_step;
 	cct->abs_force.z = 0;
+	
+	cct->water_out_switch = false;
 }
 
 // stop all movement from on water state
 void ent_stop_movement_in_water(CCT *cct){
+	
+	// reset water in switch only if player stands on the ground
+	if(cct->is_grounded == true){
+		
+		cct->water_in_switch = false;
+	}
 	
 	cct->swim_z_force = 0;
 	cct->swim_z_speed = 0;

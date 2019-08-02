@@ -26,6 +26,8 @@ void init_player_struct(ENTITY *ent, PLAYER *temp){
 		return;
 	}
 	temp->cam = sys_malloc(sizeof(CAMERA));
+	vec_set(&temp->cam->position, &ent->x);
+	vec_set(&camera->x, &ent->x);
 	vec_set(&temp->cam->angle, &ent->pan);
 	temp->cam->height = 10;
 	temp->cam->fov = 90;
@@ -33,7 +35,8 @@ void init_player_struct(ENTITY *ent, PLAYER *temp){
 	temp->cam->bob_z_offset = 1.5;
 	temp->cam->bob_speed_factor = 2;
 	
-	temp->always_run = false;
+	// player should 'always run' by default
+	temp->always_run = true;
 }
 
 // returns pointer of the player structure from given entity's obj_struct skill

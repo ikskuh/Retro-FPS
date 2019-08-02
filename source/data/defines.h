@@ -57,7 +57,11 @@
 	#define TYPE_MELEE 2
 	#define TYPE_EXPLO 3
 	#define TYPE_SMASHED 4
-	#define TYPE_AQUA 5
+	#define TYPE_OUT_OF_AIR 5
+	#define TYPE_FALL_DAMAGE 6
+	
+	#define obj_snd_handle skill52
+	#define obj_water_height skill53
 	
 	// water region
 	STRING *reg_water_str = "water_reg";
@@ -66,5 +70,9 @@
 	var game_running = false; // 1 - when game is running, otherwise - 0 (used to stop main game loop)
 	var game_level_is_loaded = false; // true - if level is loaded, otherwise - false
 	var game_ticks = 0; // alternative to native total_ticks
-
+	
+	// cct and player's stuff
+	var cct_snd_volume = 450;
+	var player_snd_volume = 50;
+	
 #endif

@@ -7,25 +7,12 @@
 	// This header also includes such headers as
 	// - cct_helper.h (all helper functions needed for proper cct behaviour)
 	// - cct_water_detection.h (all functions need to perform water detection)
-	// - cct_gravity.h (all functions needed to perform gravity traces etc)
 	// - cct_movement.h (all functions needed to perform all movement)
-	// - cct_state_machine.h (all functions needed to setup a state machine)
 	
 	// ground info defines
 	#define SOLID 0
 	#define STAIRS 1
 	#define MOVING 2
-	
-	// state machine states
-	#define IDLE 0
-	#define WALK 1
-	#define RUN 2
-	#define JUMPED 3
-	#define IN_AIR 4
-	#define LANDED 5
-	#define PAIN 6
-	#define SHOOT 7
-	#define DEATH 8
 	
 	// water detection states
 	#define OUT_OF_WATER 0
@@ -48,6 +35,9 @@
 	var cct_slope_fac = 0.5; // walkable slope angle
 	
 	var cct_reduce_input_in_air_factor = 0.2; // reduce input forces when we are in air
+	var cct_underwater_no_air_damage = 10; // damage thaken underwater, when out of air
+	var cct_fall_damage_limit = 9; // if falling limit is greater than this value - take damage
+	var cct_fall_damage_const = 50; // used for falling damage calculations
 	
 	// cct main structure
 	typedef struct {
@@ -101,6 +91,7 @@
 		var movement_speed;
 		var friction;
 		var falling_timer;
+		var falling_damage_limit;
 		var land_timer;
 		var land_timer_limit;
 		
@@ -117,6 +108,13 @@
 		
 		var water_mid_trace_result;
 		var water_top_trace_result;
+		var water_in_switch;
+		var water_out_switch;
+		
+		var air_underwater;
+		var air_underwater_timer;
+		var air_underwater_timer_limit;
+		var air_underwater_snd_gasp_switch;
 		
 		var swim_speed;
 		var swim_z_force;
@@ -153,7 +151,6 @@
 	
 	#include "cct_helper.h"
 	#include "cct_water_detection.h"
-	#include "cct_gravity.h"
 	#include "cct_movement.h"
 	#include "cct.c"
 #endif
