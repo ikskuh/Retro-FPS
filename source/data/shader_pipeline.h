@@ -11,7 +11,7 @@
 	var pp_darken = 8;
 	var pp_contrast = 125;
 	
-	var pp_sharpen_strength = 2.5;
+	var pp_sharpen_strength = 3;
 	
 	MATERIAL *mtl_water = {
 		
