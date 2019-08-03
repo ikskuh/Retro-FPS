@@ -6,13 +6,52 @@
 	var pp_underwater_is_on = false; // true - if underwater effect is on, otherwise - false
 	
 	var pp_blur = 0;
-	var pp_saturation = 100;
+	var pp_saturation = 50;
 	var pp_sepia = 5;
-	var pp_darken = 8;
+	var pp_darken = 5;
 	var pp_contrast = 125;
-	
 	var pp_sharpen_strength = 3;
 	
+	var mtl_brightness = 0.9;
+	
+	MATERIAL *mtl_world = {
+		
+		effect = "mtl_world.fx";
+		flags = PASS_SOLID | AUTORELOAD;
+		
+	}
+
+	MATERIAL *mtl_object = {
+		
+		ambient_red = 192;
+		ambient_green = 192;
+		ambient_blue = 192;
+		effect = "mtl_object.fx";
+		flags = PASS_SOLID | AUTORELOAD;
+		
+	}
+
+	MATERIAL *mtl_fade = {
+		
+		effect = "mtl_fade.fx";
+		flags = TRANSLUCENT | AUTORELOAD;
+		
+	}
+
+	MATERIAL *mtl_translucent = {
+		
+		effect = "mtl_translucent.fx";
+		flags = TRANSLUCENT | AUTORELOAD;
+		
+	}
+
+	MATERIAL *mtl_anim_sprite = {
+		
+		effect = "mtl_anim_sprite.fx";
+		flags = TRANSLUCENT | AUTORELOAD;
+		
+	}
+
 	MATERIAL *mtl_water = {
 		
 		effect = "mtl_water.fx";

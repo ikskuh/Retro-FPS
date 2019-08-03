@@ -27,8 +27,9 @@
 	#define SWITCH_ITEM_GROUP 3
 	#define PATHFIND_GROUP 4
 	#define PLAYER_GROUP 5
-	#define SHOOTABLE_GROUP 6
-	#define OBSTACLE_GROUP 7
+	#define ENEMY_GROUP 6
+	#define SHOOTABLE_GROUP 7
+	#define OBSTACLE_GROUP 8
 
 	#define LEVEL_GROUP 10
 	
@@ -42,8 +43,10 @@
 	#define TYPE_NONE 0
 	#define TYPE_PLAYER 1
 	#define TYPE_NPC 2
-	#define TYPE_ELEVATOR 3
-	#define TYPE_PLATFORM 4
+	#define TYPE_SWITCH 3
+	#define TYPE_ELEVATOR 4
+	#define TYPE_PLATFORM 5
+	#define TYPE_DOOR 6
 	
 	#define obj_health skill45
 	#define obj_armor skill46

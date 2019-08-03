@@ -5,9 +5,9 @@
 	// it's used for registering, deleting and contains all cct parameters
 	//
 	// This header also includes such headers as
-	// - cct_helper.h (all helper functions needed for proper cct behaviour)
-	// - cct_water_detection.h (all functions need to perform water detection)
-	// - cct_movement.h (all functions needed to perform all movement)
+	// - cct_helper.h (everything needed for proper cct behaviour)
+	// - cct_water_detection.h (everything needed to perform water detection)
+	// - cct_movement.h (everything needed to perform all movement)
 	
 	// ground info defines
 	#define SOLID 0
@@ -19,6 +19,11 @@
 	#define ON_WATER 1
 	#define IN_WATER 2
 	#define HEAD_IN_WATER 3
+	
+	// trace/scan states
+	#define NONE 0
+	#define INTERACT 1
+	#define SHOOT 2
 	
 	var cct_gravity = 4; // gravity strength
 	var cct_gravity_max = 90; // gravity strength max
@@ -38,6 +43,8 @@
 	var cct_underwater_no_air_damage = 10; // damage thaken underwater, when out of air
 	var cct_fall_damage_limit = 9; // if falling limit is greater than this value - take damage
 	var cct_fall_damage_const = 50; // used for falling damage calculations
+	
+	var cct_interact_distance = 64; // interaction distance (both front and downwards)
 	
 	// cct main structure
 	typedef struct {
@@ -62,6 +69,9 @@
 		VECTOR water_out_trace_mid;
 		VECTOR water_out_trace_top;
 		
+		VECTOR interact_front_pos;
+		VECTOR interact_down_pos;
+		
 		var bbox_x;
 		var bbox_y;
 		var bbox_z;
@@ -74,6 +84,7 @@
 		var soil_height;
 		var soil_allow_sliding;
 		var is_grounded;
+		var is_hit_ceiling;
 		
 		var jump_allowed;
 		var jump_out_of_water;
@@ -87,6 +98,7 @@
 		var jump;
 		var run;
 		var dive;
+		var interact;
 		
 		var movement_speed;
 		var friction;
@@ -124,15 +136,20 @@
 		var water_z_distance;
 		var water_z_speed;
 		var water_z_is_moving;
+		var water_z_snd_switch;
 		
 		var moving_distance;
 		var moving_speed;
 		var is_moving;
 		
+		var interact_switch;
+		var interact_hit_front;
+		var c_indicator;
+		
 	} CCT;
 	
 	// register and initializes new cct (character controller)
-	// and save it's pointer into given entities obj_cct_struct skill
+	// and save it's pointer into given entity's obj_cct_struct skill
 	CCT *register_cct(ENTITY *ent);
 	
 	// initialize all major variables for the given cct

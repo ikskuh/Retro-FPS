@@ -1,4 +1,65 @@
 
+// handle interaction traces
+void ent_interact(ENTITY *ent, CCT *cct){
+	
+	// pressed interaction button ?
+	if(cct->interact == true && cct->interact_switch == 0){
+		
+		// make sure to note that this is an interaction trace
+		cct->c_indicator = INTERACT;
+		c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
+		c_trace(&cct->origin, &cct->interact_front_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
+		cct->interact_hit_front = false;
+		
+		if(HIT_TARGET){
+			
+			if(you != NULL){
+				
+				// we've detected a switch, elevator, platform or a door ?
+				if(you->obj_type == TYPE_SWITCH || you->obj_type == TYPE_ELEVATOR || you->obj_type == TYPE_PLATFORM || you->obj_type == TYPE_DOOR){
+					cct->interact_hit_front = true;
+				}
+			}
+		}
+		
+		// if front trace failed ?
+		if(cct->interact_hit_front == false){
+			
+			// make sure to note that this is an interaction trace
+			cct->c_indicator = INTERACT;
+			c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
+			c_trace(&cct->origin, &cct->interact_down_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
+		}
+		
+		cct->interact_switch = 1;
+	}
+	else{ cct->interact_switch = 0; }
+}
+
+// update interaction trace positions
+void ent_interact_trace_pos(ENTITY *ent, CCT *cct){
+	
+	// front trace end position
+	vec_set(&cct->interact_front_pos, vector(cct_interact_distance, 0, 0));
+	vec_rotate(&cct->interact_front_pos, vector(ent->pan, 0, 0));
+	
+	if(ent->obj_type == TYPE_PLAYER){
+		
+		vec_rotate(&cct->interact_front_pos, &camera->pan);
+	}
+	vec_add(&cct->interact_front_pos, &cct->origin);
+	
+	// down trace end position
+	vec_set(&cct->interact_down_pos, vector(0, 0, -cct_interact_distance));
+	vec_rotate(&cct->interact_down_pos, vector(ent->pan, 0, 0));
+	
+	if(ent->obj_type == TYPE_PLAYER){
+		
+		vec_rotate(&cct->interact_down_pos, vector(camera->pan, 0, 0));
+	}
+	vec_add(&cct->interact_down_pos, &cct->origin);
+}
+
 // push given forces away from the normals with the given strength
 void ent_foot_push(VECTOR *force, VECTOR *surf_normal, var strength){
 	

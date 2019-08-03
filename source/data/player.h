@@ -4,10 +4,10 @@
 	// This is header of player's structure, it contains all the stuff needed for player
 	//
 	// This header also includes such headers as
-	// - player_weapons.h (all functions used for player's weapon system)
-	// - player_camera.h (all functions used for player's camera)
-	// - player_state_machine.h (all functions used to setup player's state machine)
-	// - player_behaviour.h (all functions needed for player action)
+	// - player_weapons.h (includes everything used for player's weapon system)
+	// - player_camera.h (includes everything used for player's camera)
+	// - player_state_machine.h (includes everything used to setup player's state machine)
+	// - player_behaviour.h (everything needed for player action)
 	
 	// camera modes
 	#define FIRST_PERSON 0

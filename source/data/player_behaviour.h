@@ -16,5 +16,8 @@
 	// handles all stuff related to after death life
 	void player_dead();
 	
+	// handle all player's interactions
+	void player_interact(CCT *cct);
+	
 	#include "player_behaviour.c"
 #endif

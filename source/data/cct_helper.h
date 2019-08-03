@@ -3,6 +3,12 @@
 	
 	// Helper functions used for cct
 	
+	// handle interaction traces
+	void ent_interact(ENTITY *ent, CCT *cct);
+	
+	// update interaction trace positions
+	void ent_interact_trace_pos(ENTITY *ent, CCT *cct);
+
 	// push given forces away from the normals with the given strength
 	void ent_foot_push(VECTOR *force, VECTOR *surf_normal, var strength);
 	

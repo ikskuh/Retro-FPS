@@ -131,14 +131,21 @@ void ent_detect_water_state(ENTITY *ent, CCT *cct){
 	}
 	
 	// handle water sounds
-	ent_water_sounds(ent, cct);
+	ent_water_interaction_sounds(ent, cct);
 	
-	// handle breathing underwater
-	ent_air_underwater(ent, cct);
+	// handle underwater air (breathing), only if we are alive
+	if(ent->obj_health > 0){
+		
+		// handle breathing underwater
+		ent_air_underwater(ent, cct);
+	}
 }
 
 // handle sounds when player get in or out of the water
-void ent_water_sounds(ENTITY *ent, CCT *cct){
+void ent_water_interaction_sounds(ENTITY *ent, CCT *cct){
+	
+	// handle surfacing sounds
+	ent_water_surface_sound(ent, cct);
 	
 	// if we are swimming
 	if(cct->water_state >= IN_WATER){
@@ -213,6 +220,31 @@ void ent_water_sounds(ENTITY *ent, CCT *cct){
 			cct->water_out_switch = true;
 		}
 	}	
+}
+
+// handle water sounds, when entity is surfacing
+void ent_water_surface_sound(ENTITY *ent, CCT *cct){
+	
+	if(cct->water_z_is_moving == true && cct->water_state == HEAD_IN_WATER){
+		
+		if(cct->water_z_snd_switch == 0 && cct->swim_z_abs_dist > 0){
+			
+			var rnd = integer(random(2));
+			if(ent->obj_type == TYPE_PLAYER){
+				
+				if(rnd == 0){ snd_play(player_swim_01_ogg, player_snd_volume, 0); }
+				if(rnd == 1){ snd_play(player_swim_02_ogg, player_snd_volume, 0); }
+			}
+			else{
+				
+			}
+			
+			cct->water_z_snd_switch = 1;
+		}
+		
+		if(cct->swim_z_abs_dist < 0 && cct->water_z_snd_switch == 1){ cct->water_z_snd_switch = 0; }
+	}
+	else{ cct->water_z_snd_switch = 0; }
 }
 
 // handle breathing underwater, and if out of air, then take damage

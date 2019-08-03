@@ -71,8 +71,13 @@ void pipeline_adjust(){
 	pp_mtl_adjust->skill3 = floatd(pp_sepia, 100);
 	pp_mtl_adjust->skill4 = floatd(pp_darken, 100);
 	pp_mtl_adjust->skill5 = floatd(pp_contrast, 100);
-	
 	pp_mtl_sharpen->skill1 = floatv(pp_sharpen_strength);
+	
+	mtl_world->skill1 = floatv(mtl_brightness);
+	mtl_object->skill1 = floatv(mtl_brightness);
+	mtl_fade->skill1 = floatv(mtl_brightness);
+	mtl_translucent->skill1 = floatv(mtl_brightness);
+	mtl_anim_sprite->skill1 = floatv(mtl_brightness);
 }
 
 void pipeline_start(){

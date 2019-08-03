@@ -16,7 +16,10 @@
 	void ent_detect_water_state(ENTITY *ent, CCT *cct);
 	
 	// handle sounds when player get in or out of the water
-	void ent_water_sounds(ENTITY *ent, CCT *cct);
+	void ent_water_interaction_sounds(ENTITY *ent, CCT *cct);
+	
+	// handle water sounds, when entity is surfacing
+	void ent_water_surface_sound(ENTITY *ent, CCT *cct);
 	
 	// handle breathing underwater, and if out of air, then take damage
 	void ent_air_underwater(ENTITY *ent, CCT *cct);

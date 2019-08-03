@@ -84,6 +84,10 @@ function ent_fall_damage(CCT *cct){
 // taking damage from landing etc
 void ent_landed(ENTITY *ent, CCT *cct){
 	
+	// only if entity is alive
+	if(ent->obj_health <= 0){ return; }
+	
+	// landed ?
 	if(cct->falling_timer > cct->land_timer_limit){
 		
 		// if we need to take damage from falling
@@ -101,6 +105,15 @@ void ent_landed(ENTITY *ent, CCT *cct){
 		}
 		
 		cct->land_timer = minv(cct->falling_timer * 6, 12);
+	}
+	
+	// player hit the ceiling ?
+	if(ent->obj_type == TYPE_PLAYER && cct->falling_timer > 1 && cct->is_hit_ceiling == true){
+		
+		if(snd_playing(ent->obj_snd_handle)){ snd_stop(ent->obj_snd_handle); }
+		ent->obj_snd_handle = snd_play(player_land_ogg, player_snd_volume, 0);
+		
+		cct->land_timer = minv(cct->falling_timer * 3, 6);
 	}
 }
 
@@ -158,7 +171,7 @@ void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct){
 		c_move(ent, nullvector, vector(0, 0, cct->soil_height - ent->z), MOVE_FLAGS | IGNORE_YOU | GLIDE);
 		cct->is_grounded = true;
 		cct->force.z = 0;
-		cct->jump_out_of_water = false;		
+		cct->jump_out_of_water = false;
 	}
 	
 	if(cct->is_grounded == true || cct->jump_out_of_water == true){
@@ -183,7 +196,11 @@ void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct){
 		
 		// hit the ceiling ?
 		// then disable jumping forces !
-		if(HIT_TARGET && normal.z < -0.5){ cct->force.z = minv(cct->force.z, 0); }
+		if(HIT_TARGET && normal.z < -0.5){
+			
+			cct->is_hit_ceiling = true;
+			cct->force.z = minv(cct->force.z, 0);
+		}
 	}
 }
 
@@ -271,12 +288,12 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct){
 	if(cct->water_z_distance > 0){
 		
 		cct->water_z_speed = cct->water_z_distance / time_step;
-		cct->water_z_is_moving = 1;	
+		cct->water_z_is_moving = true;
 	}
 	else{
 		
 		cct->water_z_speed = 0;
-		cct->water_z_is_moving = 0;
+		cct->water_z_is_moving = false;
 	}
 	
 	// help us to surface (if we are alive)
@@ -319,8 +336,9 @@ void ent_horizontal_movement_on_foot(ENTITY *ent, CCT *cct){
 		// landed on ground
 		ent_landed(ent, cct);
 		
-		// reset falling time
+		// reset falling time and celling hit
 		cct->falling_timer = 0;
+		cct->is_hit_ceiling = false;
 		
 		// ground friction
 		cct->friction = cct_gnd_fric;
@@ -505,6 +523,9 @@ void ent_movement(ENTITY *ent, CCT *cct){
 			// x-y movement
 			ent_horizontal_movement_on_foot(ent, cct);
 		}
+		
+		// update interaction traces
+		ent_interact_trace_pos(ent, cct);
 	}
 	
 	// reset landing timer
@@ -570,6 +591,8 @@ void ent_stop_movement(CCT *cct){
 	cct->straif_right = 0;
 	cct->jump = 0;
 	cct->run = 0;
+	cct->dive = 0;
+	cct->interact = 0;
 	
 	cct->swim_z_force = 0;
 	cct->swim_z_speed = 0;

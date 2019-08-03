@@ -61,6 +61,17 @@ void player_dead(){
 	my->event = NULL;
 }
 
+// handle all player's interactions
+void player_interact(CCT *cct){
+	
+	// when alive
+	if(my->obj_health > 0){
+		
+		// handle interaction traces
+		ent_interact(my, cct);
+	}
+}
+
 // main player's action, this one is used in WED
 action player_controller(){
 
@@ -119,6 +130,7 @@ action player_controller(){
 				cct->run = key_shift;
 				cct->jump = key_space;
 				cct->dive = (key_ctrl || key_c);
+				cct->interact = (key_e || mouse_right);
 			}
 			else{
 				
@@ -155,6 +167,9 @@ action player_controller(){
 		
 		// attach and update camera
 		camera_update(my, cct);
+		
+		// interact with the world
+		player_interact(cct);
 		
 		wait(1);
 	}

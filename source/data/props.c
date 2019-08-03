@@ -1,23 +1,57 @@
 
-// water skills
-#define amplitude skill1
-#define speed skill2
-#define modulation skill3
+// register and initializes new props (f.e. doors, platforms, elevators)
+// and save it's pointer into given entity's obj_struct skill
+PROPS *register_props(ENTITY *ent){
+	
+	if(!ent){
+		
+		diag("\nERROR! Can't register PROPS, given entity doesn't exist");
+		return;
+	}
+	
+	PROPS *props = sys_malloc(sizeof(PROPS));
+	init_props(props);
+	
+	ent->obj_struct = props;
+	return props;
+}
 
-// action for visual water plane
-// uses: amplitude, speed, modulation
-action props_toxic_water(){
+// initialize all major variables for the given props
+// this function called inside of register_props right after creating new props
+void init_props(PROPS *props){
 	
-	set(my, PASSABLE | NOFILTER);
-	reset(my, DYNAMIC);
-	my->ambient = 100;
+	if(!props){
+		
+		diag("\nERROR! Can't init PROPS, because it doesn't exist");
+		return;
+	}
 	
-	if(my->amplitude == 0){ my->amplitude = 1000; }
-	if(my->speed == 0){ my->speed = 25; }
-	if(my->modulation == 0){ my->modulation = 300; }
 	
-	my->material = mtl_water;
-	my->skill41 = floatv(my->amplitude);	
-	my->skill42 = floatv(my->speed);
-	my->skill43 = floatv(my->modulation);
+}
+
+// returns pointer of the props from given entity's obj_struct skill
+PROPS *get_props(ENTITY *ent){
+	
+	if(!ent){
+		
+		diag("\nERROR! Can't get PROPS, given entity doesn't exist");
+		return;
+	}
+	
+	PROPS *props = ent->obj_struct;
+	return props;
+}
+
+// removes props from the memory
+// pointer is taken from given entity's obj_struct skill
+void delete_props(ENTITY *ent){
+	
+	PROPS *props = get_props(ent);
+	sys_free(props);
+}
+
+// remove given props from the memory
+void delete_props(PROPS *props){
+	
+	sys_free(props);
 }
