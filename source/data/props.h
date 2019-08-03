@@ -4,9 +4,13 @@
 	// This header handles everything related to level props
 	//
 	// This header also includes such headers as
+	// - props_helper.h (helper functions for all props)
 	// - props_liquid.h (everything needed for water, lava etc)
 	// - props_switch.h (everything needed for creating switches)
+	// - props_trigger.h (everything needed for creating trigger zones)
 	// - props_elevator.h (everything needed for elevators)
+	// - props_door.h (everything needed for doors)
+	// - props_loop.h (update all props in one loop)
 	
 	// skills used by all props
 	#define id skill1
@@ -14,16 +18,27 @@
 	#define offset_y_ skill3
 	#define offset_z_ skill4
 	
-	#define once FLAG3
-	#define switch FLAG4
-	#define red_key FLAG5
-	#define yellow_key FLAG6
-	#define blue_key FLAG7
+	#define use_once FLAG3
+	#define use_switch_id FLAG4
+	#define use_trigger FLAG5
+	#define red_key FLAG6
+	#define yellow_key FLAG7
+	#define blue_key FLAG8
+	
+	// states
+	#define IDLE 0
+	#define OPEN 1
+	#define CLOSE 2
+	#define DELAY 3
 	
 	// props main structure
 	typedef struct {
 		
-		var delay;
+		VECTOR diff;
+		VECTOR origin;
+		var movement_speed;
+		var delay_time;
+		var old_state;
 		
 	} PROPS;
 	
@@ -33,7 +48,7 @@
 	
 	// initialize all major variables for the given props
 	// this function called inside of register_props right after creating new props
-	void init_props(PROPS *props);
+	void init_props(ENTITY *ent, PROPS *props);
 	
 	// returns pointer of the props from given entity's obj_struct skill
 	PROPS *get_props(ENTITY *ent);
@@ -46,7 +61,12 @@
 	void delete_props(PROPS *props);
 	
 	#include "props.c"
+	#include "props_helper.h"
 	#include "props_liquid.h"
 	#include "props_switch.h"
+	#include "props_trigger.h"
 	#include "props_elevator.h"
+	#include "props_door.h"
+	
+	#include "props_loop.h"
 #endif

@@ -9,13 +9,6 @@
 	// update interaction trace positions
 	void ent_interact_trace_pos(ENTITY *ent, CCT *cct);
 
-	// push given forces away from the normals with the given strength
-	void ent_foot_push(VECTOR *force, VECTOR *surf_normal, var strength);
-	
-	// used to push entity away from the normals
-	// in order to prevent it's auto climbing bullshit (caused by ellipsoid hull)
-	void ent_foot_push_from_normals(ENTITY *ent, CCT *cct, VECTOR *hit_pos, VECTOR *surf_normal);
-	
 	// function used for stopping movement (velocity, speed, forces etc)
 	void ent_foot_stop_velocity(var is_x, ENTITY *ent, CCT *cct, VECTOR *hit_pos);
 	

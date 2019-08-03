@@ -498,7 +498,8 @@ void ent_horizontal_movement_in_water(ENTITY *ent, CCT *cct){
 void ent_movement(ENTITY *ent, CCT *cct){
 	
 	// allowed to move?
-	if(ent->obj_allow_move == 1){
+	// if cct was smashed, then there is nothing left to apply physics to :D
+	if(ent->obj_allow_move == 1 && ent->obj_death_type != TYPE_SMASHED){
 		
 		// if we are swimming
 		if(cct->water_state >= IN_WATER){
@@ -577,7 +578,6 @@ void ent_stop_movement(CCT *cct){
 	vec_fill(&cct->abs_force, 0);
 	vec_fill(&cct->dist, 0);
 	vec_fill(&cct->abs_dist, 0);
-	vec_fill(&cct->speed, 0);
 	vec_fill(&cct->velocity, 0);
 	vec_fill(&cct->push_force, 0);
 

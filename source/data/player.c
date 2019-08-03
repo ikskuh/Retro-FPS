@@ -29,6 +29,8 @@ void init_player_struct(ENTITY *ent, PLAYER *temp){
 	vec_set(&temp->cam->position, &ent->x);
 	vec_set(&camera->x, &ent->x);
 	vec_set(&temp->cam->angle, &ent->pan);
+	vec_set(&camera->pan, vector(ent->pan, 0, 0));
+	ent->pan = 0;
 	temp->cam->height = 10;
 	temp->cam->fov = 90;
 	temp->cam->third_person_dist = -128;

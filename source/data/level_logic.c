@@ -54,6 +54,9 @@ void level_load_(){
 	set_level_settings();
 	game_level_is_loaded = true;
 	
+	// update props
+	props_update();
+	
 	set(camera, SHOW);
 }
 

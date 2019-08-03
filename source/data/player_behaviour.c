@@ -39,6 +39,26 @@ void player_event(){
 	
 	if(event_type == EVENT_PUSH){
 		
+		// smashed by props ?
+		if(you->obj_type == TYPE_ELEVATOR || you->obj_type == TYPE_DOOR){
+			
+			// get props structure
+			PROPS *props = get_props(you);
+			
+			// get player's cct structure
+			CCT *cct = get_cct(my);
+			
+			// push us away
+			vec_set(&cct->push_force, vector(props->diff.x, props->diff.y, 0));
+			
+			// if we can perform check ?
+			// means that door is almost closed (f.e.)
+			if(you->obj_check == true){
+				
+				// perform check (if player is smashed or not)
+				props_vs_npc_check(you, my, my->scale_x);
+			}
+		}
 	}
 	
 	if(event_type == EVENT_SHOOT){
@@ -75,9 +95,10 @@ void player_interact(CCT *cct){
 // main player's action, this one is used in WED
 action player_controller(){
 
-	CCT *cct = register_cct(my);
 	register_player_struct(my);
+	CCT *cct = register_cct(my);
 	
+	set(my, TRANSLUCENT);
 	c_setminmax(my);
 	my->max_z = cct->bbox_z;
 	my->min_z = -0.1;
@@ -86,6 +107,7 @@ action player_controller(){
 	my->obj_armor = 0;
 	my->obj_type = TYPE_PLAYER;
 	my->obj_allow_move = true;
+	my->obj_timer = 1; // 1 second delay, before retry
 	
 	my->group = PLAYER_GROUP;
 	my->push = PLAYER_GROUP;
@@ -144,8 +166,11 @@ action player_controller(){
 			// f.e. disable lightrange, stop sounds etc
 			player_dead();
 			
+			// count down
+			my->obj_timer -= time_frame / 16;
+			
 			// allow to reset level, as soon as movement has stoped and camera has lowered
-			if(mouse_left && hero->cam->height <= -13){
+			if(mouse_left && my->obj_timer <= 0){
 				
 				// make sure that it's intentional
 				my->obj_state = -1;

@@ -44,9 +44,11 @@
 	#define TYPE_PLAYER 1
 	#define TYPE_NPC 2
 	#define TYPE_SWITCH 3
-	#define TYPE_ELEVATOR 4
-	#define TYPE_PLATFORM 5
-	#define TYPE_DOOR 6
+	#define TYPE_TRIGGER_ZONE 4
+	#define TYPE_ELEVATOR 5
+	#define TYPE_PLATFORM 6
+	#define TYPE_DOOR 7
+	#define TYPE_SECRET 8
 	
 	#define obj_health skill45
 	#define obj_armor skill46
@@ -65,6 +67,14 @@
 	
 	#define obj_snd_handle skill52
 	#define obj_water_height skill53
+	#define obj_timer skill54
+	#define obj_check skill55
+	
+	// trace/scan states
+	#define obj_c_indicator skill56
+	#define NONE 0
+	#define INTERACT 1
+	#define SHOOT 2
 	
 	// water region
 	STRING *reg_water_str = "water_reg";
@@ -74,8 +84,24 @@
 	var game_level_is_loaded = false; // true - if level is loaded, otherwise - false
 	var game_ticks = 0; // alternative to native total_ticks
 	
-	// cct and player's stuff
+	// bboxes for checks
+	var biggest_bbox_x_side = 16; // consider this as a bixest bbox X size (16+16=32)
+	var biggest_bbox_y_side = 16; // same as above, but for Y
+	var biggest_bbox_z_side = 32; // same as above, but for Z
+	
+	// cct stuff
 	var cct_snd_volume = 450;
+	
+	// player's stuff
+	var player_has_red_key = false;
+	var player_has_yellow_key = false;
+	var player_has_blue_key = false;
 	var player_snd_volume = 50;
+	
+	// props stuff
+	var props_switch_snd_volume = 450;
+	var props_elevator_snd_volume = 450;
+	var props_elevator_snd_loop_volume = 150;
+	var props_door_snd_volume = 450;
 	
 #endif

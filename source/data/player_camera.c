@@ -93,9 +93,13 @@ void camera_update(ENTITY *ent, CCT *cct){
 	}
 	else{
 		
-		// lower camera and tilt it a little bit upwards
-		hero->cam->height -= (hero->cam->height - (-14)) * 0.5 * time_step;
-		hero->cam->angle.tilt -= (hero->cam->angle.tilt - 5) * 0.5 * time_step;				
+		// if we aren't smashed ?
+		if(ent->obj_death_type != TYPE_SMASHED){
+			
+			// lower camera and tilt it a little bit upwards
+			hero->cam->height -= (hero->cam->height - (-14)) * 0.5 * time_step;
+			hero->cam->angle.tilt -= (hero->cam->angle.tilt - 5) * 0.5 * time_step;				
+		}
 		
 		// reset bobbing effect
 		if(hero->cam->bob < 180){ hero->cam->bob -= (hero->cam->bob - 0) * 0.5 * time_step; }

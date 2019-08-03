@@ -11,15 +11,16 @@
 #define PRAGMA_PATH "data\\models"
 #define PRAGMA_PATH "data\\sounds"
 #define PRAGMA_PATH "data\\sounds\\player"
+#define PRAGMA_PATH "data\\sounds\\props"
 #define PRAGMA_PATH "data\\sprites"
 
 #include "defines.h"
 #include "resources.h"
 #include "particles.h"
 #include "shader_pipeline.h"
-#include "level_logic.h"
-#include "props.h"
 #include "cct.h"
+#include "props.h"
+#include "level_logic.h"
 #include "player.h"
 
 void on_ent_remove_event(ENTITY *ent){
@@ -28,6 +29,11 @@ void on_ent_remove_event(ENTITY *ent){
 		
 		delete_cct(ent);
 		delete_player_struct(ent);
+	}
+	
+	if(ent->obj_type == TYPE_ELEVATOR || ent->obj_type == TYPE_DOOR){
+		
+		delete_props(ent);
 	}
 }
 

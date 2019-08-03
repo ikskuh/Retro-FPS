@@ -2,13 +2,20 @@
 // handle interaction traces
 void ent_interact(ENTITY *ent, CCT *cct){
 	
+	VECTOR start_pos;
+	vec_set(&start_pos, &cct->origin);
+	if(ent->obj_type == TYPE_PLAYER){
+		
+		vec_set(&start_pos, &camera->x);
+	}
+	
 	// pressed interaction button ?
 	if(cct->interact == true && cct->interact_switch == 0){
 		
 		// make sure to note that this is an interaction trace
-		cct->c_indicator = INTERACT;
+		ent->obj_c_indicator = INTERACT;
 		c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
-		c_trace(&cct->origin, &cct->interact_front_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
+		c_trace(&start_pos, &cct->interact_front_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
 		cct->interact_hit_front = false;
 		
 		if(HIT_TARGET){
@@ -26,9 +33,9 @@ void ent_interact(ENTITY *ent, CCT *cct){
 		if(cct->interact_hit_front == false){
 			
 			// make sure to note that this is an interaction trace
-			cct->c_indicator = INTERACT;
+			ent->obj_c_indicator = INTERACT;
 			c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
-			c_trace(&cct->origin, &cct->interact_down_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
+			c_trace(&start_pos, &cct->interact_down_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
 		}
 		
 		cct->interact_switch = 1;
@@ -41,47 +48,22 @@ void ent_interact_trace_pos(ENTITY *ent, CCT *cct){
 	
 	// front trace end position
 	vec_set(&cct->interact_front_pos, vector(cct_interact_distance, 0, 0));
-	vec_rotate(&cct->interact_front_pos, vector(ent->pan, 0, 0));
 	
 	if(ent->obj_type == TYPE_PLAYER){
 		
 		vec_rotate(&cct->interact_front_pos, &camera->pan);
+		vec_add(&cct->interact_front_pos, &camera->x);
 	}
-	vec_add(&cct->interact_front_pos, &cct->origin);
+	else{
+		
+		vec_rotate(&cct->interact_front_pos, vector(ent->pan, 0, 0));
+		vec_add(&cct->interact_front_pos, &cct->origin);
+	}
 	
 	// down trace end position
 	vec_set(&cct->interact_down_pos, vector(0, 0, -cct_interact_distance));
 	vec_rotate(&cct->interact_down_pos, vector(ent->pan, 0, 0));
-	
-	if(ent->obj_type == TYPE_PLAYER){
-		
-		vec_rotate(&cct->interact_down_pos, vector(camera->pan, 0, 0));
-	}
 	vec_add(&cct->interact_down_pos, &cct->origin);
-}
-
-// push given forces away from the normals with the given strength
-void ent_foot_push(VECTOR *force, VECTOR *surf_normal, var strength){
-	
-	force->x += surf_normal->x * (strength - vec_dot(&surf_normal->x, &force->x)) * time_step;
-	force->y += surf_normal->y * (strength - vec_dot(&surf_normal->x, &force->x)) * time_step;
-}
-
-// used to push entity away from the normals
-// in order to prevent it's auto climbing bullshit (caused by ellipsoid hull)
-void ent_foot_push_from_normals(ENTITY *ent, CCT *cct, VECTOR *hit_pos, VECTOR *surf_normal){
-	
-	var strength = 1;
-	var ent_to_hit_distance = vec_dist(vector(ent->x, ent->y, 0), vector(hit_pos->x, hit_pos->y, 0));
-	var ent_bbox_size = ent->max_x;
-	
-	if(ent_to_hit_distance < ent_bbox_size && cct->is_grounded == false){
-		
-		ent_foot_push(&cct->force, surf_normal, strength);
-		ent_foot_push(&cct->speed, surf_normal, strength);
-		ent_foot_push(&cct->dist, surf_normal, strength);
-		ent_foot_push(&cct->push_force, surf_normal, strength);	
-	}
 }
 
 // function used for stopping movement (velocity, speed, forces etc)
@@ -92,14 +74,14 @@ void ent_foot_stop_velocity(var is_x, ENTITY *ent, CCT *cct, VECTOR *hit_pos){
 		if(hit_pos->x < ent->x){
 			
 			cct->force.x = maxv(cct->force.x, 0);
-			cct->speed.x = maxv(cct->speed.x, 0);
+			cct->velocity.x = maxv(cct->velocity.x, 0);
 			cct->dist.x = maxv(cct->dist.x, 0);
 			cct->push_force.x = maxv(cct->push_force.x, 0);
 		}
 		else{
 			
 			cct->force.x = minv(cct->force.x, 0);
-			cct->speed.x = minv(cct->speed.x, 0);
+			cct->velocity.x = minv(cct->velocity.x, 0);
 			cct->dist.x = minv(cct->dist.x, 0);
 			cct->push_force.x = minv(cct->push_force.x, 0);
 		}
@@ -110,14 +92,14 @@ void ent_foot_stop_velocity(var is_x, ENTITY *ent, CCT *cct, VECTOR *hit_pos){
 		if(hit_pos->y < ent->y){
 			
 			cct->force.y = maxv(cct->force.y, 0);
-			cct->speed.y = maxv(cct->speed.y, 0);
+			cct->velocity.y = maxv(cct->velocity.y, 0);
 			cct->dist.y = maxv(cct->dist.y, 0);
 			cct->push_force.y = maxv(cct->push_force.y, 0);
 		}
 		else{
 			
 			cct->force.y = minv(cct->force.y, 0);
-			cct->speed.y = minv(cct->speed.y, 0);
+			cct->velocity.y = minv(cct->velocity.y, 0);
 			cct->dist.y = minv(cct->dist.y, 0);
 			cct->push_force.y = minv(cct->push_force.y, 0);
 		}
@@ -152,7 +134,6 @@ void ent_foot_check(ENTITY *ent, CCT *cct){
 	if(HIT_TARGET && abs(normal.z) < cct_slope_fac && (hit->z - (ent->z + ent->min_z)) > cct->foot_step_height){
 		
 		ent_foot_stop_velocity(true, ent, cct, &hit->x);
-		ent_foot_push_from_normals(ent, cct, &target, &normal);
 	}
 	
 	// y coordinates
@@ -165,7 +146,6 @@ void ent_foot_check(ENTITY *ent, CCT *cct){
 	if(HIT_TARGET && abs(normal.z) < cct_slope_fac && (hit->z - (ent->z + ent->min_z)) > cct->foot_step_height){
 		
 		ent_foot_stop_velocity(false, ent, cct, &hit->x);
-		ent_foot_push_from_normals(ent, cct, &target, &normal);
 	}
 	
 	// different step height in air and on ground

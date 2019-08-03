@@ -49,7 +49,11 @@ void ent_set_water_state(CCT *cct){
 // find surface to hop onto
 void ent_detect_water_edge(ENTITY *ent, CCT *cct){
 	
-	var trace_length = 4;
+	// only if we are in water !
+	// otherwise, player will be able to climb edges :D
+	if(cct->water_state < IN_WATER && cct_allow_cheap_edge_climb == false){ return; }
+	
+	var trace_length = cct->bbox_x;
 	
 	vec_set(&cct->water_out_trace_mid, vector(cct->bbox_x + trace_length, 0, 0));
 	
@@ -96,6 +100,9 @@ void ent_detect_water_edge(ENTITY *ent, CCT *cct){
 
 // detect if entity is inside of the water region, or not
 void ent_detect_water_state(ENTITY *ent, CCT *cct){
+	
+	// perform only if wasn't smashed !
+	if(ent->obj_death_type == TYPE_SMASHED){ return; }
 	
 	// detect water region
 	ent_detect_water(ent, cct);

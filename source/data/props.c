@@ -10,7 +10,7 @@ PROPS *register_props(ENTITY *ent){
 	}
 	
 	PROPS *props = sys_malloc(sizeof(PROPS));
-	init_props(props);
+	init_props(ent, props);
 	
 	ent->obj_struct = props;
 	return props;
@@ -18,7 +18,13 @@ PROPS *register_props(ENTITY *ent){
 
 // initialize all major variables for the given props
 // this function called inside of register_props right after creating new props
-void init_props(PROPS *props){
+void init_props(ENTITY *ent, PROPS *props){
+	
+	if(!ent){
+		
+		diag("\nERROR! Can't init PROPS, given entity doesn't exist");
+		return;
+	}
 	
 	if(!props){
 		
@@ -26,7 +32,9 @@ void init_props(PROPS *props){
 		return;
 	}
 	
-	
+	vec_set(&props->origin, &ent->x);
+	props->movement_speed = 5; // default speed
+	props->delay_time = 3; // 3 seconds, default time
 }
 
 // returns pointer of the props from given entity's obj_struct skill

@@ -25,4 +25,16 @@
 	SOUND *player_drown_01_ogg = "player_drown_01.ogg";
 	SOUND *player_drown_02_ogg = "player_drown_02.ogg";
 	
+	SOUND *switch_ogg = "switch.ogg";
+	SOUND *switch_next_level_ogg = "switch_next_level.ogg";
+	
+	SOUND *elevator_start_ogg = "elevator_start.ogg";
+	SOUND *elevator_stop_ogg = "elevator_stop.ogg";
+	SOUND *elevator_mid_ogg = "elevator_mid.ogg";
+	
+	SOUND *door_01_open_ogg = "door_open_01.ogg";
+	SOUND *door_01_close_ogg = "door_close_01.ogg";
+	SOUND *door_02_open_ogg = "door_open_02.ogg";
+	SOUND *door_02_close_ogg = "door_close_02.ogg";
+	
 #endif

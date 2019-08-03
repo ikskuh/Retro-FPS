@@ -20,11 +20,6 @@
 	#define IN_WATER 2
 	#define HEAD_IN_WATER 3
 	
-	// trace/scan states
-	#define NONE 0
-	#define INTERACT 1
-	#define SHOOT 2
-	
 	var cct_gravity = 4; // gravity strength
 	var cct_gravity_max = 90; // gravity strength max
 	var cct_gravity_fluid = 1; // gravity strength in fluid
@@ -46,6 +41,8 @@
 	
 	var cct_interact_distance = 64; // interaction distance (both front and downwards)
 	
+	var cct_allow_cheap_edge_climb = false; // if true, player will be able to climb edges :D
+	
 	// cct main structure
 	typedef struct {
 		
@@ -55,7 +52,6 @@
 		VECTOR dist;
 		VECTOR abs_dist;
 		
-		VECTOR speed;
 		VECTOR velocity;
 		VECTOR push_force;
 		
@@ -143,9 +139,7 @@
 		var is_moving;
 		
 		var interact_switch;
-		var interact_hit_front;
-		var c_indicator;
-		
+		var interact_hit_front;		
 	} CCT;
 	
 	// register and initializes new cct (character controller)
