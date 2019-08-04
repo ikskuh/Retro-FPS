@@ -14,7 +14,7 @@
 	void player_event();
 	
 	// handles all stuff related to after death life
-	void player_dead();
+	void player_dead(ENTITY * ent);
 	
 	// handle all player's interactions
 	void player_interact(ENTITY * me, CCT *cct);

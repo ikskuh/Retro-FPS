@@ -87,14 +87,14 @@ void player_event(){
 }
 
 // handles all stuff related to after death life
-void player_dead(){
+void player_dead(ENTITY * ent){
 	
 	// reset lightrange
-	my->lightrange = 0;
+	ent->lightrange = 0;
 	
 	// no events from here on
-	my->emask &= ~(ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);
-	my->event = NULL;
+	ent->emask &= ~(ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);
+	ent->event = NULL;
 }
 
 // handle all player's interactions
@@ -160,7 +160,7 @@ void player_update(ENTITY * ent)
 		
 		// handle all stuff related to death
 		// f.e. disable lightrange, stop sounds etc
-		player_dead();
+		player_dead(ent);
 		
 		// count down
 		ent->obj_timer -= time_frame / 16;

@@ -1,11 +1,17 @@
 #ifndef _DEFINES_H_
 	#define _DEFINES_H_
 	
+	#include <acknex.h>
+
+	#define ASSERT(_X) _assert(_X, "assertion failed!")
+	void _assert(int v, char const * msg);
+
 	// macros
 	#define math_round(num) return(floor(num + 0.5));
 	#define math_check_divide(value, divide) return(integer(divide * math_round( value / divide )))
 	#define ent_delete(ent) ptr_remove(ent); ent = NULL
 	
+	typedef int bool;
 	#define false 0
 	#define true 1
 
@@ -79,7 +85,17 @@
 	#define NONE 0
 	#define INTERACT 1
 	#define SHOOT 2
-	
+
+	#define OBJ_FLAGS skill57 // custom flags for "more than 8"
+	#define OBJ_IS_INTERACTIBLE 1 // the player can interact with this
+	#define OBJ_HAD_INTERACTION 2 // the player interacted with this object
+	#define OBJ_ENABLED         4 // generic object enabled state (used in e.g. switch)
+
+	#define OBJ_NEXT_INTERACTION skill58 // stores total_ticks of next possible interaction time
+	#define OBJ_INTERACTION_SOURCE skill59 // stores handle to the last interactor
+
+	#define OBJ_SWITCH_TIMEOUT skill60 // stores total_ticks of the next event happening or -1 if none
+
 	// list of strings, containing each level's name
 	STRING *level_str[MAX_LEVELS];
 	

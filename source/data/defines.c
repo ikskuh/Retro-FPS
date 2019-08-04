@@ -1,5 +1,16 @@
+#include "defines.h"
+#include <windows.h>
 
-// checks if given cct is inside of the given entity
+void _assert(int v, char const * msg)
+{
+	if(v) // assertion met
+		return;
+	error(msg);
+	ExitProcess(1); // and fast exit
+}
+
+
+// checks if given cct is inside of the given  entity
 // returns true if true, else if not
 var is_cct_in_rect(ENTITY *cct, ENTITY *rect, var scale){
 	

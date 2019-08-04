@@ -1,4 +1,6 @@
 
+#include "interaction.h"
+
 // handle interaction traces
 void ent_interact(ENTITY *ent, CCT *cct){
 	
@@ -13,20 +15,16 @@ void ent_interact(ENTITY *ent, CCT *cct){
 	// pressed interaction button ?
 	if(cct->interact == true && cct->interact_switch == 0){
 		
-		me = ent; // events require `you` to be set, so we have to set `me` before tracing!
-
 		// make sure to note that this is an interaction trace
 		ent->obj_c_indicator = INTERACT;
 		c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
-		c_trace(&start_pos, &cct->interact_front_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
+		c_trace(&start_pos, &cct->interact_front_pos, TRACE_FLAGS);
 		cct->interact_hit_front = false;
 		
 		if(HIT_TARGET){
-			
 			if(you != NULL){
-				
-				// we've detected a switch, elevator, platform or a door ?
-				if(you->obj_type == TYPE_SWITCH || you->obj_type == TYPE_ELEVATOR || you->obj_type == TYPE_PLATFORM || you->obj_type == TYPE_DOOR){
+				if(interaction_is_enabled(you)) {
+					interaction_do(you, ent);
 					cct->interact_hit_front = true;
 				}
 			}
@@ -38,10 +36,15 @@ void ent_interact(ENTITY *ent, CCT *cct){
 			// make sure to note that this is an interaction trace
 			ent->obj_c_indicator = INTERACT;
 			c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
-			c_trace(&start_pos, &cct->interact_down_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
+			c_trace(&start_pos, &cct->interact_down_pos, TRACE_FLAGS);
+			if(HIT_TARGET) {
+				if(you != NULL) {
+					if(interaction_is_enabled(you)) {
+						interaction_do(you, ent);
+					}
+				}
+			}
 		}
-
-		me = NULL; // fixup
 		
 		cct->interact_switch = 1;
 	}
