@@ -16,9 +16,5 @@
 	// it's used as a workaround for aweful ellipsoid hull that OBB uses in Acknex
 	void ent_foot_check(ENTITY *ent, CCT *cct);
 	
-	// checks if given cct is inside of the given entity
-	// returns true if true, else if not
-	var is_cct_in_rect(ENTITY *cct, ENTITY *rect, var scale);
-
 	#include "cct_helper.c"
 #endif

@@ -18,8 +18,8 @@
 #include "resources.h"
 #include "particles.h"
 #include "shader_pipeline.h"
-#include "cct.h"
 #include "props.h"
+#include "cct.h"
 #include "level_logic.h"
 #include "player.h"
 

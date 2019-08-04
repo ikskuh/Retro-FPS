@@ -124,6 +124,9 @@ action player_controller(){
 		if(key_q){ my->obj_health = -1; }
 		DEBUG_VAR(my->obj_health, 10);
 		DEBUG_VAR(cct->air_underwater, 30);
+		DEBUG_VAR(cct->falling_timer, 50);
+		DEBUG_VAR(cct->soil_contact, 70);
+		DEBUG_VAR(cct->is_grounded, 90);
 		
 		// update our health, armor etc
 		// used globally - f.e. for gui
@@ -136,7 +139,7 @@ action player_controller(){
 		ent_gravity_trace(my, cct);
 		
 		// shake camera, if we are on moving props
-		if(cct->ground_info == MOVING){ /*cam_explo_power = 0.35;*/ }
+		if(cct->ground_info == MOVING){ hero->cam->explo_power = 0.35; }
 		
 		// alive?
 		if(my->obj_health > 0){

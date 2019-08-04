@@ -104,4 +104,9 @@
 	var props_elevator_snd_loop_volume = 150;
 	var props_door_snd_volume = 450;
 	
+	// checks if given cct is inside of the given entity
+	// returns true if true, else if not
+	var is_cct_in_rect(ENTITY *cct, ENTITY *rect, var scale);
+
+	#include "defines.c"
 #endif

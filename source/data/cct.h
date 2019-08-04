@@ -68,6 +68,8 @@
 		VECTOR interact_front_pos;
 		VECTOR interact_down_pos;
 		
+		VECTOR bbox_min_vec;
+		
 		var bbox_x;
 		var bbox_y;
 		var bbox_z;
@@ -78,7 +80,9 @@
 		var foot_check_length;
 		var foot_step_height;
 		var soil_height;
+		var soil_contact;
 		var soil_allow_sliding;
+		var height_to_ground;
 		var is_grounded;
 		var is_hit_ceiling;
 		

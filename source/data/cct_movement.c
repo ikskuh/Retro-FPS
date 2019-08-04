@@ -28,6 +28,8 @@ void ent_gravity_trace(ENTITY *ent, CCT *cct){
 	
 	cct->ground_info = SOLID;
 	
+	vec_for_min(&cct->bbox_min_vec, ent);
+	
 	if(HIT_TARGET){
 		
 		vec_set(&target_vec, &target);
@@ -48,30 +50,26 @@ void ent_gravity_trace(ENTITY *ent, CCT *cct){
 			if(your->obj_move_npc == true){
 				
 				// then add it's XY speed to our movement
-				// TODO !
-				// here we need to get structure of YOU entity
-				// then we need to take it's velocity and add it to our
-				// surface speed !
-				// cct->surface_speed.x = your->speed_x;
-				// cct->surface_speed.y = your->speed_y;
+				PROPS *props = get_props(you);
+				cct->surface_speed.x = props->diff.x;
+				cct->surface_speed.y = props->diff.y;
 				// Z speed is not necessary - this is done by the height adaption
 			}
 			
 			if(your->obj_type == TYPE_ELEVATOR || your->obj_type == TYPE_PLATFORM){
 				
-				// TODO !
-				// here we need to get structure of YOU entity
-				// then we need to get it's current state and if it's MOVING
-				// then we need to set our ground info to MOVING as well
-				// this could be used f.e. to shake player's camera
-				/*if(your->obj_state == 1 || your->obj_state == 2){
-					cct->ground_info = MOVING;
-				}*/
+				PROPS *props = get_props(you);
+				if(you->obj_state == OPEN || you->obj_state == CLOSE){ cct->ground_info = MOVING; }
 			}
 		}
 	}
 	
 	cct->soil_height = target_vec.z - cct->foot_height;
+	
+	cct->height_to_ground = ent->z - target_vec.z;
+	
+	cct->is_grounded = false;
+	if(cct->height_to_ground < 7){ cct->is_grounded = true; }
 }
 
 // calculate the damage from a fall and return that value:
@@ -160,16 +158,16 @@ void ent_handle_movement_speed(CCT *cct, var spd){
 // handle all gravity movement when out of the water
 void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct){
 	
-	if(ent->z > cct->soil_height + (5 + 20 * cct->is_grounded) * time_step || cct->force.z > 0){
+	if(ent->z > cct->soil_height + (5 + 20 * cct->soil_contact) * time_step || cct->force.z > 0){
 		
-		cct->is_grounded = false;
+		cct->soil_contact = false;
 		cct->force.z = maxv(cct->force.z - cct_gravity * time_step, -cct_gravity_max);
 	}
 	else{
 		
 		c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
 		c_move(ent, nullvector, vector(0, 0, cct->soil_height - ent->z), MOVE_FLAGS | IGNORE_YOU | GLIDE);
-		cct->is_grounded = true;
+		cct->soil_contact = true;
 		cct->force.z = 0;
 		cct->jump_out_of_water = false;
 	}
@@ -225,16 +223,16 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct){
 	else{
 		
 		// otherwise, we need to drown slowly
-		if(ent->z > cct->soil_height + (5 + 20 * cct->is_grounded) * time_step){
+		if(ent->z > cct->soil_height + (5 + 20 * cct->soil_contact) * time_step){
 			
-			cct->is_grounded = false;
+			cct->soil_contact = false;
 			cct->force.z = maxv(cct->force.z - cct_gravity_fluid * time_step, -cct_gravity_fluid);
 		}
 		else{
 			
 			c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
 			c_move(ent, nullvector, vector(0, 0, cct->soil_height - ent->z), MOVE_FLAGS | IGNORE_YOU | GLIDE);
-			cct->is_grounded = true;
+			cct->soil_contact = true;
 			cct->force.z = 0;		
 		}
 		
