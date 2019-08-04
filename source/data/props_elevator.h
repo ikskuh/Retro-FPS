@@ -16,6 +16,4 @@
 
 	// event function for the elevator
 	void elevator_event();
-
-	#include "props_elevator.c"
 #endif

@@ -21,6 +21,4 @@
 
   // update all player code
 	void player_update(ENTITY * ent);
-	
-	#include "player_behaviour.c"
 #endif

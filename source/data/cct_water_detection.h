@@ -23,6 +23,4 @@
 	
 	// handle breathing underwater, and if out of air, then take damage
 	void ent_air_underwater(ENTITY *ent, CCT *cct);
-
-	#include "cct_water_detection.c"
 #endif

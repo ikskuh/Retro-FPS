@@ -13,5 +13,4 @@
 	// event function for secret zone
 	void secret_zone_event();
 
-	#include "props_secret.c"
 #endif

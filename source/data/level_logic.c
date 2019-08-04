@@ -1,3 +1,4 @@
+#include "level_logic.h"
 
 // initialize all levels name (in string list)
 void set_level_names(){
@@ -54,7 +55,7 @@ void level_load_(){
 	
 	freeze_mode = true;
 	level_load(level_str[level_id]);
-	wait(3);
+	// wait(3); not necessary here!
 	freeze_mode = false;
 	
 	level_ent->group = LEVEL_GROUP;
@@ -62,9 +63,6 @@ void level_load_(){
 	
 	set_level_settings();
 	game_level_is_loaded = true;
-	
-	// update props
-	props_update();
 	
 	set(camera, SHOW);
 }

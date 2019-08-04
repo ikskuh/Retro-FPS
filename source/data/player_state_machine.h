@@ -16,6 +16,4 @@
 	
 	// handle all player's states
 	void player_handle_state_machine(ENTITY *ent, CCT *cct);
-	
-	#include "player_state_machine.c"
 #endif

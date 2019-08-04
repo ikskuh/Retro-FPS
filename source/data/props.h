@@ -67,7 +67,6 @@
 	// remove given props from the memory
 	void delete_props(PROPS *props);
 	
-	#include "props.c"
 	#include "props_helper.h"
 	#include "props_liquid.h"
 	#include "props_switch.h"
@@ -76,6 +75,4 @@
 	#include "props_elevator.h"
 	#include "props_door.h"
 	#include "props_platform.h"
-	
-	#include "props_loop.h"
 #endif

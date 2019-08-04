@@ -145,6 +145,4 @@
 	void pipeline_update();
 	
 	void pipeline_resolution();
-
-	#include "shader_pipeline.c"
 #endif

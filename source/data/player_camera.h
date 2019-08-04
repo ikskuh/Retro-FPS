@@ -17,6 +17,4 @@
 
 	// handle camera shaking effect (used for explosions and moving on platforms/elevators)
 	void camera_explosion_shake();
-	
-	#include "player_camera.c"
 #endif
