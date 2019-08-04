@@ -35,11 +35,16 @@ void interaction_do(ENTITY * ent, ENTITY * source)
   ASSERT(ent != NULL);
   ASSERT(interaction_is_enabled(ent));
 
-  if(ent->OBJ_LAST_INTERACTION > total_ticks + 16 * INTERACTION_SUPPRESSION_TIME) {
+  diag(_chr(str_printf(NULL, "\ntry interaction on %p from %p: ", ent, source)));
+
+  if(total_ticks <= ent->OBJ_NEXT_INTERACTION) {
     // suppress interaction here
+    double ticks = (double)(ent->OBJ_NEXT_INTERACTION - total_ticks);
+    diag(_chr(str_printf(NULL, "suppressed for %f ticks", ticks)));
     return;
   }
-  ent->OBJ_LAST_INTERACTION = total_ticks;
+  diag("ok.");
+  ent->OBJ_NEXT_INTERACTION = total_ticks + 16 * INTERACTION_SUPPRESSION_TIME;
   ent->OBJ_FLAGS |= OBJ_HAD_INTERACTION;
   ent->OBJ_INTERACTION_SOURCE = handle(source);
 }

@@ -15,9 +15,9 @@
 	void switch_disable_by_id(var num);
 
 	// function used to trigger props with the same id
-	void switch_trigger_props();
+	void switch_trigger_props(var prop_id);
 
 	// switch's event function
-	void switch_event();
+	void switch_update(ENTITY * ent);
 	
 #endif

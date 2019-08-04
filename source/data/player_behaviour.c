@@ -90,7 +90,7 @@ void player_event(){
 void player_dead(ENTITY * ent){
 	
 	// reset lightrange
-	menty->lightrange = 0;
+	ent->lightrange = 0;
 	
 	// no events from here on
 	ent->emask &= ~(ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);

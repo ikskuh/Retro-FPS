@@ -1,3 +1,6 @@
+#include "defines.h"
+#include "props.h"
+#include "interaction.h"
 
 // enable all switches with the given id
 void switch_enable_by_id(var num){
@@ -13,7 +16,7 @@ void switch_enable_by_id(var num){
 			// same id? then disable it
 			if(temp_ent->id == num){
 				
-				temp_ent->emask |= (ENABLE_SHOOT);
+				temp_ent->OBJ_FLAGS |= OBJ_ENABLED;
 			}
 		}
 	}
@@ -30,14 +33,15 @@ void switch_disable_by_id(var num){
 			// same id? then disable it
 			if(temp_ent->id == num){
 				
-				temp_ent->emask &= ~ENABLE_SHOOT;
+				temp_ent->OBJ_FLAGS &= ~OBJ_ENABLED;
+				// temp_ent->emask &= ~ENABLE_SHOOT;
 			}
 		}
 	}	
 }
 
 // function used to trigger props with the same id
-void switch_trigger_props(){
+void switch_trigger_props(var prop_id){
 	
 	ENTITY *temp_ent = NULL;			
 	for(temp_ent = ent_next(NULL); temp_ent; temp_ent = ent_next(temp_ent)){
@@ -46,7 +50,7 @@ void switch_trigger_props(){
 		if(temp_ent->obj_type == TYPE_ELEVATOR || temp_ent->obj_type == TYPE_PLATFORM || temp_ent->obj_type == TYPE_DOOR || temp_ent->obj_type == TYPE_SECRET_WALL){
 			
 			// not the same id OR not using switch ? ignore
-			if(temp_ent->id != my->id || !is(temp_ent, use_switch)){ continue; }
+			if(temp_ent->id != prop_id || !is(temp_ent, use_switch)){ continue; }
 			
 			// already triggered ? ignore
 			if(temp_ent->obj_state != IDLE){ continue; }
@@ -68,38 +72,7 @@ void switch_trigger_props(){
 	}
 }
 
-// switch's event function
-void switch_event(){
-	
-	if(event_type == EVENT_SHOOT){
-		
-		// only player can trigger switches ?
-		if(you->obj_type == TYPE_PLAYER){
-			
-			// not interacting with us ? then ignore !
-			if(you->obj_c_indicator != INTERACT){ return; }
-			
-			// disable all switches with the same id
-			switch_disable_by_id(my->id);
-			
-			// play switch sound
-			if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
-			my->obj_snd_handle = ent_playsound(my, switch_ogg, props_switch_snd_volume);
-			
-			// 1 second delay
-			var counter = 1;
-			while(my){
-				
-				counter -= time_frame / 16;
-				if(counter <= 0){ break; }
-				wait(1);
-			}
-			
-			// trigger props with the same id
-			switch_trigger_props();
-		}
-	}	
-}
+#define PROPS_SWITCH_NO_TIMEOUT 0
 
 // switch to trigger other props
 // uses: id, toggleable
@@ -114,7 +87,47 @@ action props_switch(){
 	my->push = SWITCH_ITEM_GROUP;
 
 	my->obj_type = TYPE_SWITCH;
-	
-	my->emask |= (ENABLE_SHOOT);
-	my->event = switch_event;
+	my->OBJ_SWITCH_TIMEOUT = PROPS_SWITCH_NO_TIMEOUT;
+
+	my->OBJ_FLAGS |= OBJ_ENABLED;
+
+	interaction_enable(my);
+}
+
+void switch_update(ENTITY * ent)
+{
+	if(interaction_was_triggered(ent))
+	{
+		if(ent->OBJ_FLAGS & OBJ_ENABLED)
+		{
+			ENTITY * source = interaction_get_source(ent);
+			
+			// only player can trigger switches ?
+			if(source->obj_type == TYPE_PLAYER)
+			{
+				// disable all switches with the same id
+				switch_disable_by_id(ent->id);
+				
+				// play switch soundd
+				if(snd_playing(ent->obj_snd_handle)){ snd_stop(ent->obj_snd_handle); }
+				ent->obj_snd_handle = ent_playsound(ent, switch_ogg, props_switch_snd_volume);
+				
+				if(ent->OBJ_SWITCH_TIMEOUT == PROPS_SWITCH_NO_TIMEOUT)
+					ent->OBJ_SWITCH_TIMEOUT = total_ticks + 16; // 1 second timeout
+			}
+		}
+	}
+
+	if(ent->OBJ_SWITCH_TIMEOUT != PROPS_SWITCH_NO_TIMEOUT)
+	{
+		if(total_ticks >= ent->OBJ_SWITCH_TIMEOUT) {
+     
+			// trigger props with the same id
+			switch_trigger_props(ent->id);
+
+			switch_enable_by_id(ent->id);
+
+			ent->OBJ_SWITCH_TIMEOUT = PROPS_SWITCH_NO_TIMEOUT;
+		}
+	}
 }

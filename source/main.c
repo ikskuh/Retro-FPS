@@ -103,6 +103,10 @@ void main_update()
 	{
 		ENTITY * ent;
 
+		FOR_ENTITY_OF_TYPE(ent, TYPE_SWITCH) {
+			switch_update(ent);
+		}
+
 		FOR_ENTITY_OF_TYPE(ent, TYPE_ELEVATOR) {
 			elevator_update(ent);
 		}

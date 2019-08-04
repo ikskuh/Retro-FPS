@@ -3,7 +3,7 @@
 	
 	#include <acknex.h>
 
-	#define ASSERT(_X) _assert(_X, #_X)
+	#define ASSERT(_X) _assert(_X, "assertion failed!")
 	void _assert(int v, char const * msg);
 
 	// macros
@@ -89,9 +89,12 @@
 	#define OBJ_FLAGS skill57 // custom flags for "more than 8"
 	#define OBJ_IS_INTERACTIBLE 1 // the player can interact with this
 	#define OBJ_HAD_INTERACTION 2 // the player interacted with this object
-	
-	#define OBJ_LAST_INTERACTION skill58 // stores total_ticks of last interaction
+	#define OBJ_ENABLED         4 // generic object enabled state (used in e.g. switch)
+
+	#define OBJ_NEXT_INTERACTION skill58 // stores total_ticks of next possible interaction time
 	#define OBJ_INTERACTION_SOURCE skill59 // stores handle to the last interactor
+
+	#define OBJ_SWITCH_TIMEOUT skill60 // stores total_ticks of the next event happening or -1 if none
 
 	// list of strings, containing each level's name
 	STRING *level_str[MAX_LEVELS];
