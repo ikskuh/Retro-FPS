@@ -17,6 +17,4 @@
 	
 	// restart level
 	void level_restart();
-
-	#include "level_logic.c"
 #endif

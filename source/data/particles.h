@@ -14,6 +14,4 @@
 
 	// bubbles particle
 	void bubbles_particle(PARTICLE *p);
-
-	#include "particles.c"
 #endif

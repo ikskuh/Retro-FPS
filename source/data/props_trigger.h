@@ -9,6 +9,4 @@
 	
 	// event function for trigger zone
 	void trigger_event();
-	
-	#include "props_trigger.c"
 #endif

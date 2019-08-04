@@ -23,5 +23,4 @@
 	// event function for platform
 	void platform_event();
 	
-	#include "props_platform.c"
 #endif

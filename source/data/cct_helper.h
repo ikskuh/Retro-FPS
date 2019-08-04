@@ -15,6 +15,4 @@
 	// perform foot check for given entity
 	// it's used as a workaround for aweful ellipsoid hull that OBB uses in Acknex
 	void ent_foot_check(ENTITY *ent, CCT *cct);
-	
-	#include "cct_helper.c"
 #endif

@@ -12,6 +12,4 @@
 
 	// check if props almost opened
 	void props_almost_opened_check(ENTITY *ent);
-
-	#include "props_helper.c"
 #endif
