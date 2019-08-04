@@ -10,17 +10,17 @@ void player_toggle_run(){
 }
 
 // handles all voice sounds made by player
-void player_sounds(CCT *cct){
+void player_sounds(ENTITY * ent, CCT *cct){
 	
-	if(my->obj_state == DEATH){
+	if(ent->obj_state == DEATH){
 		
 		// smashed ?
-		if(my->obj_death_type == TYPE_SMASHED){
+		if(ent->obj_death_type == TYPE_SMASHED){
 			
 			if(hero->death_snd_switch == 0){
 				
-				if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
-				my->obj_snd_handle = snd_play(player_smashed_ogg, player_snd_volume, 0);
+				if(snd_playing(ent->obj_snd_handle)){ snd_stop(ent->obj_snd_handle); }
+				ent->obj_snd_handle = snd_play(player_smashed_ogg, player_snd_volume, 0);
 				
 				hero->death_snd_switch = 1;
 			}
@@ -29,18 +29,18 @@ void player_sounds(CCT *cct){
 			
 			if(hero->death_snd_switch == 0){
 				
-				if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
+				if(snd_playing(ent->obj_snd_handle)){ snd_stop(ent->obj_snd_handle); }
 				var rnd = integer(random(2));
-				if(rnd == 0){ my->obj_snd_handle = snd_play(player_death_ogg, player_snd_volume, 0); }
-				if(rnd == 1){ my->obj_snd_handle = snd_play(player_x_death_ogg, player_snd_volume, 0); }
+				if(rnd == 0){ ent->obj_snd_handle = snd_play(player_death_ogg, player_snd_volume, 0); }
+				if(rnd == 1){ ent->obj_snd_handle = snd_play(player_x_death_ogg, player_snd_volume, 0); }
 				
 				hero->death_snd_switch = 1;
 			}
 			
 			if(cct->water_state >= IN_WATER && hero->death_snd_switch == 1){
 				
-				if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
-				my->obj_snd_handle = snd_play(player_death_to_water_ogg, player_snd_volume, 0);
+				if(snd_playing(ent->obj_snd_handle)){ snd_stop(ent->obj_snd_handle); }
+				ent->obj_snd_handle = snd_play(player_death_to_water_ogg, player_snd_volume, 0);
 				hero->death_snd_switch = -1;
 			}
 		}
@@ -96,47 +96,23 @@ void player_dead(){
 }
 
 // handle all player's interactions
-void player_interact(CCT *cct){
+void player_interact(ENTITY * ent, CCT *cct){
 	
 	// when alive
-	if(my->obj_health > 0){
+	if(ent->obj_health > 0){
 		
 		// handle interaction traces
-		ent_interact(my, cct);
+		ent_interact(ent, cct);
 	}
 }
 
-// main player's action, this one is used in WED
-action player_controller(){
+void player_update(ENTITY * ent)
+{
+	CCT * cct = get_cct(ent);
 
-	register_player_struct(my);
-	CCT *cct = register_cct(my);
-	
-	set(my, TRANSLUCENT);
-	c_setminmax(my);
-	my->max_z = cct->bbox_z;
-	my->min_z = -0.1;
-	
-	my->obj_health = 100;
-	my->obj_armor = 0;
-	my->obj_type = TYPE_PLAYER;
-	my->obj_allow_move = true;
-	my->obj_timer = 1; // 1 second delay, before retry
-	
-	my->group = PLAYER_GROUP;
-	my->push = PLAYER_GROUP;
-	
-	my->emask |= (ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);
-	my->event = player_event;
-	
-	on_caps = player_toggle_run;
-	on_r = level_restart;
-	
-	while(my){
-		
 		// for testing
-		if(key_q){ my->obj_health = -1; }
-		DEBUG_VAR(my->obj_health, 10);
+		if(key_q){ ent->obj_health = -1; }
+		DEBUG_VAR(ent->obj_health, 10);
 		DEBUG_VAR(cct->air_underwater, 30);
 		DEBUG_VAR(cct->falling_timer, 50);
 		DEBUG_VAR(cct->soil_contact, 70);
@@ -144,22 +120,22 @@ action player_controller(){
 		
 		// update our health, armor etc
 		// used globally - f.e. for gui
-		hero->health = my->obj_health;
-		hero->armor = my->obj_armor;
-		hero->allow_movement = my->obj_allow_move;
+		hero->health = ent->obj_health;
+		hero->armor = ent->obj_armor;
+		hero->allow_movement = ent->obj_allow_move;
 		cct->always_run = hero->always_run;
 		
 		// perform gravity trace
-		ent_gravity_trace(my, cct);
+		ent_gravity_trace(ent, cct);
 		
 		// shake camera, if we are on moving props
 		if(cct->ground_info == MOVING){ hero->cam->explo_power = 0.35; }
 		
 		// alive?
-		if(my->obj_health > 0){
+		if(ent->obj_health > 0){
 			
 			// allowed to move ?
-			if(my->obj_allow_move == 1){
+			if(ent->obj_allow_move == 1){
 				
 				// set input keys and update every frame
 				cct->forward = key_w;
@@ -184,38 +160,57 @@ action player_controller(){
 			player_dead();
 			
 			// count down
-			my->obj_timer -= time_frame / 16;
+			ent->obj_timer -= time_frame / 16;
 			
 			// allow to reset level, as soon as movement has stoped and camera has lowered
-			if(mouse_left && my->obj_timer <= 0){
+			if(mouse_left && ent->obj_timer <= 0){
 				
 				// make sure that it's intentional
-				my->obj_state = -1;
-				break;
+				ent->obj_state = -1;
+				level_restart();
+				return;
 			}
 		}
 		
 		// handle movement
-		ent_movement(my, cct);
+		ent_movement(ent, cct);
 		
 		// handle state machine
-		player_handle_state_machine(my, cct);
+		player_handle_state_machine(ent, cct);
 		
 		// handle sound effects
-		player_sounds(cct);
+		player_sounds(ent, cct);
 		
 		// save our fake origin position
-		vec_set(&cct->origin, vector(my->x, my->y, my->z + 16));
+		vec_set(&cct->origin, vector(ent->x, ent->y, ent->z + 16));
 		
 		// attach and update camera
-		camera_update(my, cct);
+		camera_update(ent, cct);
 		
 		// interact with the world
-		player_interact(cct);
-		
-		wait(1);
-	}
+		player_interact(ent, cct);
+}
+
+// main player's action, this one is used in WED
+action player_controller(){
+
+	register_player_struct(my);
+	CCT *cct = register_cct(my);
 	
-	// if we wated to restart, then do so!
-	if(my->obj_state == -1){ level_restart(); }
+	set(my, TRANSLUCENT);
+	c_setminmax(my);
+	my->max_z = cct->bbox_z;
+	my->min_z = -0.1;
+	
+	my->obj_health = 100;
+	my->obj_armor = 0;
+	my->obj_type = TYPE_PLAYER;
+	my->obj_allow_move = true;
+	my->obj_timer = 1; // 1 second delay, before retry
+	
+	my->group = PLAYER_GROUP;
+	my->push = PLAYER_GROUP;
+	
+	my->emask |= (ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);
+	my->event = player_event;
 }

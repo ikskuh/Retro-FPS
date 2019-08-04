@@ -85,6 +85,25 @@ void set_engine_settings(){
 	mouse_pointer = 0;
 }
 
+void main_update()
+{
+	if(!game_running)
+		return;
+		
+	game_ticks += time_frame;	
+	mouse_lock_in_window();
+		
+	if(key_e) { fps_max = 20; }
+	else { fps_max = 60; }
+	
+	ENTITY * ent;
+	for(ent = ent_next(NULL); ent != NULL; ent = ent_next(ent)) {
+		if(ent->obj_type != TYPE_PLAYER)
+			continue;
+		player_update(ent);
+	}
+}
+
 void main(){
 	
 	on_ent_remove = on_ent_remove_event;
@@ -99,16 +118,10 @@ void main(){
 	
 	level_load_();
 	pipeline_start();
+
+
+	on_caps = player_toggle_run;
+	on_r = level_restart;
 	
-	while(game_running == true){
-		
-		game_ticks += time_frame;
-		
-		mouse_lock_in_window();
-		
-		if(key_e){ fps_max = 20; }
-		else{ fps_max = 60; }
-		
-		wait(1);
-	}
+	on_frame = main_update;
 }

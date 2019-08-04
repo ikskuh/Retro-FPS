@@ -9,9 +9,12 @@ void ent_interact(ENTITY *ent, CCT *cct){
 		vec_set(&start_pos, &camera->x);
 	}
 	
+
 	// pressed interaction button ?
 	if(cct->interact == true && cct->interact_switch == 0){
 		
+		me = ent; // events require `you` to be set, so we have to set `me` before tracing!
+
 		// make sure to note that this is an interaction trace
 		ent->obj_c_indicator = INTERACT;
 		c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
@@ -37,6 +40,8 @@ void ent_interact(ENTITY *ent, CCT *cct){
 			c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
 			c_trace(&start_pos, &cct->interact_down_pos, ACTIVATE_SHOOT | TRACE_FLAGS);
 		}
+
+		me = NULL; // fixup
 		
 		cct->interact_switch = 1;
 	}

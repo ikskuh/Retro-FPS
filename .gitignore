@@ -19,3 +19,4 @@ source/data/sounds/water_out.ogg
 source/data/sounds/props/secret_wall_start.ogg
 source/data/sounds/props/secret_wall_stop.ogg
 source/data/sounds/props/secret_zone_found.ogg
+.vscode/
