@@ -24,6 +24,4 @@
 
 	// event function for the door
 	void door_event();
-	
-	#include "props_door.c"
 #endif

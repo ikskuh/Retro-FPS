@@ -43,6 +43,4 @@
 
 	// stop all movement from on water state
 	void ent_stop_movement_in_water(CCT *cct);
-	
-	#include "cct_movement.c"
 #endif

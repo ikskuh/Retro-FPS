@@ -85,6 +85,46 @@ void set_engine_settings(){
 	mouse_pointer = 0;
 }
 
+void main_update()
+{
+	if(!game_running)
+		return;
+		
+	game_ticks += time_frame;	
+	mouse_lock_in_window();
+		
+	if(key_e) { fps_max = 20; }
+	else { fps_max = 60; }
+	
+
+#define FOR_ENTITY_OF_TYPE(_Var, _Type) for((_Var) = ent_next(NULL); (_Var) != NULL; (_Var) = ent_next((_Var))) if((_Var)->obj_type == (_Type))
+	
+	if(game_level_is_loaded)
+	{
+		ENTITY * ent;
+
+		FOR_ENTITY_OF_TYPE(ent, TYPE_ELEVATOR) {
+			elevator_update(ent);
+		}
+
+		FOR_ENTITY_OF_TYPE(ent, TYPE_DOOR) {
+			door_update(ent);
+		}
+
+		FOR_ENTITY_OF_TYPE(ent, TYPE_PLATFORM) {
+			platform_update(ent);
+		}
+
+		FOR_ENTITY_OF_TYPE(ent, TYPE_SECRET_WALL) {
+			secret_wall_update(ent);
+		}	
+
+		FOR_ENTITY_OF_TYPE(ent, TYPE_PLAYER) {
+			player_update(ent);
+		}
+	}
+}
+
 void main(){
 	
 	on_ent_remove = on_ent_remove_event;
@@ -99,16 +139,33 @@ void main(){
 	
 	level_load_();
 	pipeline_start();
+
+
+	on_caps = player_toggle_run;
+	on_r = level_restart;
 	
-	while(game_running == true){
-		
-		game_ticks += time_frame;
-		
-		mouse_lock_in_window();
-		
-		if(key_e){ fps_max = 20; }
-		else{ fps_max = 60; }
-		
-		wait(1);
-	}
+	on_frame = main_update;
 }
+
+#include "cct.c"
+#include "cct_helper.c"
+#include "cct_movement.c"
+#include "cct_water_detection.c"
+#include "defines.c"
+#include "level_logic.c"
+#include "particles.c"
+#include "player.c"
+#include "player_behaviour.c"
+#include "player_camera.c"
+#include "player_state_machine.c"
+#include "player_weapon.c"
+#include "props.c"
+#include "props_door.c"
+#include "props_elevator.c"
+#include "props_helper.c"
+#include "props_liquid.c"
+#include "props_platform.c"
+#include "props_secret.c"
+#include "props_switch.c"
+#include "props_trigger.c"
+#include "shader_pipeline.c"

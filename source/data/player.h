@@ -80,7 +80,6 @@
 	// remove given player from the memory
 	void delete_player_struct(PLAYER *temp);
 	
-	#include "player.c"
 	#include "player_weapon.h"
 	#include "player_camera.h"
 	#include "player_state_machine.h"

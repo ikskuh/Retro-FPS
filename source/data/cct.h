@@ -167,5 +167,4 @@
 	#include "cct_helper.h"
 	#include "cct_water_detection.h"
 	#include "cct_movement.h"
-	#include "cct.c"
 #endif

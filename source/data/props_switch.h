@@ -20,5 +20,4 @@
 	// switch's event function
 	void switch_event();
 	
-	#include "props_switch.c"
 #endif

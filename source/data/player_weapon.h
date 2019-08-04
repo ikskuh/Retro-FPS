@@ -6,6 +6,4 @@
 	var weapon_z_land = 0;
 	var weapon_do_recoil = 0;
 	var weapon_recoil_rate = 0;
-	
-	#include "player_weapon.c"
 #endif

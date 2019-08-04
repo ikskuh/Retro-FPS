@@ -1,3 +1,4 @@
+#include "props.h
 
 // function to update given door
 void door_update(ENTITY *ent){
@@ -234,10 +235,8 @@ void door_event(){
 	}
 }
 
-// simple door action
-// uses: id, offset_x_, offset_y_, offset_z_, red_key, yellow_key, blue_key, toggleable, use_switch, use_trigger
-action props_door_a(){
-	
+void props_door_init(ENTITY * ent, int sound_fx)
+{
 	PROPS *props = register_props(my);
 	
 	props->movement_speed = 5;
@@ -256,7 +255,7 @@ action props_door_a(){
 	my->obj_state = IDLE;
 	my->obj_type = TYPE_DOOR;
 	my->obj_move_npc = true;
-	my->obj_pain_type = 0; // default snd fx
+	my->obj_pain_type = sound_fx; // default snd fx
 	
 	// dirty hack
 	props_offset_trim(my);
@@ -267,31 +266,14 @@ action props_door_a(){
 
 // simple door action
 // uses: id, offset_x_, offset_y_, offset_z_, red_key, yellow_key, blue_key, toggleable, use_switch, use_trigger
+action props_door_a(){
+	
+	props_door_init(me, 0);
+}
+
+// simple door action
+// uses: id, offset_x_, offset_y_, offset_z_, red_key, yellow_key, blue_key, toggleable, use_switch, use_trigger
 action props_door_b(){
 	
-	PROPS *props = register_props(my);
-	
-	props->movement_speed = 5;
-	props->delay_time = 5;
-	
-	if(is(my, toggleable)){ props->delay_time = 0.5; }
-	
-	vec_fill(&my->scale_x, 1);
-	wait(1);
-	c_setminmax(my);
-	set(my, POLYGON);
-	
-	my->group = OBSTACLE_GROUP;
-	my->push = OBSTACLE_GROUP;
-	
-	my->obj_state = IDLE;
-	my->obj_type = TYPE_DOOR;
-	my->obj_move_npc = true;
-	my->obj_pain_type = 1; // alternative snd fx
-	
-	// dirty hack
-	props_offset_trim(my);
-	
-	my->emask |= (ENABLE_SHOOT);
-	my->event = door_event;
+	props_door_init(me, 1);
 }
