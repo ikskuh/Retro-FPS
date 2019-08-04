@@ -35,12 +35,12 @@ void props_vs_npc_check(ENTITY *prop, ENTITY *npc, var scale){
 	}
 }
 
-// check if props almost closed
+// check (for smashing cct) if props almost closed
 void props_almost_closed_check(ENTITY *ent, PROPS *props){
 	
-	var x_distance = ent->x - props->origin.x;
-	var y_distance = ent->y - props->origin.y;
-	var z_distance = ent->z - props->origin.z;
+	var x_distance = abs(ent->x - props->origin.x);
+	var y_distance = abs(ent->y - props->origin.y);
+	var z_distance = abs(ent->z - props->origin.z);
 	
 	if(x_distance <= biggest_bbox_x_side && y_distance <= biggest_bbox_x_side && z_distance <= biggest_bbox_z_side){
 		
@@ -48,12 +48,12 @@ void props_almost_closed_check(ENTITY *ent, PROPS *props){
 	}
 }
 
-// check if props almost opened
+// check (for smashing cct) if props almost opened
 void props_almost_opened_check(ENTITY *ent){
 	
-	var x_distance = ent->x - ent->offset_x_;
-	var y_distance = ent->y - ent->offset_y_;
-	var z_distance = ent->z - ent->offset_z_;
+	var x_distance = abs(ent->x - ent->offset_x_);
+	var y_distance = abs(ent->y - ent->offset_y_);
+	var z_distance = abs(ent->z - ent->offset_z_);
 	
 	if(x_distance <= biggest_bbox_x_side && y_distance <= biggest_bbox_x_side && z_distance <= biggest_bbox_z_side){
 		

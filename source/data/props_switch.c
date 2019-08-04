@@ -8,7 +8,7 @@ void switch_enable_by_id(var num){
 		if(temp_ent->obj_type == TYPE_SWITCH){
 			
 			// if it needs to be enabled only once, then ignore !
-			if(is(temp_ent, use_once)){ continue; }
+			if(!is(temp_ent, toggleable)){ continue; }
 			
 			// same id? then disable it
 			if(temp_ent->id == num){
@@ -43,16 +43,16 @@ void switch_trigger_props(){
 	for(temp_ent = ent_next(NULL); temp_ent; temp_ent = ent_next(temp_ent)){
 		
 		// props
-		if(temp_ent->obj_type == TYPE_ELEVATOR || temp_ent->obj_type == TYPE_PLATFORM || temp_ent->obj_type == TYPE_DOOR || temp_ent->obj_type == TYPE_SECRET){
+		if(temp_ent->obj_type == TYPE_ELEVATOR || temp_ent->obj_type == TYPE_PLATFORM || temp_ent->obj_type == TYPE_DOOR || temp_ent->obj_type == TYPE_SECRET_WALL){
 			
 			// not the same id OR not using switch ? ignore
-			if(temp_ent->id != my->id || !is(temp_ent, use_switch_id)){ continue; }
+			if(temp_ent->id != my->id || !is(temp_ent, use_switch)){ continue; }
 			
 			// already triggered ? ignore
 			if(temp_ent->obj_state != IDLE){ continue; }
 			
 			// if you were made to be triggered
-			if(!is(temp_ent, use_once)){
+			if(is(temp_ent, toggleable)){
 				
 				// toggle between open and close states
 				temp_ent->obj_allow_move += 1;
@@ -102,7 +102,8 @@ void switch_event(){
 }
 
 // switch to trigger other props
-// uses: id, use_once
+// uses: id, toggleable
+// FLAG3: toggleable 1
 action props_switch(){
 	
 	vec_fill(&my->scale_x, 1);

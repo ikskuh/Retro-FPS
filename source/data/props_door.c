@@ -103,7 +103,7 @@ void door_update(ENTITY *ent){
 				// set proper position
 				vec_set(&ent->x, &props->origin);
 				
-				if(!is(ent, use_once)){
+				if(is(ent, toggleable)){
 					
 					// switch to delay
 					ent->obj_state = DELAY;
@@ -115,7 +115,7 @@ void door_update(ENTITY *ent){
 					ent->obj_state = IDLE;
 					
 					// if we used switch, enable them all again
-					if(is(ent, use_switch_id)){
+					if(is(ent, use_switch)){
 						
 						switch_enable_by_id(ent->id);
 					}
@@ -133,12 +133,12 @@ void door_update(ENTITY *ent){
 				// reset check
 				ent->obj_check = false;
 				
-				if(!is(ent, use_once)){
+				if(is(ent, toggleable)){
 					
 					ent->obj_state = IDLE;
 					
 					// if we used switch, enable them all again
-					if(is(ent, use_switch_id)){
+					if(is(ent, use_switch)){
 						
 						switch_enable_by_id(ent->id);
 					}
@@ -173,7 +173,7 @@ void door_event(){
 		if(my->obj_state != IDLE){ return; }
 		
 		// if this door needs to be triggered by switch or trigger zone, don't interact with it
-		if(is(my, use_switch_id) || is(my, use_trigger)){ return; }
+		if(is(my, use_switch) || is(my, use_trigger)){ return; }
 		
 		// requires a key ?
 		if(is(my, red_key) || is(my, yellow_key) || is(my, blue_key)){
@@ -222,7 +222,7 @@ void door_event(){
 		}
 		
 		// toggle ?
-		if(!is(my, use_once)){
+		if(is(my, toggleable)){
 			
 			// toggle open/close states
 			my->obj_allow_move += 1;
@@ -235,8 +235,7 @@ void door_event(){
 }
 
 // simple door action
-// uses: id, offset_x_, offset_y_, offset_z_, red_key, yellow_key, blue_key, use_once, use_switch_id, use_trigger
-// FLAG3: use_once 1
+// uses: id, offset_x_, offset_y_, offset_z_, red_key, yellow_key, blue_key, toggleable, use_switch, use_trigger
 action props_door_a(){
 	
 	PROPS *props = register_props(my);
@@ -244,7 +243,7 @@ action props_door_a(){
 	props->movement_speed = 5;
 	props->delay_time = 5;
 	
-	if(!is(my, use_once)){ props->delay_time = 0.5; }
+	if(is(my, toggleable)){ props->delay_time = 0.5; }
 	
 	vec_fill(&my->scale_x, 1);
 	wait(1);
@@ -267,14 +266,15 @@ action props_door_a(){
 }
 
 // simple door action
-// uses: id, offset_x_, offset_y_, offset_z_, red_key, yellow_key, blue_key, use_once, use_switch_id, use_trigger
-// FLAG3: use_once 1
+// uses: id, offset_x_, offset_y_, offset_z_, red_key, yellow_key, blue_key, toggleable, use_switch, use_trigger
 action props_door_b(){
 	
 	PROPS *props = register_props(my);
 	
 	props->movement_speed = 5;
 	props->delay_time = 5;
+	
+	if(is(my, toggleable)){ props->delay_time = 0.5; }
 	
 	vec_fill(&my->scale_x, 1);
 	wait(1);
@@ -287,7 +287,7 @@ action props_door_b(){
 	my->obj_state = IDLE;
 	my->obj_type = TYPE_DOOR;
 	my->obj_move_npc = true;
-	my->obj_pain_type = 1; // alter snd fx
+	my->obj_pain_type = 1; // alternative snd fx
 	
 	// dirty hack
 	props_offset_trim(my);

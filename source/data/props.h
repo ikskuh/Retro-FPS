@@ -8,8 +8,10 @@
 	// - props_liquid.h (everything needed for water, lava etc)
 	// - props_switch.h (everything needed for creating switches)
 	// - props_trigger.h (everything needed for creating trigger zones)
+	// - props_secret.h (everything needed fro creating secret rooms)
 	// - props_elevator.h (everything needed for elevators)
 	// - props_door.h (everything needed for doors)
+	// - props_platforms.h (everything needed for creating platforms that follow path)
 	// - props_loop.h (update all props in one loop)
 	
 	// skills used by all props
@@ -18,8 +20,8 @@
 	#define offset_y_ skill3
 	#define offset_z_ skill4
 	
-	#define use_once FLAG3
-	#define use_switch_id FLAG4
+	#define toggleable FLAG3
+	#define use_switch FLAG4
 	#define use_trigger FLAG5
 	#define red_key FLAG6
 	#define yellow_key FLAG7
@@ -30,6 +32,7 @@
 	#define OPEN 1
 	#define CLOSE 2
 	#define DELAY 3
+	#define DEAD 4
 	
 	// props main structure
 	typedef struct {
@@ -39,6 +42,10 @@
 		var movement_speed;
 		var delay_time;
 		var old_state;
+		var dir;
+		var dist;
+		var path_id;
+		var total_nodes;
 		
 	} PROPS;
 	
@@ -65,8 +72,10 @@
 	#include "props_liquid.h"
 	#include "props_switch.h"
 	#include "props_trigger.h"
+	#include "props_secret.h"
 	#include "props_elevator.h"
 	#include "props_door.h"
+	#include "props_platform.h"
 	
 	#include "props_loop.h"
 #endif

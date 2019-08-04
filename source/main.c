@@ -31,7 +31,7 @@ void on_ent_remove_event(ENTITY *ent){
 		delete_player_struct(ent);
 	}
 	
-	if(ent->obj_type == TYPE_ELEVATOR || ent->obj_type == TYPE_DOOR){
+	if(ent->obj_type == TYPE_ELEVATOR || ent->obj_type == TYPE_DOOR || ent->obj_type == TYPE_PLATFORM || ent->obj_type == TYPE_SECRET_WALL){
 		
 		delete_props(ent);
 	}

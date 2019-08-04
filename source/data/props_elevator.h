@@ -1,11 +1,11 @@
 #ifndef _PROPS_ELEVATOR_H
 	#define _PROPS_ELEVATOR_H
 	
-	// use_once (set by default)
-	// if set, then elevator will go through whole states (open, delay, close) by itself
-	// if not set, then each interaction will move plaftorm up and down
+	// toggleable
+	// if set, then each interaction will (toggle) move plaftorm up and down
+	// if not set, then elevator will go through whole states (open, delay, close) by itself
 	
-	// use_switch_id
+	// use_switch
 	// if set, elevator can be triggered only by switch (with the same ID)
 	
 	// use trigger

@@ -6,11 +6,11 @@
 	// red_key OR yellow_key OR blue_key
 	// if any set, then door will require the key with the set color to be opened!
 	
-	// use_once (set by default)
-	// if set, then door will go through whole states (open, delay, close) by itself
-	// if not set, then each interaction will open/close the door
+	// toggleable
+	// if set, then each interaction will (toggle) open/close the door
+	// if notset, then door will go through whole states (open, delay, close) by itself
 	
-	// use_switch_id
+	// use_switch
 	// if set, door can be triggered only by switch (with the same ID)
 	
 	// use trigger

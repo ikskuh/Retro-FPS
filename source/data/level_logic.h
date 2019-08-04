@@ -1,19 +1,21 @@
 #ifndef _LEVEL_LOGIC_H_
 	#define _LEVEL_LOGIC_H_
 	
-	#define MAX_LEVELS 100
+	// This header includes everything related to level setup and loading
 	
-	var level_id = 0; // current level id, increased at the end of each level
-	STRING *level_str[MAX_LEVELS]; // list of strings, containing each level's name
-	
+	// initialize all levels name (in string list)
 	void set_level_names();
 	
+	// set level settings (sun, fog, clipping etc)
 	void set_level_settings();
 	
+	// reset variables per level
 	void level_reset();
 	
+	// load level (level_str with level_id)
 	void level_load_();
 	
+	// restart level
 	void level_restart();
 
 	#include "level_logic.c"

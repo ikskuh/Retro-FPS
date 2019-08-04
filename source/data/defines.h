@@ -4,9 +4,12 @@
 	// macros
 	#define math_round(num) return(floor(num + 0.5));
 	#define math_check_divide(value, divide) return(integer(divide * math_round( value / divide )))
+	#define ent_delete(ent) ptr_remove(ent); ent = NULL
 	
 	#define false 0
 	#define true 1
+
+	#define MAX_LEVELS 100
 
 	// default trace/move flags
 	#define TRACE_FLAGS (IGNORE_ME | IGNORE_PASSABLE | IGNORE_PASSENTS | IGNORE_MAPS | IGNORE_SPRITES | IGNORE_CONTENT)
@@ -45,10 +48,11 @@
 	#define TYPE_NPC 2
 	#define TYPE_SWITCH 3
 	#define TYPE_TRIGGER_ZONE 4
-	#define TYPE_ELEVATOR 5
-	#define TYPE_PLATFORM 6
-	#define TYPE_DOOR 7
-	#define TYPE_SECRET 8
+	#define TYPE_SECRET_WALL 5
+	#define TYPE_SECRET_ZOME 6
+	#define TYPE_ELEVATOR 7
+	#define TYPE_DOOR 8
+	#define TYPE_PLATFORM 9
 	
 	#define obj_health skill45
 	#define obj_armor skill46
@@ -76,9 +80,17 @@
 	#define INTERACT 1
 	#define SHOOT 2
 	
+	// list of strings, containing each level's name
+	STRING *level_str[MAX_LEVELS];
+	
 	// water region
 	STRING *reg_water_str = "water_reg";
-
+	
+	// level logic stuff
+	var level_id = 0; // current level id, increased at the end of each level
+	var level_secrets_found = 0; // +1 with each new found secret zone (per level)
+	var level_secrets_total = 0; // +1 with each created secret zone (per level)
+	
 	// game logic stuff
 	var game_running = false; // 1 - when game is running, otherwise - 0 (used to stop main game loop)
 	var game_level_is_loaded = false; // true - if level is loaded, otherwise - false
@@ -103,6 +115,10 @@
 	var props_elevator_snd_volume = 450;
 	var props_elevator_snd_loop_volume = 150;
 	var props_door_snd_volume = 450;
+	var props_platform_snd_volume = 450;
+	var props_platform_snd_loop_volume = 150;
+	var props_secret_wall_snd_volume = 450;
+	var props_secret_zone_snd_volume = 50;
 	
 	// checks if given cct is inside of the given entity
 	// returns true if true, else if not

@@ -1,4 +1,5 @@
 
+// initialize all levels name (in string list)
 void set_level_names(){
 	
 	// set names for each level
@@ -6,6 +7,7 @@ void set_level_names(){
 	level_str[0] = "map.wmb";
 }
 
+// set level settings (sun, fog, clipping etc)
 void set_level_settings(){
 	
 	set(camera, NOFLAG1);
@@ -28,18 +30,25 @@ void set_level_settings(){
 	vec_set(&sky_color.blue, &d3d_fogcolor4.blue);
 }
 
+// reset variables per level
 void level_reset(){
 	
+	// stop music + level isn't loaded any more !
+	snd_stopall(4);
+	game_level_is_loaded = false;
+	
+	// reset secrets
+	level_secrets_found = 0;
+	level_secrets_total = 0;
 }
 
+// load level (level_str with level_id)
 void level_load_(){
 	
 	if(proc_status(level_load_) > 0 || !is(camera, SHOW)){ return; }
 	
 	reset(camera, SHOW);
 	
-	snd_stopall(4);
-	game_level_is_loaded = false;
 	level_reset();
 	wait_for(level_reset);
 	
@@ -60,6 +69,7 @@ void level_load_(){
 	set(camera, SHOW);
 }
 
+// restart level
 void level_restart(){
 	
 	level_load_();

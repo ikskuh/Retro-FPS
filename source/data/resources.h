@@ -37,4 +37,12 @@
 	SOUND *door_02_open_ogg = "door_open_02.ogg";
 	SOUND *door_02_close_ogg = "door_close_02.ogg";
 	
+	SOUND *platform_start_ogg = "platform_start.ogg";
+	SOUND *platform_stop_ogg = "platform_stop.ogg";
+	SOUND *platform_mid_ogg = "platform_mid.ogg";
+	
+	SOUND *secret_wall_start_ogg = "secret_wall_start.ogg";
+	SOUND *secret_wall_stop_ogg = "secret_wall_stop.ogg";
+	SOUND *secret_zone_found_ogg = "secret_zone_found.ogg";
+	
 #endif

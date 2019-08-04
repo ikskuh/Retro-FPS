@@ -24,6 +24,17 @@ void props_update(){
 				door_update(props_ent);
 			}
 			
+			// platform ?
+			if(props_ent->obj_type == TYPE_PLATFORM){
+				
+				platform_update(props_ent);
+			}
+			
+			// secret ?
+			if(props_ent->obj_type == TYPE_SECRET_WALL){
+				
+				secret_wall_update(props_ent);
+			}
 		}
 	}
 }

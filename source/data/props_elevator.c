@@ -110,7 +110,7 @@ void elevator_update(ENTITY *ent){
 				// set proper position
 				vec_set(&ent->x, &props->origin);
 				
-				if(!is(ent, use_once)){
+				if(is(ent, toggleable)){
 					
 					// switch to delay
 					ent->obj_state = DELAY;
@@ -122,7 +122,7 @@ void elevator_update(ENTITY *ent){
 					ent->obj_state = IDLE;
 					
 					// if we used switch, enable them all again
-					if(is(ent, use_switch_id)){
+					if(is(ent, use_switch)){
 						
 						switch_enable_by_id(ent->id);
 					}
@@ -140,12 +140,12 @@ void elevator_update(ENTITY *ent){
 				// reset check
 				ent->obj_check = false;
 				
-				if(!is(ent, use_once)){
+				if(is(ent, toggleable)){
 					
 					ent->obj_state = IDLE;
 					
 					// if we used switch, enable them all again
-					if(is(ent, use_switch_id)){
+					if(is(ent, use_switch)){
 						
 						switch_enable_by_id(ent->id);
 					}
@@ -170,10 +170,10 @@ void elevator_event(){
 		if(my->obj_state != IDLE){ return; }
 		
 		// if this elevator needs to be triggered by switch or trigger zone, don't interact with it
-		if(is(my, use_switch_id) || is(my, use_trigger)){ return; }
+		if(is(my, use_switch) || is(my, use_trigger)){ return; }
 		
 		// toggle ?
-		if(!is(my, use_once)){
+		if(is(my, toggleable)){
 			
 			// toggle open/close states
 			my->obj_allow_move += 1;
@@ -186,8 +186,7 @@ void elevator_event(){
 }
 
 // simple elevator action
-// uses: id, offset_x_, offset_y_, offset_z_, use_once, use_switch_id, use_trigger
-// FLAG3: use_once 1
+// uses: id, offset_x_, offset_y_, offset_z_, toggleable, use_switch, use_trigger
 action props_elevator(){
 	
 	PROPS *props = register_props(my);
@@ -195,7 +194,7 @@ action props_elevator(){
 	props->movement_speed = 5;
 	props->delay_time = 3;
 	
-	if(!is(my, use_once)){ props->delay_time = 0.5; }
+	if(is(my, toggleable)){ props->delay_time = 0.5; }
 	
 	vec_fill(&my->scale_x, 1);
 	wait(1);

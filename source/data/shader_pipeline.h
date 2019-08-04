@@ -23,9 +23,9 @@
 
 	MATERIAL *mtl_object = {
 		
-		ambient_red = 192;
-		ambient_green = 192;
-		ambient_blue = 192;
+		ambient_red = 200;
+		ambient_green = 200;
+		ambient_blue = 200;
 		effect = "mtl_object.fx";
 		flags = PASS_SOLID | AUTORELOAD;
 		

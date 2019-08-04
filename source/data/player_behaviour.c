@@ -14,21 +14,35 @@ void player_sounds(CCT *cct){
 	
 	if(my->obj_state == DEATH){
 		
-		if(hero->death_snd_switch == 0){
+		// smashed ?
+		if(my->obj_death_type == TYPE_SMASHED){
 			
-			if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
-			var rnd = integer(random(2));
-			if(rnd == 0){ my->obj_snd_handle = snd_play(player_death_ogg, player_snd_volume, 0); }
-			if(rnd == 1){ my->obj_snd_handle = snd_play(player_x_death_ogg, player_snd_volume, 0); }
-			
-			hero->death_snd_switch = 1;
+			if(hero->death_snd_switch == 0){
+				
+				if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
+				my->obj_snd_handle = snd_play(player_smashed_ogg, player_snd_volume, 0);
+				
+				hero->death_snd_switch = 1;
+			}
 		}
-		
-		if(cct->water_state >= IN_WATER && hero->death_snd_switch == 1){
+		else{
 			
-			if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
-			my->obj_snd_handle = snd_play(player_death_to_water_ogg, player_snd_volume, 0);
-			hero->death_snd_switch = -1;
+			if(hero->death_snd_switch == 0){
+				
+				if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
+				var rnd = integer(random(2));
+				if(rnd == 0){ my->obj_snd_handle = snd_play(player_death_ogg, player_snd_volume, 0); }
+				if(rnd == 1){ my->obj_snd_handle = snd_play(player_x_death_ogg, player_snd_volume, 0); }
+				
+				hero->death_snd_switch = 1;
+			}
+			
+			if(cct->water_state >= IN_WATER && hero->death_snd_switch == 1){
+				
+				if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
+				my->obj_snd_handle = snd_play(player_death_to_water_ogg, player_snd_volume, 0);
+				hero->death_snd_switch = -1;
+			}
 		}
 	}
 }
@@ -40,7 +54,7 @@ void player_event(){
 	if(event_type == EVENT_PUSH){
 		
 		// smashed by props ?
-		if(you->obj_type == TYPE_ELEVATOR || you->obj_type == TYPE_DOOR){
+		if(you->obj_type == TYPE_ELEVATOR || you->obj_type == TYPE_DOOR || you->obj_type == TYPE_PLATFORM || you->obj_type == TYPE_SECRET_WALL){
 			
 			// get props structure
 			PROPS *props = get_props(you);
