@@ -19,3 +19,6 @@ source/data/sounds/water_out.ogg
 source/data/sounds/props/secret_wall_start.ogg
 source/data/sounds/props/secret_wall_stop.ogg
 source/data/sounds/props/secret_zone_found.ogg
+source/.vscode/tasks.json
+source/.vscode/settings.json
+source/.vscode/c_cpp_properties.json
