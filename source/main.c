@@ -169,3 +169,4 @@ void main(){
 #include "props_switch.c"
 #include "props_trigger.c"
 #include "shader_pipeline.c"
+#include "interaction.c"

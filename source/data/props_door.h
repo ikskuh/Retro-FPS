@@ -20,8 +20,5 @@
 	void door_update(ENTITY *ent);
 	
 	// check if player has needed key
-	var door_player_has_key();
-
-	// event function for the door
-	void door_event();
+	var door_player_has_key(ENTITY * ent);
 #endif
