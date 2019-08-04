@@ -96,6 +96,7 @@ void main(){
 	set_level_names();
 	set_video_settings();
 	set_engine_settings();
+	
 	level_load_();
 	pipeline_start();
 	
