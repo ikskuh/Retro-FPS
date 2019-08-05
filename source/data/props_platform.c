@@ -198,7 +198,6 @@ action props_platform(){
 	if(is(my, toggleable)){ props->delay_time = 0.5; }
 	
 	vec_fill(&my->scale_x, 1);
-	wait(1);
 	c_setminmax(my);
 	set(my, POLYGON);
 	

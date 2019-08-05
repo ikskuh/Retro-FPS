@@ -86,7 +86,6 @@ action props_secret_wall(){
 	props->movement_speed = 2.5;
 	
 	vec_fill(&my->scale_x, 1);
-	wait(1);
 	c_setminmax(my);
 	set(my, POLYGON);
 	
@@ -137,7 +136,6 @@ action props_secret_zone(){
 	level_secrets_total++;
 	
 	vec_fill(&my->scale_x, 1);
-	wait(1);
 	c_setminmax(my);
 	set(my, POLYGON | TRANSLUCENT);
 	

@@ -51,11 +51,9 @@ void level_load_(){
 	reset(camera, SHOW);
 	
 	level_reset();
-	wait_for(level_reset);
 	
 	freeze_mode = true;
 	level_load(level_str[level_id]);
-	// wait(3); not necessary here!
 	freeze_mode = false;
 	
 	level_ent->group = LEVEL_GROUP;

@@ -47,7 +47,6 @@ void trigger_event(){
 action props_trigger_zone(){
 	
 	vec_fill(&my->scale_x, 1);
-	wait(1);
 	c_setminmax(my);
 	set(my, POLYGON | TRANSLUCENT);
 	
