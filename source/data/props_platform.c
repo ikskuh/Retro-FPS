@@ -1,3 +1,6 @@
+#include "props.h"
+#include "defines.h"
+#include "interaction.h"
 
 // move platform
 var platform_move(ENTITY *ent, PROPS *props){
@@ -60,6 +63,25 @@ void platform_update(ENTITY *ent){
 		return;
 	}
 	
+	if(interaction_was_triggered(ent))
+	{
+			
+		// already moving ? ingore !
+		if((ent->obj_state == IDLE) && !is(ent, use_switch) && !is(ent, use_trigger))
+		{
+			// toggle ?
+			if(is(ent, toggleable)){
+				
+				// toggle open/close states
+				ent->obj_allow_move += 1;
+				ent->obj_allow_move = cycle(ent->obj_allow_move, 1, 3);
+				ent->obj_state = ent->obj_allow_move;
+				
+			} // if once ? then only open
+			else{ ent->obj_state = DELAY; }
+		}
+	}
+
 	// get props struct
 	PROPS *props = get_props(ent);
 	
@@ -163,33 +185,6 @@ void platform_update(ENTITY *ent){
 	}	
 }
 
-// event function for platform
-void platform_event(){
-	
-	if(event_type == EVENT_SHOOT){
-		
-		// not interacting with us ? then ignore !
-		if(you->obj_c_indicator != INTERACT){ return; }
-		
-		// already moving ? ingore !
-		if(my->obj_state != IDLE){ return; }
-		
-		// if this platform needs to be triggered by switch or trigger zone, don't interact with it
-		if(is(my, use_switch) || is(my, use_trigger)){ return; }
-		
-		// toggle ?
-		if(is(my, toggleable)){
-			
-			// toggle open/close states
-			my->obj_allow_move += 1;
-			my->obj_allow_move = cycle(my->obj_allow_move, 1, 3);
-			my->obj_state = my->obj_allow_move;
-			
-		} // if once ? then only open
-		else{ my->obj_state = DELAY; }
-	}
-}
-
 // action for moving platform
 // uses: id, toggleable, use_switch, use_trigger
 action props_platform(){
@@ -217,8 +212,7 @@ action props_platform(){
 	// dirty hack
 	props_offset_trim(my);
 	
-	my->emask |= (ENABLE_SHOOT);
-	my->event = platform_event;
+	interaction_enable(me);
 	
 	// find a path near by and attach us to it
 	props->path_id = path_scan(me, &my->x, &my->pan, vector(360, 180, 128));

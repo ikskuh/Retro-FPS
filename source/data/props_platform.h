@@ -19,8 +19,5 @@
 	
 	// update this platform
 	void platform_update(ENTITY *ent);
-
-	// event function for platform
-	void platform_event();
 	
 #endif
