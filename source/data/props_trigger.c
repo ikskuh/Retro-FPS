@@ -1,15 +1,18 @@
+#include "props.h"
+#include "defines.h"
+#include "interaction.h"
 
 // trigger props with the same id
-void trigger_props(){
+void trigger_props(var prop_id){
 	
 	ENTITY *temp_ent = NULL;			
-	for(temp_ent = ent_next(NULL); temp_ent; temp_ent = ent_next(temp_ent)){
-		
+	for(temp_ent = ent_next(NULL); temp_ent; temp_ent = ent_next(temp_ent))
+	{	
 		// props
 		if(temp_ent->obj_type == TYPE_ELEVATOR || temp_ent->obj_type == TYPE_PLATFORM || temp_ent->obj_type == TYPE_DOOR || temp_ent->obj_type == TYPE_SECRET_WALL){
 			
 			// not the same id OR not using trigger ? ignore
-			if(temp_ent->id != my->id || !is(temp_ent, use_trigger)){ continue; }
+			if(temp_ent->id != prop_id || !is(temp_ent, use_trigger)){ continue; }
 			
 			// already triggered ? ignore
 			if(temp_ent->obj_state != IDLE){ continue; }
@@ -20,9 +23,7 @@ void trigger_props(){
 			temp_ent->obj_state = temp_ent->obj_allow_move;
 		}
 	}
-	
-	wait(1);
-	ent_delete(my);
+	ent_remove_later(me);
 }
 
 // event function for trigger zone
@@ -37,7 +38,7 @@ void trigger_event(){
 		my->emask &= ~ENABLE_PUSH;
 		
 		// trigger props with the same id
-		trigger_props();
+		trigger_props(my->id);
 	}
 }
 
