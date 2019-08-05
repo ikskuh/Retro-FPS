@@ -1,3 +1,7 @@
+#include "props.h"
+#include "defines.h"
+#include "interaction.h"
+
 
 // function to update given elevator
 void elevator_update(ENTITY *ent){
@@ -8,6 +12,29 @@ void elevator_update(ENTITY *ent){
 		return;
 	}
 	
+	if(interaction_was_triggered(ent))
+	{
+		ENTITY * source = interaction_get_source(ent);
+
+		// already moving ? ingore !
+		if(ent->obj_state == IDLE)
+		{
+			// if this elevator needs to be triggered by switch or trigger zone, don't interact with it
+			if(is(ent, use_switch) || is(ent, use_trigger)){ return; }
+			
+			// toggle ?
+			if(is(ent, toggleable)){
+				
+				// toggle open/close states
+				ent->obj_allow_move += 1;
+				ent->obj_allow_move = cycle(ent->obj_allow_move, 1, 3);
+				ent->obj_state = ent->obj_allow_move;
+				
+			} // if once ? then only open
+			else{ ent->obj_state = OPEN; }
+		}
+	}
+
 	// get props struct
 	PROPS *props = get_props(ent);
 	
@@ -158,32 +185,6 @@ void elevator_update(ENTITY *ent){
 	}
 }
 
-// event function for the elevator
-void elevator_event(){
-	
-	if(event_type == EVENT_SHOOT){
-		
-		// not interacting with us ? then ignore !
-		if(you->obj_c_indicator != INTERACT){ return; }
-		
-		// already moving ? ingore !
-		if(my->obj_state != IDLE){ return; }
-		
-		// if this elevator needs to be triggered by switch or trigger zone, don't interact with it
-		if(is(my, use_switch) || is(my, use_trigger)){ return; }
-		
-		// toggle ?
-		if(is(my, toggleable)){
-			
-			// toggle open/close states
-			my->obj_allow_move += 1;
-			my->obj_allow_move = cycle(my->obj_allow_move, 1, 3);
-			my->obj_state = my->obj_allow_move;
-			
-		} // if once ? then only open
-		else{ my->obj_state = OPEN; }
-	}
-}
 
 // simple elevator action
 // uses: id, offset_x_, offset_y_, offset_z_, toggleable, use_switch, use_trigger
@@ -211,6 +212,5 @@ action props_elevator(){
 	// dirty hack
 	props_offset_trim(my);
 	
-	my->emask |= (ENABLE_SHOOT);
-	my->event = elevator_event;
+	interaction_enable(me);
 }

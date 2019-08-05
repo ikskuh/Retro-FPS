@@ -13,7 +13,4 @@
 	
 	// function to update given elevator
 	void elevator_update(ENTITY *ent);
-
-	// event function for the elevator
-	void elevator_event();
 #endif
