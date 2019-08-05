@@ -1,3 +1,6 @@
+#include "props.h"
+#include "defines.h"
+#include "interaction.h"
 
 // update secret wall
 void secret_wall_update(ENTITY *ent){
@@ -6,6 +9,17 @@ void secret_wall_update(ENTITY *ent){
 		
 		diag("\nERROR! Can't update this secret wall, it doesn't exist");
 		return;
+	}
+
+	if(interaction_was_triggered(ent))
+	{
+		// not in IDLE state ?
+		ENTITY * source = interaction_get_source(ent);
+		if((ent->obj_state == IDLE) && (source->obj_type == TYPE_PLAYER))
+		{
+			// move this secret wall !
+			ent->obj_state = OPEN;
+		}
 	}
 	
 	// get props struct
@@ -63,25 +77,6 @@ void secret_wall_update(ENTITY *ent){
 	}
 }
 
-// event function for secret wall
-void secret_wall_event(){
-	
-	if(event_type == EVENT_SHOOT){
-		
-		// not in IDLE state ?
-		if(my->obj_state != IDLE){ return; }
-		
-		// player is that you ?
-		if(you->obj_type != TYPE_PLAYER){ return; }
-		
-		// only once !
-		my->emask &= ~ENABLE_SHOOT;
-		
-		// move this secret wall !
-		my->obj_state = OPEN;
-	}
-}
-
 // simple secret wall
 // uses: offset_x_, offset_y_, offset_z_
 action props_secret_wall(){
@@ -108,8 +103,7 @@ action props_secret_wall(){
 	// set proper shader
 	my->material = mtl_object;
 	
-	my->emask |= (ENABLE_SHOOT);
-	my->event = secret_wall_event;
+	interaction_enable(me);
 }
 
 // event function for secret zone
@@ -132,8 +126,7 @@ void secret_zone_event(){
 		// show message
 		
 		// remove us
-		wait(1);
-		ent_delete(my);
+		ent_remove_later(me);
 	}
 }
 

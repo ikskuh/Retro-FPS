@@ -51,3 +51,9 @@ var is_cct_in_rect(ENTITY *cct, ENTITY *rect, var scale){
 	
 	return(false);
 }
+
+	void ent_remove_later(ENTITY * ent)
+	{
+		ASSERT(ent != NULL);
+		ent->OBJ_FLAGS |= OBJ_DELETE_LATER;
+	}

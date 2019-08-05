@@ -121,7 +121,6 @@ void switch_update(ENTITY * ent)
 	if(ent->OBJ_SWITCH_TIMEOUT != PROPS_SWITCH_NO_TIMEOUT)
 	{
 		if(total_ticks >= ent->OBJ_SWITCH_TIMEOUT) {
-     
 			// trigger props with the same id
 			switch_trigger_props(ent->id);
 
