@@ -227,7 +227,6 @@ void props_door_init(ENTITY * ent, int sound_fx)
 	if(is(my, toggleable)){ props->delay_time = 0.5; }
 	
 	vec_fill(&my->scale_x, 1);
-	wait(1);
 	c_setminmax(my);
 	set(my, POLYGON);
 	

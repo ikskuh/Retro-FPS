@@ -127,6 +127,19 @@ void main_update()
 			player_update(ent);
 		}
 	}
+
+	// cleanup all entities that should be deleted
+	{
+		ENTITY * ent = ent_next(NULL);
+		while(ent)
+		{
+			you = ent;
+			ent = ent_next(ent);
+			if(you->OBJ_FLAGS & OBJ_DELETE_LATER) {
+				ptr_remove(you);
+			}
+		}
+	}
 }
 
 void main(){

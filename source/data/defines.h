@@ -90,6 +90,7 @@
 	#define OBJ_IS_INTERACTIBLE 1 // the player can interact with this
 	#define OBJ_HAD_INTERACTION 2 // the player interacted with this object
 	#define OBJ_ENABLED         4 // generic object enabled state (used in e.g. switch)
+	#define OBJ_DELETE_LATER    8 // if set at the end of the frame, this entity will be deleted
 
 	#define OBJ_NEXT_INTERACTION skill58 // stores total_ticks of next possible interaction time
 	#define OBJ_INTERACTION_SOURCE skill59 // stores handle to the last interactor
@@ -139,4 +140,10 @@
 	// checks if given cct is inside of the given entity
 	// returns true if true, else if not
 	var is_cct_in_rect(ENTITY *cct, ENTITY *rect, var scale);
+
+	// will set a flag that will ensure the entity is deleted at
+	// the end of the frame.
+	// will remove the need for wait() in events and will ensure all
+	// temporary entity refs are valid until end-of-frame.
+	void ent_remove_later(ENTITY * ent);
 #endif
