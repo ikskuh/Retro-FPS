@@ -277,10 +277,10 @@ void ent_air_underwater(ENTITY *ent, CCT *cct){
 				// play drown sound effects for player
 				if(ent->obj_type == TYPE_PLAYER){
 					
-					if(snd_playing(my->obj_snd_handle)){ snd_stop(my->obj_snd_handle); }
+					if(snd_playing(ent->obj_snd_handle)){ snd_stop(ent->obj_snd_handle); }
 					var rnd = integer(random(2));
-					if(rnd == 0){ my->obj_snd_handle = snd_play(player_drown_01_ogg, player_snd_volume, 0); }
-					if(rnd == 1){ my->obj_snd_handle = snd_play(player_drown_02_ogg, player_snd_volume, 0); }
+					if(rnd == 0){ ent->obj_snd_handle = snd_play(player_drown_01_ogg, player_snd_volume, 0); }
+					if(rnd == 1){ ent->obj_snd_handle = snd_play(player_drown_02_ogg, player_snd_volume, 0); }
 				}
 				
 				int bubble = 0;

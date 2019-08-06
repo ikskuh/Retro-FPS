@@ -31,10 +31,9 @@ void bubbles_fade_event(PARTICLE *p){
 
 // bubbles particle
 void bubbles_particle(PARTICLE *p){
-
-	if(!you){ return; }
 	
-	p->skill_x = you->obj_water_height;
+	p->skill_x = p->vel_x;
+	p->vel_x = 0;
 	p->alpha = 0;
 	
 	if(p->z < p->skill_x - 16){

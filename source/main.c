@@ -6,13 +6,17 @@
 
 #define PRAGMA_POINTER
 
-#define PRAGMA_PATH "data"
-#define PRAGMA_PATH "data\\fx"
-#define PRAGMA_PATH "data\\models"
-#define PRAGMA_PATH "data\\sounds"
-#define PRAGMA_PATH "data\\sounds\\player"
-#define PRAGMA_PATH "data\\sounds\\props"
-#define PRAGMA_PATH "data\\sprites"
+#define PRAGMA_PATH "resources"
+#define PRAGMA_PATH "resources\\models"
+#define PRAGMA_PATH "resources\\sounds"
+#define PRAGMA_PATH "resources\\sounds\\player"
+#define PRAGMA_PATH "resources\\sounds\\props"
+#define PRAGMA_PATH "resources\\sprites"
+#define PRAGMA_PATH "code"
+#define PRAGMA_PATH "code\\cct"
+#define PRAGMA_PATH "code\\fx"
+#define PRAGMA_PATH "code\\player"
+#define PRAGMA_PATH "code\\props"
 
 #include "defines.h"
 #include "resources.h"
@@ -88,16 +92,16 @@ void set_engine_settings(){
 void main_update()
 {
 	if(!game_running)
-		return;
-		
+	return;
+	
 	game_ticks += time_frame;	
 	mouse_lock_in_window();
-		
+	
 	if(key_e) { fps_max = 20; }
 	else { fps_max = 60; }
 	
 
-#define FOR_ENTITY_OF_TYPE(_Var, _Type) for((_Var) = ent_next(NULL); (_Var) != NULL; (_Var) = ent_next((_Var))) if((_Var)->obj_type == (_Type))
+	#define FOR_ENTITY_OF_TYPE(_Var, _Type) for((_Var) = ent_next(NULL); (_Var) != NULL; (_Var) = ent_next((_Var))) if((_Var)->obj_type == (_Type))
 	
 	if(game_level_is_loaded)
 	{
