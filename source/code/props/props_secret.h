@@ -1,16 +1,16 @@
 #ifndef _PROPS_SECRET_H_
-	#define _PROPS_SECRET_H_
-	
-	// This header handles everything related to secret rooms
-	// Secret walls and zones can be triggered only ONCE !
+#define _PROPS_SECRET_H_
 
-	// update secret wall
-	void secret_wall_update(ENTITY *ent);
+// This header handles everything related to secret rooms
+// Secret walls and zones can be triggered only ONCE !
 
-	// event function for secret wall
-	void secret_wall_event();
-	
-	// event function for secret zone
-	void secret_zone_event();
+// update secret wall
+void secret_wall_update(ENTITY *ent);
+
+// event function for secret wall
+void secret_wall_event_function();
+
+// event function for secret zone
+void secret_zone_event_function();
 
 #endif

@@ -1,59 +1,124 @@
-#include "defines.h"
-#include <windows.h>
 
-void _assert(int v, char const * msg)
+// delay functions
+void delay(var time)
 {
-	if(v) // assertion met
-		return;
-	error(msg);
-	ExitProcess(1); // and fast exit
+    if (time == 0)
+    {
+        time = 1;
+    }
+    var counter = abs(time);
+    while (counter > 0)
+    {
+        if (level_is_loaded == false)
+        {
+            break;
+        }
+        counter -= time_frame / 16;
+        wait(1);
+    }
 }
 
-
-// checks if given cct is inside of the given  entity
-// returns true if true, else if not
-var is_cct_in_rect(ENTITY *cct, ENTITY *rect, var scale){
-	
-	if(!cct){
-		
-		diag("\nERROR! Can't perform cct_vs_rect check! CCT entity doesn't exist!");
-		return;
-	}
-	
-	if(!rect){
-		
-		diag("\nERROR! Can't perform cct_vs_rect check! Rect entity doesn't exist!");
-		return;	
-	}
-	
-	VECTOR pos;
-	vec_diff(&pos, &cct->x, &rect->x);
-	vec_rotateback(&pos, &rect->pan);
-	vec_add(&pos, &rect->x);
-	
-	var delta_x = pos.x - maxv(rect->x + (rect->min_x * scale), minv(pos.x, rect->x + (rect->max_x * scale)));
-	var delta_y = pos.y - maxv(rect->y + (rect->min_y * scale), minv(pos.y, rect->y + (rect->max_y * scale)));
-	var rect_delta = (delta_x * delta_x) + (delta_y * delta_y);
-	
-	var cct_top = cct->z + (cct->max_z * scale);
-	var cct_bottom = cct->z + (cct->min_z * scale);
-	var cct_z_hit = false;
-	
-	if((rect->z + rect->min_z) - cct_top > 0 || cct_bottom - (rect->z + rect->max_z) > 0){
-		
-		cct_z_hit = true; 
-	}
-	
-	if(rect_delta < (cct->max_x * cct->max_x) && cct_z_hit == false){
-		
-		return(true);
-	}
-	
-	return(false);
+void ent_delay(ENTITY *ent, var time)
+{
+    if (!ent)
+    {
+        diag("\nERROR! Can't run delay function! Entity doesn't exist.");
+        return;
+    }
+    if (time == 0)
+    {
+        time = 1;
+    }
+    var counter = abs(time);
+    while (ent)
+    {
+        if (level_is_loaded == false)
+        {
+            break;
+        }
+        counter -= time_frame / 16;
+        if (counter <= 0)
+        {
+            break;
+        }
+        wait(1);
+    }
 }
 
-	void ent_remove_later(ENTITY * ent)
-	{
-		ASSERT(ent != NULL);
-		ent->OBJ_FLAGS |= OBJ_DELETE_LATER;
-	}
+// math functions
+var math_round(num)
+{
+    return (floor(num + 0.5));
+}
+
+var math_check_divide(value, divide)
+{
+    return (integer(divide * math_round(value / divide)));
+}
+
+// assert func
+void _assert(int v, char const *msg)
+{
+    if (v)
+    {
+        return;
+    } // assertion met
+    error(msg);
+    ExitProcess(1); // and fast exit
+}
+
+// safe remove entity (at the end of the frame)
+void ent_delete_later(ENTITY *ent)
+{
+    ASSERT(ent != NULL);
+    ent->OBJ_FLAGS |= FLAG_DELETE_LATER;
+}
+
+// safe remove entity
+void ent_delete(ENTITY *ent)
+{
+    ptr_remove(ent);
+    ent = NULL;
+}
+
+// alternative for c_move
+var ent_move(ENTITY *ent, VECTOR *reldist, VECTOR *absdist, var mode)
+{
+    if (!ent)
+    {
+        diag("\nERROR! Can't move entity.. It doesn't exist!");
+        return -1;
+    }
+    my = ent;
+    var distance = c_move(ent, reldist, absdist, MOVE_FLAGS | mode);
+    my = NULL;
+    return distance;
+}
+
+// alternative for c_trace
+var ent_trace(ENTITY *ent, VECTOR *from, VECTOR *to, var mode)
+{
+    if (!ent)
+    {
+        diag("\nERROR! Can't perform trace.. My entity doesn't exist!");
+        return -1;
+    }
+    my = ent;
+    var distance = c_trace(from, to, TRACE_FLAGS | mode);
+    my = NULL;
+    return distance;
+}
+
+// alternative for c_scan
+var ent_scan(ENTITY *ent, VECTOR *pos, ANGLE *ang, VECTOR *sector, var mode)
+{
+    if (!ent)
+    {
+        diag("\nERROR! Can't perform scan.. My entity doesn't exist!");
+        return -1;
+    }
+    my = ent;
+    var distance = c_scan(pos, ang, sector, mode);
+    my = NULL;
+    return distance;
+}

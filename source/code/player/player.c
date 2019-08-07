@@ -1,71 +1,82 @@
 
-// register and initializes new player's structure
-// and save it's pointer into given entities obj_struct skill
-void *register_player_struct(ENTITY *ent){
-	
-	if(!ent){
-		
-		diag("\nERROR! Can't register player structure, given entity doesn't exist");
-		return;
-	}
-	
-	hero = sys_malloc(sizeof(PLAYER));
-	init_player_struct(ent, hero);
-	
-	ent->obj_struct = hero;
-	return hero;
+// register player's structure
+PLAYER *register_player_struct(ENTITY *ent)
+{
+    if (!ent)
+    {
+        diag("\nERROR! Can't register player's structure! Entity doesn't exist!");
+        return NULL;
+    }
+
+    if (ent->OBJ_STRUCT != 0)
+    {
+        diag("\nERROR! Can't register player's structure twice! It already exists!");
+        return get_player_struct(ent);
+    }
+
+    PLAYER *hero = sys_malloc(sizeof(PLAYER));
+    initialize_player_struct(ent, hero);
+    ent->OBJ_STRUCT = hero;
+    return hero;
 }
 
-// initialize all major variables for the given player's structure
-// this function called inside of register_player_struct right after creating new one
-void init_player_struct(ENTITY *ent, PLAYER *temp){
-	
-	if(!temp){
-		
-		diag("\nERROR! Can't init player structure, because it doesn't exist");
-		return;
-	}
-	temp->cam = sys_malloc(sizeof(CAMERA));
-	vec_set(&temp->cam->position, &ent->x);
-	vec_set(&camera->x, &ent->x);
-	vec_set(&temp->cam->angle, &ent->pan);
-	vec_set(&camera->pan, vector(ent->pan, 0, 0));
-	ent->pan = 0;
-	temp->cam->height = 10;
-	temp->cam->fov = 90;
-	temp->cam->third_person_dist = -128;
-	temp->cam->bob_z_offset = 1.5;
-	temp->cam->bob_speed_factor = 2;
-	
-	// player should 'always run' by default
-	temp->always_run = true;
+// initialize player's structure to default values
+var initialize_player_struct(ENTITY *ent, PLAYER *hero)
+{
+    vec_set(&hero->cam.position, &ent->x);
+    vec_set(&camera->x, &ent->x);
+    vec_set(&hero->cam.angle, &ent->pan);
+    vec_set(&camera->pan, vector(ent->pan, 0, 0));
+    ent->pan = 0;
+    hero->cam.height = 10;
+    hero->cam.fov = 90;
+    hero->cam.third_person_dist = -128;
+    hero->cam.bob_z_offset = 1.5;
+    hero->cam.bob_speed_factor = 2;
 }
 
-// returns pointer of the player structure from given entity's obj_struct skill
-PLAYER *get_player_struct(ENTITY *ent){
-	
-	if(!ent){
-		
-		diag("\nERROR! Can't get player structure, given entity doesn't exist");
-		return;
-	}
-	
-	PLAYER *temp = ent->obj_struct;
-	return temp;
+// get player's structure from the given entity
+PLAYER *get_player_struct(ENTITY *ent)
+{
+    if (!ent)
+    {
+        diag("\nERROR! Can't get player's structure! Entity doesn't exist.");
+        return NULL;
+    }
+
+    if (ent->OBJ_STRUCT == 0)
+    {
+        diag("\nERROR! Can't get player's structure! It doesn't exist.");
+        return NULL;
+    }
+
+    PLAYER *hero = ent->OBJ_STRUCT;
+    return hero;
 }
 
-// removes player from the memory
-// pointer is taken from given entity's obj_struct skill
-void delete_player_struct(ENTITY *ent){
-	
-	PLAYER *temp = get_player_struct(ent);
-	sys_free(temp->cam);
-	sys_free(temp);
+// free player structure from memory from given entity
+var delete_player_struct(ENTITY *ent)
+{
+    if (!ent)
+    {
+        diag("\nERROR! Can't free player's structure! Entity doesn't exist");
+        return false;
+    }
+
+    PLAYER *hero = get_player_struct(ent);
+
+    if (!hero)
+    {
+        diag("\nERROR! Can't free player's structure! It already doesn't exist.");
+        return false;
+    }
+
+    delete_player_struct(hero);
+    return true;
 }
 
-// remove given player from the memory
-void delete_player_struct(PLAYER *temp){
-	
-	sys_free(temp->cam);
-	sys_free(temp);
+// free given player structure from the memory
+void delete_player_struct(PLAYER *hero)
+{
+    sys_free(hero);
 }
