@@ -7,7 +7,7 @@ Requirements
 
 Well, compiling and running actuall version is pretty simple, you'll need :
 
-	* Download free edition of GameStudio A8 from the official download webpage http://www.3dgamestudio.com/download.php. Note that with free edition you won't be able to use shaders.. That's because GameStudio supports shaders only starting from Commercial edition.
+	* Download free edition of GameStudio A8 from the official [download webpage](http://www.3dgamestudio.com/download.php). Note that with free edition you won't be able to use shaders.. That's because GameStudio supports shaders only starting from Commercial edition.
 	* Some sound files.. As this project uses (as a placeholder) few sounds from ID Software sounds, you'll need to find your own ones.. Or.. simply copy main.wrs (from the bin.zip) into the root folder of your project!
 
 Building/Running
