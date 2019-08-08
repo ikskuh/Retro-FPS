@@ -262,6 +262,9 @@ void player_update(ENTITY *ent)
     // attach and update camera
     camera_update(ent, cct, hero);
 
+    // update weapons
+    player_weapons_update(ent, hero);
+
     // interact with the world
     player_interact(ent, cct);
 }
@@ -288,4 +291,7 @@ action player_controller()
 
     my->emask |= (ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);
     my->event = player_event_function;
+
+    // init weapons
+    player_weapons_initialize(my, hero);
 }

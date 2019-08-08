@@ -19,7 +19,12 @@
 #define PRAGMA_PATH "resources\\sounds"
 #define PRAGMA_PATH "resources\\sounds\\player"
 #define PRAGMA_PATH "resources\\sounds\\props"
+#define PRAGMA_PATH "resources\\sounds\\items"
+#define PRAGMA_PATH "resources\\sounds\\weapons"
 #define PRAGMA_PATH "resources\\sprites"
+#define PRAGMA_PATH "resources\\sprites\\fx"
+#define PRAGMA_PATH "resources\\sprites\\items"
+#define PRAGMA_PATH "resources\\sprites\\weapons"
 
 #include "includes.h"
 

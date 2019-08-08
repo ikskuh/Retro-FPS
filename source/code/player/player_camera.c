@@ -161,13 +161,13 @@ void camera_recoil(ENTITY *ent, PLAYER *hero)
     {
         if (random(1) > 0.5)
         {
-            hero->cam.recoil_angle.pan -= random(hero->weapon[weapon_id].recoil_rate);
+            hero->cam.recoil_angle.pan -= random(hero->weapon[weapon_id].recoil_strength);
         }
         else
         {
-            hero->cam.recoil_angle.pan += random(hero->weapon[weapon_id].recoil_rate);
+            hero->cam.recoil_angle.pan += random(hero->weapon[weapon_id].recoil_strength);
         }
-        hero->cam.recoil_angle.tilt += (hero->weapon[weapon_id].recoil_rate + random(hero->weapon[weapon_id].recoil_rate));
+        hero->cam.recoil_angle.tilt += (hero->weapon[weapon_id].recoil_strength + random(hero->weapon[weapon_id].recoil_strength));
     }
     else
     {

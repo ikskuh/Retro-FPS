@@ -42,5 +42,62 @@ SOUND *platform_mid_ogg = "platform_mid.ogg";
 SOUND *secret_wall_start_ogg = "secret_wall_start.ogg";
 SOUND *secret_wall_stop_ogg = "secret_wall_stop.ogg";
 SOUND *secret_zone_found_ogg = "secret_zone_found.ogg";
+SOUND *teleport_ogg = "teleport.ogg";
+
+// weapon sprites
+STRING *world_saw_tga = "w_saw.tga";
+STRING *view_saw_tga = "v_saw+4.tga";
+STRING *world_pistol_tga = "w_pistol.tga";
+STRING *view_pistol_tga = "v_pistol+4.tga";
+STRING *world_shotgun_tga = "w_shotgun.tga";
+STRING *view_shotgun_tga = "v_shotgun+8.tga";
+STRING *world_supershotgun_tga = "w_sshotgun.tga";
+STRING *view_supershotgun_tga = "v_sshotgun+10.tga";
+STRING *world_chaingun_tga = "w_chaingun.tga";
+STRING *view_chaingun_tga = "v_chaingun+4.tga";
+STRING *world_rocketlauncher_tga = "w_rocketlauncher.tga";
+STRING *view_rocketlauncher_tga = "v_rocketlauncher+6.tga";
+STRING *world_lasergun_tga = "w_lasergun.tga";
+STRING *view_lasergun_tga = "v_lasergun+4.tga";
+
+// weapon sounds
+SOUND *weapon_draw_ogg = "wp_draw.ogg";
+SOUND *weapon_saw_up_ogg = "wp_saw_up.ogg";
+SOUND *weapon_saw_idle_ogg = "wp_saw_idle.ogg";
+SOUND *weapon_saw_hit_01_ogg = "wp_saw_hit_01.ogg";
+SOUND *weapon_saw_hit_02_ogg = "wp_saw_hit_02.ogg";
+SOUND *weapon_saw_hit_03_ogg = "wp_saw_hit_03.ogg";
+SOUND *weapon_saw_full_ogg = "wp_saw_full.ogg";
+SOUND *weapon_pistol_shoot_ogg = "wp_pistol_shoot.ogg";
+SOUND *weapon_chaingun_shoot_ogg = "wp_chaingun_shoot.ogg";
+SOUND *weapon_shotgun_shoot_ogg = "wp_shotgun_shoot.ogg";
+SOUND *weapon_sshotgun_shoot_ogg = "wp_supershotgun_shoot.ogg";
+SOUND *weapon_lasergun_shoot_ogg = "wp_pistol_shoot.ogg"; // got to find lasergun snd
+
+// pickup sounds
+SOUND *pickup_weapon_ogg = "pickup_weapon.ogg";
+SOUND *pickup_health_ogg = "pickup_health.ogg";
+SOUND *pickup_item_ogg = "pickup_item.ogg";
+SOUND *pickup_key_ogg = "pickup_key.ogg";
+
+// items
+STRING *item_ammo_big_tga = "item_ammo_big.tga";
+STRING *item_ammo_small_tga = "item_ammo_small.tga";
+STRING *item_armor_big_tga = "item_armor_big+2.tga";
+STRING *item_armor_small_tga = "item_armor_small+4.tga";
+STRING *item_health_big_tga = "item_health_big.tga";
+STRING *item_health_small_tga = "item_health_small+4.tga";
+STRING *item_key_red_tga = "item_key_red+2.tga";
+STRING *item_key_blue_tga = "item_key_blue+2.tga";
+STRING *item_key_yellow_tga = "item_key_yellow+2.tga";
+STRING *item_pistol_ammo_tga = "item_pistol_ammo.tga";
+STRING *item_rocket_big_tga = "item_rocket_big.tga";
+STRING *item_rocket_small_tga = "item_rocket_small.tga";
+STRING *item_shells_big_tga = "item_shells_big.tga";
+STRING *item_shells_small_tga = "item_shells_small.tga";
+STRING *item_suit_tga = "item_suit.tga";
+
+// weapon fx
+STRING *rocket_flying_tga = "rocket_flying+8.tga";
 
 #endif

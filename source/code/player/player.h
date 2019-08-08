@@ -12,7 +12,22 @@
 // weapon structure
 typedef struct WEAPON
 {
-	var recoil_rate;
+	var collected;
+	var fire_rate;
+	var recoil_strength;
+	var accuracy;
+	var ammo;
+	var bullet_speed;
+	var damage;
+
+	var anim_type;
+	var anim_speed;
+	var anim_total;
+
+	void *fnc;
+	SOUND *snd_shoot;
+	STRING *sprite;
+	STRING *name;
 } WEAPON;
 
 // player's camera structure
