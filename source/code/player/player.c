@@ -78,5 +78,14 @@ var delete_player_struct(ENTITY *ent)
 // free given player structure from the memory
 void delete_player_struct(PLAYER *hero)
 {
+    var i = 0;
+    for (i = 0; i < MAX_WEAPONS; i++)
+    {
+        if (hero->weapon[i].ent)
+        {
+            ptr_remove(hero->weapon[i].ent);
+            hero->weapon[i].ent = NULL;
+        }
+    }
     sys_free(hero);
 }

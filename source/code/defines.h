@@ -80,6 +80,22 @@
 #define IN_WATER 2
 #define HEAD_IN_WATER 3
 
+// player's weapon states
+#define PLAYER_WPN_WAIT 0
+#define PLAYER_WPN_DRAW 1
+#define PLAYER_WPN_IDLE 2
+#define PLAYER_WPN_SHOOT 3
+#define PLAYER_WPN_HIDE 4
+
+// player's weapons ID
+#define PLAYER_SAW 0
+#define PLAYER_PISTOL 1
+#define PLAYER_SHOTGUN 2
+#define PLAYER_SSHOTGUN 3
+#define PLAYER_CHAINGUN 4
+#define PLAYER_ROCKETLAUNCHER 5
+#define PLAYER_LASERGUN 6
+
 // collusion groups/push values
 #define PUSH_GROUP 2
 #define SWITCH_ITEM_GROUP 3
@@ -205,11 +221,18 @@ var props_secret_wall_snd_volume = 450;   // volume for all secret wall related 
 var props_secret_zone_snd_volume = 50;    // volume for 'found secret' sound effect
 
 // weapon stuff
-var weapon_id = 0;            // currently equiped weapon's ID
-var weapon_bob_y = 0;         // weapon's sway effect (left-right)
-var weapon_bob_z = 0;         // weapon's sway effect (up-down)
-var weapon_z_land = 0;        // weapon's landing effect
-var weapon_do_recoil = false; // true - if we need to have recoil effect, otherwise - false
+var weapon_id = PLAYER_PISTOL;    // currently equiped weapon's ID
+var weapon_bob_y = 0;             // weapon's sway effect (left-right)
+var weapon_bob_z = 0;             // weapon's sway effect (up-down)
+var weapon_z_land = 0;            // weapon's landing effect
+var weapon_do_recoil = false;     // true - if we need to have recoil effect, otherwise - false
+var weapon_draw_volume = 45;      // volume for player's weapon draw sound effect
+var weapon_idle_volume = 35;      // volume for player's weapon idle sound effect (saw)
+var weapon_shoot_volume = 65;     // volume for player's weapon shoot sound effect
+var weapon_draw_time = 0.25;      // default drawing time for weapons
+var weapon_in_use = false;        // true - if player's has equiped weapon, otherwise - false
+var weapon_fire_key_busy = false; // true - if fire button is busy, otherwise - false
+var weapon_function();            // pointer to weapon's shooting function
 
 // shader pipeline
 VIEW *TempView;

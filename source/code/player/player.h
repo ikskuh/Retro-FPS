@@ -13,21 +13,22 @@
 typedef struct WEAPON
 {
 	var collected;
+	var semiauto;
+
+	var ammo;
+	var ammo_per_shoot;
 	var fire_rate;
 	var recoil_strength;
-	var accuracy;
-	var ammo;
-	var bullet_speed;
 	var damage;
+	var accuracy;
 
-	var anim_type;
+	var animate;
 	var anim_speed;
-	var anim_total;
+	var anim_total_frames;
 
 	void *fnc;
-	SOUND *snd_shoot;
-	STRING *sprite;
-	STRING *name;
+	ENTITY *ent;
+	SOUND *snd;
 } WEAPON;
 
 // player's camera structure
@@ -62,8 +63,22 @@ typedef struct CAMERA
 typedef struct PLAYER
 {
 	var death_snd_switch;
+	var weapon_snd_switch;
+	var weapon_draw_counter;
 	CAMERA cam;
 	WEAPON weapon[MAX_WEAPONS];
+
+	// input
+	var wpn_slot_1;
+	var wpn_slot_2;
+	var wpn_slot_3;
+	var wpn_slot_4;
+	var wpn_slot_5;
+	var wpn_slot_6;
+	var wpn_slot_7;
+	var wpn_slot_8;
+	var wpn_slot_9;
+	var wpn_shoot;
 } PLAYER;
 
 // register player's structure

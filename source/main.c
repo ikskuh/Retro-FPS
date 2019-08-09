@@ -94,7 +94,14 @@ void on_frame_event()
     }
     else
     {
-        fps_max = 60;
+        if (key_z)
+        {
+            fps_max = 500;
+        }
+        else
+        {
+            fps_max = 60;
+        }
     }
 
     if (game_state == GAME_LOADING)
@@ -214,4 +221,23 @@ void main()
 #endif
 
     level_load(level_id);
+
+    var shooting_delay = 0, shooting_timer = 0;
+
+    while(!key_esc)
+    {
+
+		if(mouse_left && shooting_delay == 0){				
+			weapon_do_recoil = 1;
+			shooting_delay = 1;
+			
+		}
+		
+		if(shooting_delay == 1){
+			
+
+			
+		}
+        wait(1);
+    }
 }

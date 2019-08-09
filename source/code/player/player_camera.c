@@ -157,7 +157,7 @@ void camera_recoil(ENTITY *ent, PLAYER *hero)
     }
 
     // recoil power
-    if (weapon_do_recoil == 1 && ent->OBJ_HEALTH > 0)
+    if (weapon_do_recoil == true && ent->OBJ_HEALTH > 0)
     {
         if (random(1) > 0.5)
         {
@@ -176,6 +176,7 @@ void camera_recoil(ENTITY *ent, PLAYER *hero)
     }
 
     hero->cam.recoil_angle.tilt = clamp(hero->cam.recoil_angle.tilt, 0, 35);
+    weapon_do_recoil = false;
 }
 
 // handle camera shaking effect (used for explosions and moving on platforms/elevators)

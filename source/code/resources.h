@@ -52,7 +52,7 @@ STRING *view_pistol_tga = "v_pistol+4.tga";
 STRING *world_shotgun_tga = "w_shotgun.tga";
 STRING *view_shotgun_tga = "v_shotgun+8.tga";
 STRING *world_supershotgun_tga = "w_sshotgun.tga";
-STRING *view_supershotgun_tga = "v_sshotgun+10.tga";
+STRING *view_supershotgun_tga = "v_sshotgun+12.tga";
 STRING *world_chaingun_tga = "w_chaingun.tga";
 STRING *view_chaingun_tga = "v_chaingun+4.tga";
 STRING *world_rocketlauncher_tga = "w_rocketlauncher.tga";
@@ -72,7 +72,8 @@ SOUND *weapon_pistol_shoot_ogg = "wp_pistol_shoot.ogg";
 SOUND *weapon_chaingun_shoot_ogg = "wp_chaingun_shoot.ogg";
 SOUND *weapon_shotgun_shoot_ogg = "wp_shotgun_shoot.ogg";
 SOUND *weapon_sshotgun_shoot_ogg = "wp_supershotgun_shoot.ogg";
-SOUND *weapon_lasergun_shoot_ogg = "wp_pistol_shoot.ogg"; // got to find lasergun snd
+SOUND *weapon_rocketlauncher_shoot_ogg = "wp_rocketlauncher_shoot.ogg";
+SOUND *weapon_lasergun_shoot_ogg = "wp_laser_shoot.ogg";
 
 // pickup sounds
 SOUND *pickup_weapon_ogg = "pickup_weapon.ogg";

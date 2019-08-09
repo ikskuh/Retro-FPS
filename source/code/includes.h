@@ -28,7 +28,14 @@
 
 // player
 #include "player.h"
-#include "player_weapons.h"
+#include "player_wpn_saw.h"
+#include "player_wpn_pistol.h"
+#include "player_wpn_shotgun.h"
+#include "player_wpn_sshotgun.h"
+#include "player_wpn_chaingun.h"
+#include "player_wpn_rocketlauncher.h"
+#include "player_wpn_lasergun.h"
+#include "player_weapon_logic.h"
 #include "player_camera.h"
 #include "player_state_machine.h"
 #include "player_behaviour.h"

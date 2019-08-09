@@ -223,11 +223,26 @@ void player_update(ENTITY *ent)
             cct->dive = (key_ctrl || key_c);
             cct->interact = (key_e || mouse_right);
             cct->pan_rotation = hero->cam.angle.pan;
+
+            // get input for weapon system
+            hero->wpn_slot_1 = key_1;
+            hero->wpn_slot_2 = key_2;
+            hero->wpn_slot_3 = key_3;
+            hero->wpn_slot_4 = key_4;
+            hero->wpn_slot_5 = key_5;
+            hero->wpn_slot_6 = key_6;
+            hero->wpn_slot_7 = key_7;
+            hero->wpn_slot_8 = key_8;
+            hero->wpn_slot_9 = key_9;
+            hero->wpn_shoot = mouse_left;
         }
         else
         {
             // stop all movement, cause we aren't allowed to move !
             ent_stop_movement(cct);
+
+            // reset weapons input
+            player_weapon_reset_input(hero);
         }
     }
     else
