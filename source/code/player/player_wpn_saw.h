@@ -1,6 +1,12 @@
 #ifndef _PLAYER_WPN_SAW_H_
 #define _PLAYER_WPN_SAW_H_
 
+// play saw hit sound
+void saw_hit_solid_sfx();
+
+// play saw impact sound
+void saw_impact_fx(var is_alive, VECTOR *hit_vector, VECTOR *surf_angle);
+
 // stop saw sound
 void player_saw_stop_snd(PLAYER *hero);
 

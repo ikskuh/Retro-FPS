@@ -15,9 +15,12 @@ void water_event_function()
 // uses: AMPLITUDE, WATER_SPEED, MODULATION
 action props_water()
 {
-	set(my, PASSABLE | NOFILTER);
+	set(my, NOFILTER);
 	reset(my, DYNAMIC);
 	my->ambient = 100;
+	my->OBJ_TYPE = TYPE_WATER_PLANE;
+	my->group = WATER_GROUP;
+	my->push = WATER_GROUP;
 
 #ifndef FREE_VERSION
 	if (my->AMPLITUDE == 0)

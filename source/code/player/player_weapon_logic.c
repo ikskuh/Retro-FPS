@@ -1,4 +1,21 @@
 
+// find better weapon
+void player_weapon_find_better(PLAYER *hero, var num)
+{
+    // play 'dry shoot sound'
+    snd_play(weapon_dry_shoot_ogg, weapon_draw_volume, 0);
+
+    var i = 0;
+    for (i = num; i >= 0; i--)
+    {
+        if (hero->weapon[i].collected == 1 && weapon_id != i)
+        {
+            player_switch_weapon_by_id(hero, i);
+            return;
+        }
+    }
+}
+
 // reset weapons input
 void player_weapon_reset_input(PLAYER *hero)
 {
@@ -69,11 +86,12 @@ void player_weapon_fnc()
     set(my, PASSABLE | NOFILTER | ZNEAR | INVISIBLE);
     vec_fill(&my->scale_x, 0.0625);
     my->ambient = 100;
+    my->OBJ_TYPE = TYPE_PLAYER_WEAPON;
+    my->OBJ_STATE = PLAYER_WPN_DRAW;
 
 #ifndef FREE_VERSION
     my->material = mtl_z_write;
 #endif
-    my->OBJ_STATE = PLAYER_WPN_DRAW;
 }
 
 // setup basic weapon settings at start
@@ -84,6 +102,7 @@ void player_weapons_initialize(ENTITY *ent, PLAYER *hero)
     weapon_fire_key_busy = false;
     weapon_in_use = false;
     hero->weapon_draw_counter = weapon_draw_time;
+    hero->weapon_casing_spawn = true;
 
     // init all weapons here
     player_saw_init(hero);
@@ -148,6 +167,39 @@ void player_weapon_animate(PLAYER *hero)
     case PLAYER_LASERGUN:
         player_lasergun_animate(hero);
         break;
+    }
+
+    // casing part
+    // no shells for saw, rocketlauncher and lasergun
+    if (weapon_id != PLAYER_SAW && weapon_id != PLAYER_ROCKETLAUNCHER && weapon_id != PLAYER_LASERGUN)
+    {
+        if (hero->weapon[weapon_id].anim_frame >= hero->weapon[weapon_id].anim_casing_frame)
+        {
+            if (hero->weapon_casing_spawn == true)
+            {
+                VECTOR casing_pos;
+                vec_set(&casing_pos, &hero->weapon[weapon_id].casing_pos);
+                vec_rotate(&casing_pos, &camera->pan);
+                vec_add(&casing_pos, &camera->x);
+
+                if (weapon_id == PLAYER_SHOTGUN || weapon_id == PLAYER_SSHOTGUN)
+                {
+                    ent_create(bbox_casing_mdl, &casing_pos, shell_func);
+
+                    if (weapon_id == PLAYER_SSHOTGUN)
+                    {
+                        // one more shell, since it's double barreled shoutgun
+                        ent_create(bbox_casing_mdl, &casing_pos, shell_func);
+                    }
+                }
+                else
+                {
+                    ent_create(bbox_casing_mdl, &casing_pos, casing_func);
+                }
+
+                hero->weapon_casing_spawn = false;
+            }
+        }
     }
 }
 
@@ -219,6 +271,9 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
         return;
     }
 
+    // update ammo
+    player_ammo = hero->weapon[weapon_id].ammo;
+
     // state machine
     // drawing ?
     if (hero->weapon[weapon_id].ent->OBJ_STATE == PLAYER_WPN_DRAW)
@@ -281,8 +336,8 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
             }
             else
             {
-                // play 'dry shoot sound'
                 // switch for to better weapon
+                player_weapon_find_better(hero, weapon_id);
             }
         }
         else
@@ -312,6 +367,9 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
 
         if (hero->weapon_snd_switch != PLAYER_WPN_SHOOT)
         {
+            // allow to spawn casings
+            hero->weapon_casing_spawn = true;
+
             // saw ?
             player_saw_snd_attack(hero);
 
@@ -334,14 +392,14 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
             // reset frames (but not for saw, since it's looping)
             if (weapon_id != PLAYER_SAW)
             {
-                hero->weapon[weapon_id].anim_speed = 0;
+                hero->weapon[weapon_id].anim_frame = 0;
             }
 
             // call shooting function here
             weapon_function = hero->weapon[weapon_id].fnc;
             if (weapon_function != NULL)
             {
-                weapon_function();
+                weapon_function(hero);
             }
 
             hero->weapon_snd_switch = PLAYER_WPN_SHOOT;
@@ -359,6 +417,12 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
     // hide ?
     if (hero->weapon[weapon_id].ent->OBJ_STATE == PLAYER_WPN_HIDE)
     {
+        if (hero->weapon_snd_switch != PLAYER_WPN_HIDE)
+        {
+            snd_play(weapon_holster_ogg, weapon_draw_volume, 0);
+            hero->weapon_snd_switch = PLAYER_WPN_HIDE;
+        }
+
         hero->weapon_draw_counter += time_frame / 8;
         if (hero->weapon_draw_counter >= weapon_draw_time)
         {
@@ -369,13 +433,6 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
             hero->weapon_draw_counter = weapon_draw_time;
         }
     }
-
-    DEBUG_VAR(weapon_fire_key_busy, 200);
-    DEBUG_VAR(hero->weapon[weapon_id].ent->OBJ_STATE, 220);
-    DEBUG_VAR(weapon_do_recoil, 240);
-
-    DEBUG_VAR(hero->weapon[PLAYER_PISTOL].animate, 280);
-    DEBUG_VAR(hero->weapon[PLAYER_PISTOL].anim_speed, 300);
 
     // switch weapons
     player_switch_weapons(hero);

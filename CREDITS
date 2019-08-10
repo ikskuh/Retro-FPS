@@ -4,5 +4,33 @@ https://freedoom.github.io/
 https://github.com/freedoom/freedoom
 
 - ID Software
-14 placeholder sounds (underwater, water in, water in slow, water out, player death in water, drown, gasp, swim up sounds, secret wall moving, stopping and secret found sound)
+13 placeholder sounds (water in, water in slow, water out, player death in water, drown, gasp, swim up sounds, secret wall moving, stopping and secret found sound)
 This sounds aren't shared in this repository! I'm gonna replace them in future.
+
+- Lasergun shoot and dry shoot sounds are from "Superpowers Western Fps Asset Pack (part 1) by Pixel-boy".
+(Link https://github.com/sparklinlabs/superpowers-asset-packs)
+
+- Saw idle and full speed sounds are from youtube channel "Audio Productions" - video called "SCARY CHAINSAW NOISE Sound Effect Chainsaw Sound"
+(Link to the video https://www.youtube.com/watch?v=daM6guU_86s&t=9s)
+
+- Ricochete sounds are from youtube channel "SoundEffectsFactory" - video called "Bullet Ricochet Sound Effects [High Quality]"
+(Link to the video https://www.youtube.com/watch?v=z2mHMkZlFxA)
+
+- Weapon draw/holster sounds are from youtube channel "n Beats" - video called "Gun Holster Sound Effect | sfx | HD"
+(Link to the video https://www.youtube.com/watch?v=tT7aqRTaGEw)
+
+- Underwater sound is from "MystyMood" made by "Loopix-Project".
+(Link http://www.loopix-project.com/)
+
+- Shells and casings sprites (flying and floor) are from "[Resource] [Weapons] Captain J's SnapShooting Workshop" (Various Casings and Rounds, doom friendly, shades awkwardly. and based on doomzone's.)
+(Link https://forum.zdoom.org/viewtopic.php?f=37&t=37556)
+
+- Casing impact sounds (only for simple bullets) are made by "SFX Bible" from webpage https://www.soundsnap.com
+(Link https://www.soundsnap.com/user-name/sfx_bible)
+
+- Shotgun shell impacts, explosions, underwater explosions and bullet hits water sounds are from "Storyblocks audio)
+(Link https://www.audioblocks.com)
+
+- Skyboxe textures by Mfg Tobias Klimmeck
+Email: h.klimmeck@freenet.de
+Website: www.3dmasterplan.de

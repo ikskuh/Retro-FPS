@@ -1,6 +1,12 @@
 #ifndef _PLAYER_WEAPONS_H_
 #define _PLAYER_WEAPONS_H_
 
+// pointer to weapon's shooting function
+var weapon_function(PLAYER *hero);
+
+// find better weapon
+void player_weapon_find_better(PLAYER *hero, var num);
+
 // reset weapons input
 void player_weapon_reset_input(PLAYER *hero);
 

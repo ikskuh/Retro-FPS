@@ -239,6 +239,9 @@ technique turb
 	pass one
 	{		
 		CullMode=none;
+		ZWriteEnable = True;
+		AlphaBlendEnable = True;
+		AlphaTestEnable = True;
 		VertexShader = compile vs_2_0 turb_VS();
 	}
 }

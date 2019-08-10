@@ -25,7 +25,7 @@ void ent_interact(ENTITY *ent, CCT *cct)
     {
         // make sure to note that this is an interaction trace
         ent->OBJ_C_INDICATOR = INTERACT;
-        c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
+        c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
         ent_trace(ent, &start_pos, &cct->interact_front_pos, ACTIVATE_SHOOT);
         cct->interact_hit_front = false;
 
@@ -46,7 +46,7 @@ void ent_interact(ENTITY *ent, CCT *cct)
         {
             // make sure to note that this is an interaction trace
             ent->OBJ_C_INDICATOR = INTERACT;
-            c_ignore(PUSH_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
+            c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, PATHFIND_GROUP, ENEMY_GROUP, 0);
             ent_trace(ent, &start_pos, &cct->interact_down_pos, ACTIVATE_SHOOT);
         }
 
@@ -167,7 +167,7 @@ void ent_foot_check(ENTITY *ent, CCT *cct)
     vec_set(&check_vec, vector(ent->x, ent->y, ent->z - cct_grav_trace_start_offset));
     check_vec.x += sign(cct->force.x) + (cct->foot_check_length * sign(cct->force.x));
 
-    c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_trace(ent, vector(ent->x, ent->y, ent->z - cct_grav_trace_start_offset), &check_vec, IGNORE_YOU | USE_BOX);
     if (HIT_TARGET && abs(normal.z) < cct_slope_fac && (hit->z - (ent->z + ent->min_z)) > cct->foot_step_height)
     {
@@ -178,7 +178,7 @@ void ent_foot_check(ENTITY *ent, CCT *cct)
     vec_set(&check_vec, vector(ent->x, ent->y, ent->z - cct_grav_trace_start_offset));
     check_vec.y += sign(cct->force.y) + (cct->foot_check_length * sign(cct->force.y));
 
-    c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_trace(ent, vector(ent->x, ent->y, ent->z - cct_grav_trace_start_offset), &check_vec, IGNORE_YOU | USE_BOX);
     if (HIT_TARGET && abs(normal.z) < cct_slope_fac && (hit->z - (ent->z + ent->min_z)) > cct->foot_step_height)
     {

@@ -1,9 +1,10 @@
 
 // create new level object
-void level_setup(var num, STRING *str, STRING *snd, COLOR *fog, ANGLE *sun, var lightness, var near, var far, var start, var end)
+void level_setup(var num, STRING *str, STRING *snd, STRING *sky, COLOR *fog, ANGLE *sun, var lightness, var near, var far, var start, var end)
 {
 	strcpy(map[num].name, str);
 	strcpy(map[num].music, snd);
+	strcpy(map[num].sky, sky);
 	vec_set(&map[num].fog_color, fog);
 	vec_set(&map[num].sun_angle, sun);
 
@@ -17,7 +18,7 @@ void level_setup(var num, STRING *str, STRING *snd, COLOR *fog, ANGLE *sun, var 
 // initialize all levels
 void init_levels()
 {
-	level_setup(0, "map.wmb", "", vector(128, 128, 128), vector(270, -25, 0), 0, 0.1, 4500, 100, 2000);
+	level_setup(0, "map.wmb", "", "sky_space+6.tga", vector(128, 128, 128), vector(270, -25, 0), 0, 0.1, 4500, 100, 2000);
 }
 
 // set level settings (such as fog, clipping etc)
@@ -39,11 +40,17 @@ void set_level_settings()
 	fog_color = 4;
 	vec_set(&d3d_fogcolor4.blue, &map[level_id].fog_color);
 	vec_set(&sky_color.blue, &d3d_fogcolor4.blue);
+
+	// create sky
+	pipeline_sky_create(map[level_id].sky);
 }
 
 // reset some global level variables
 void level_reset()
 {
+	// remove sky
+	//pipeline_sky_remove();
+
 	// stop sounds/music
 	snd_stopall(4);
 	music_stop();

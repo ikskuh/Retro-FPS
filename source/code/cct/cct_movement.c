@@ -23,7 +23,7 @@ void ent_gravity_trace(ENTITY *ent, CCT *cct)
     // perform gravity trace
     vec_set(&ent->min_x, vector(-(cct->bbox_x - 1), -(cct->bbox_y - 1), -0.1));
     vec_set(&ent->max_x, vector((cct->bbox_x - 1), (cct->bbox_y - 1), 0.1));
-    c_ignore(PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_trace(ent, &from, &to, IGNORE_PUSH | SCAN_TEXTURE | USE_BOX);
     vec_set(&ent->min_x, vector(-cct->bbox_x, -cct->bbox_y, -0.1));
     vec_set(&ent->max_x, vector(cct->bbox_x, cct->bbox_y, cct->bbox_z));
@@ -184,8 +184,23 @@ void ent_get_input(ENTITY *ent, CCT *cct)
     // if object is dead, stop all input forces
     if (ent->OBJ_HEALTH <= 0)
     {
+        // reset main movement forces
         cct->force.x = 0;
         cct->force.y = 0;
+        cct->swim_z_force = 0;
+        cct->swim_z_speed = 0;
+        cct->swim_z_abs_dist = 0;
+
+        // reset input keys
+        cct->forward = 0;
+        cct->backward = 0;
+        cct->strafe_left = 0;
+        cct->strafe_right = 0;
+        cct->run = 0;
+        cct->jump = 0;
+        cct->dive = 0;
+        cct->interact = 0;
+        cct->pan_rotation = 0;
     }
 }
 
@@ -258,7 +273,7 @@ void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct)
     }
     else
     {
-        c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+        c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
         ent_move(ent, nullvector, vector(0, 0, cct->soil_height - ent->z), IGNORE_YOU | GLIDE);
         cct->soil_contact = true;
         cct->force.z = 0;
@@ -288,7 +303,7 @@ void ent_vertical_movement_on_foot(ENTITY *ent, CCT *cct)
 
     if (cct->force.z)
     {
-        c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+        c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
         ent_move(ent, nullvector, vector(0, 0, maxv(cct->force.z * time_step, cct->soil_height - ent->z)), IGNORE_YOU | GLIDE);
 
         // hit the ceiling ?
@@ -328,7 +343,7 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct)
     {
         // reset slowly gravity from on foot state
         cct->force.z -= (cct->force.z - 0) * 0.5 * time_step;
-        c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+        c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
         ent_move(ent, nullvector, vector(0, 0, maxv(cct->force.z * time_step, cct->soil_height - ent->z)), IGNORE_YOU | GLIDE);
     }
     else
@@ -341,7 +356,7 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct)
         }
         else
         {
-            c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+            c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
             ent_move(ent, nullvector, vector(0, 0, cct->soil_height - ent->z), IGNORE_YOU | GLIDE);
             cct->soil_contact = true;
             cct->force.z = 0;
@@ -349,7 +364,7 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct)
 
         if (cct->force.z)
         {
-            c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+            c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
             ent_move(ent, nullvector, vector(0, 0, maxv(cct->force.z * time_step, cct->soil_height - ent->z)), IGNORE_YOU | GLIDE);
         }
     }
@@ -391,7 +406,7 @@ void ent_vertical_movement_in_water(ENTITY *ent, CCT *cct)
     cct->swim_z_abs_dist = cct->swim_z_speed * time_step;
 
     // absolute distance
-    c_ignore(PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     cct->water_z_distance = ent_move(ent, nullvector, vector(0, 0, cct->swim_z_abs_dist), IGNORE_PUSH);
 
     if (cct->water_z_distance > 0)
@@ -511,7 +526,7 @@ void ent_horizontal_movement_on_foot(ENTITY *ent, CCT *cct)
 
     // relative distance
     move_friction = 0;
-    c_ignore(PLAYER_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(WATER_GROUP, PLAYER_GROUP, PATHFIND_GROUP, 0);
     cct->moving_distance = ent_move(ent, nullvector, &cct->dist, IGNORE_PUSH | IGNORE_YOU | GLIDE);
 
     if (cct->moving_distance > 0.5)
@@ -526,7 +541,7 @@ void ent_horizontal_movement_on_foot(ENTITY *ent, CCT *cct)
     }
 
     // absolute distance
-    c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_move(ent, nullvector, &cct->abs_dist, IGNORE_YOU | GLIDE);
 }
 
@@ -585,7 +600,7 @@ void ent_horizontal_movement_in_water(ENTITY *ent, CCT *cct)
 
     // relative distance
     move_friction = 0;
-    c_ignore(PLAYER_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(WATER_GROUP, PLAYER_GROUP, PATHFIND_GROUP, 0);
     cct->moving_distance = ent_move(ent, nullvector, &cct->dist, IGNORE_PUSH | IGNORE_YOU | GLIDE);
 
     if (cct->moving_distance > 0.5)
@@ -600,7 +615,7 @@ void ent_horizontal_movement_in_water(ENTITY *ent, CCT *cct)
     }
 
     // absolute distance
-    c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_move(ent, nullvector, &cct->abs_dist, IGNORE_YOU | GLIDE);
 }
 

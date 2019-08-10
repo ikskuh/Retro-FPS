@@ -127,4 +127,8 @@ void pipeline_update();
 
 void pipeline_resolution();
 
+void pipeline_sky_create();
+
+void pipeline_sky_remove();
+
 #endif

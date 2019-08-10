@@ -1,5 +1,5 @@
-#ifndef _PLAYER_WPN_ROCKETLAUNCHER_H_
-#define _PLAYER_WPN_ROCKETLAUNCHER_H_
+#ifndef _PLAYER_WPN_ROCKETL_H_
+#define _PLAYER_WPN_ROCKETL_H_
 
 // initialize all rocketlauncher parameters
 void player_rocketlauncher_init(PLAYER *hero);

@@ -102,7 +102,7 @@ void ent_detect_water_edge(ENTITY *ent, CCT *cct)
     vec_set(&cct->water_out_trace_top, &cct->water_out_trace_mid);
     cct->water_out_trace_top.z += cct->bbox_z;
 
-    c_ignore(PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_trace(ent, &ent->x, &cct->water_out_trace_mid, IGNORE_PUSH);
     cct->water_mid_trace_result = false;
     if (HIT_TARGET)
@@ -110,7 +110,7 @@ void ent_detect_water_edge(ENTITY *ent, CCT *cct)
         cct->water_mid_trace_result = true;
     }
 
-    c_ignore(PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_trace(ent, vector(ent->x, ent->y, cct->water_out_trace_top.z), &cct->water_out_trace_top, IGNORE_PUSH);
     cct->water_top_trace_result = false;
     if (HIT_TARGET)
@@ -241,10 +241,11 @@ void ent_water_interaction_sounds(ENTITY *ent, CCT *cct)
                 ent_playsound(ent, water_in_ogg, cct_snd_volume);
             }
 
+            // create impact on water place
+            water_create_small_impact(vector(ent->x, ent->y, cct->water_z_height + 0.1), 0.5);
+
             // add some underwater bubbles
             bubbles_spawn(&cct->origin, 64, vector(16, 16, 32), cct->water_z_height);
-
-            // add water splash fx on water plane
 
             cct->water_in_switch = true;
         }
@@ -403,6 +404,23 @@ void ent_air_underwater(ENTITY *ent, CCT *cct)
     }
     else
     {
+        // but still in water ?
+        if (cct->water_state == IN_WATER)
+        {
+            // create water ripple effect
+            if ((total_frames % 10) == 1 && cct->is_moving == true)
+            {
+                water_create_ripple_effect(vector(ent->x, ent->y, cct->water_z_height + 0.1), 0.5);
+            }
+            else
+            {
+                if ((total_frames % 50) == 1)
+                {
+                    water_create_ripple_effect(vector(ent->x, ent->y, cct->water_z_height + 0.1), 0.5);
+                }
+            }
+        }
+
         // increase air when out of water
         cct->air_underwater = clamp(cct->air_underwater += 2 * time_step, 0, 100);
 

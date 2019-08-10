@@ -96,15 +96,41 @@
 #define PLAYER_ROCKETLAUNCHER 5
 #define PLAYER_LASERGUN 6
 
+// skills used by projectiles
+#define ORIGIN_X skill1
+#define ORIGIN_Y skill2
+#define ORIGIN_Z skill3
+#define DIR_X skill4
+#define DIR_Y skill5
+#define DIR_Z skill6
+#define VEL_X skill7
+#define VEL_Y skill8
+#define VEL_Z skill9
+#define OWNER_GROUP skill10
+
+// projectiles states
+#define PROJ_FLY 0
+#define PROJ_HIT_ALIVE 1
+#define PROJ_HIT_STATIC 2
+#define PROJ_DELETE 3
+
+// skills used by casing
+#define CASING_VEL_X skill1
+#define CASING_VEL_Y skill2
+#define CASING_VEL_Z skill3
+#define CASING_DIST skill4
+#define CASING_HIT_COUNT skill5
+#define CASING_IS_SHELL skill6
+
 // collusion groups/push values
 #define PUSH_GROUP 2
-#define SWITCH_ITEM_GROUP 3
-#define PATHFIND_GROUP 4
-#define PLAYER_GROUP 5
-#define ENEMY_GROUP 6
-#define SHOOTABLE_GROUP 7
-#define OBSTACLE_GROUP 8
-
+#define WATER_GROUP 3
+#define SWITCH_ITEM_GROUP 4
+#define PATHFIND_GROUP 5
+#define PLAYER_GROUP 6
+#define ENEMY_GROUP 7
+#define SHOOTABLE_GROUP 8
+#define OBSTACLE_GROUP 9
 #define LEVEL_GROUP 10
 
 // object skills
@@ -121,6 +147,10 @@
 #define TYPE_ELEVATOR 7
 #define TYPE_DOOR 8
 #define TYPE_PLATFORM 9
+#define TYPE_PLAYER_WEAPON 10
+#define TYPE_BULLET 11
+#define TYPE_CASING 12
+#define TYPE_WATER_PLANE 13
 
 #define OBJ_HEALTH skill53
 #define OBJ_ARMOR skill54
@@ -150,6 +180,9 @@
 // custom flags for "more than 8"
 #define OBJ_FLAGS skill64
 #define FLAG_DELETE_LATER 1
+
+// sky entity
+ENTITY *sky_ent;
 
 // water region
 STRING *reg_water_str = "water_reg";
@@ -220,19 +253,29 @@ var props_platform_snd_loop_volume = 150; // volume for platform looping sound e
 var props_secret_wall_snd_volume = 450;   // volume for all secret wall related sound effects
 var props_secret_zone_snd_volume = 50;    // volume for 'found secret' sound effect
 
+// water stuff
+var water_small_impact_volume = 48; // volume water small impact sound effect
+var water_hard_impact_volume = 256; // volume water small impact sound effect
+
 // weapon stuff
-var weapon_id = PLAYER_PISTOL;    // currently equiped weapon's ID
-var weapon_bob_y = 0;             // weapon's sway effect (left-right)
-var weapon_bob_z = 0;             // weapon's sway effect (up-down)
-var weapon_z_land = 0;            // weapon's landing effect
-var weapon_do_recoil = false;     // true - if we need to have recoil effect, otherwise - false
-var weapon_draw_volume = 45;      // volume for player's weapon draw sound effect
-var weapon_idle_volume = 35;      // volume for player's weapon idle sound effect (saw)
-var weapon_shoot_volume = 65;     // volume for player's weapon shoot sound effect
-var weapon_draw_time = 0.25;      // default drawing time for weapons
-var weapon_in_use = false;        // true - if player's has equiped weapon, otherwise - false
-var weapon_fire_key_busy = false; // true - if fire button is busy, otherwise - false
-var weapon_function();            // pointer to weapon's shooting function
+var weapon_id = PLAYER_PISTOL;     // currently equiped weapon's ID
+var weapon_bob_y = 0;              // weapon's sway effect (left-right)
+var weapon_bob_z = 0;              // weapon's sway effect (up-down)
+var weapon_z_land = 0;             // weapon's landing effect
+var weapon_do_recoil = false;      // true - if we need to have recoil effect, otherwise - false
+var weapon_draw_volume = 45;       // volume for player's weapon draw sound effect
+var weapon_idle_volume = 35;       // volume for player's weapon idle sound effect (saw)
+var weapon_shoot_volume = 65;      // volume for player's weapon shoot sound effect
+var weapon_draw_time = 0.25;       // default drawing time for weapons
+var weapon_in_use = false;         // true - if player's has equiped weapon, otherwise - false
+var weapon_fire_key_busy = false;  // true - if fire button is busy, otherwise - false
+var weapon_ric_volume = 96;        // volume for ricochet sounds effects
+var weapon_casing_snd_volume = 64; // weapon casing impact sound effect volume
+var weapon_casing_snd_counter = 0; // counts amount of existing casings
+
+// chainsaw hit sounds
+var player_saw_hit_snd_handle = 0;  // handle for player's chainsaw hit sound effect
+var player_saw_hit_snd_volume = 55; // volume of player's chainsaw hit sound effect
 
 // shader pipeline
 VIEW *TempView;

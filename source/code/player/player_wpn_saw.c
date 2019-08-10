@@ -1,4 +1,46 @@
 
+// play saw hit sound
+void saw_hit_solid_sfx()
+{
+    if (snd_playing(player_saw_hit_snd_handle))
+    {
+        snd_stop(player_saw_hit_snd_handle);
+    }
+    var rnd_snd = integer(random(3));
+    if (rnd_snd == 0)
+    {
+        player_saw_hit_snd_handle = snd_play(weapon_saw_hit_01_ogg, player_saw_hit_snd_volume, 0);
+    }
+    if (rnd_snd == 1)
+    {
+        player_saw_hit_snd_handle = snd_play(weapon_saw_hit_02_ogg, player_saw_hit_snd_volume, 0);
+    }
+    if (rnd_snd == 2)
+    {
+        player_saw_hit_snd_handle = snd_play(weapon_saw_hit_03_ogg, player_saw_hit_snd_volume, 0);
+    }
+}
+
+// play saw impact sound
+void saw_impact_fx(var is_alive, VECTOR *hit_vector, VECTOR *surf_angle)
+{
+    // we hit something static here
+    if (is_alive == false)
+    {
+        VECTOR temp_tec;
+        VECTOR impact_vec;
+        vec_fill(&impact_vec, 0);
+        vec_set(&impact_vec, vector(4, 0, 0));
+
+        vec_to_angle(&temp_tec, &surf_angle->x);
+        vec_rotate(&impact_vec, &temp_tec);
+        vec_add(&impact_vec, &hit_vector->x);
+
+        effect(bullet_impact_particle, 8 + random(8), &impact_vec, nullvector);
+        saw_hit_solid_sfx();
+    }
+}
+
 // stop saw sound
 void player_saw_stop_snd(PLAYER *hero)
 {
@@ -101,19 +143,43 @@ void player_saw_snd_attack(PLAYER *hero)
 // saw attack function
 void player_saw_attack(PLAYER *hero)
 {
-    // trace here
+    VECTOR temp_vec;
+    vec_set(&temp_vec, vector(16, 0, 0));
+    vec_rotate(&temp_vec, &camera->pan);
+    vec_add(&temp_vec, &camera->x);
+    c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_trace(&camera->x, &temp_vec, TRACE_FLAGS);
+
+    if (HIT_TARGET)
+    {
+        if (you)
+        {
+            if (you->OBJ_TYPE == TYPE_NPC)
+            {
+                saw_impact_fx(true, &hit->x, &normal);
+            }
+            else
+            {
+                saw_impact_fx(true, &hit->x, &normal);
+            }
+        }
+        else
+        {
+            saw_impact_fx(false, &hit->x, &normal);
+        }
+    }
 }
 
 // animate saw
 void player_saw_animate(PLAYER *hero)
 {
     // shooting ?
-    if (weapon_fire_key_busy == true)
+    if (weapon_fire_key_busy == true && weapon_in_use == true)
     {
         // for shooting, we need to play only last two frames
-        hero->weapon[PLAYER_SAW].anim_speed += time_step;
-        hero->weapon[PLAYER_SAW].anim_speed %= (hero->weapon[PLAYER_SAW].anim_total_frames / 2);
-        hero->weapon[PLAYER_SAW].ent->frame = hero->weapon[PLAYER_SAW].anim_speed + 3;
+        hero->weapon[PLAYER_SAW].anim_frame += time_step;
+        hero->weapon[PLAYER_SAW].anim_frame %= (hero->weapon[PLAYER_SAW].anim_total_frames / 2);
+        hero->weapon[PLAYER_SAW].ent->frame = hero->weapon[PLAYER_SAW].anim_frame + 3;
     }
     else // weapon not busy ?
     {
@@ -121,9 +187,9 @@ void player_saw_animate(PLAYER *hero)
         if (hero->weapon[PLAYER_SAW].ent->OBJ_STATE == PLAYER_WPN_IDLE)
         {
             // for idle, we need to play only first two frames !
-            hero->weapon[PLAYER_SAW].anim_speed += 0.75 * time_step;
-            hero->weapon[PLAYER_SAW].anim_speed %= (hero->weapon[PLAYER_SAW].anim_total_frames / 2);
-            hero->weapon[PLAYER_SAW].ent->frame = hero->weapon[PLAYER_SAW].anim_speed + 1;
+            hero->weapon[PLAYER_SAW].anim_frame += 0.75 * time_step;
+            hero->weapon[PLAYER_SAW].anim_frame %= (hero->weapon[PLAYER_SAW].anim_total_frames / 2);
+            hero->weapon[PLAYER_SAW].ent->frame = hero->weapon[PLAYER_SAW].anim_frame + 1;
         }
         else
         {

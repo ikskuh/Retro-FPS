@@ -145,3 +145,25 @@ void pipeline_resolution()
 	pipeline_update();
 #endif
 }
+
+void pipeline_sky_create(STRING *sky_name)
+{
+	sky_ent = ent_createlayer(SPHERE_MDL, SKY | SCENE | SHOW, 1);
+	vec_fill(&sky_ent->scale_x, (camera->clip_far * 0.99) / 16);
+	sky_ent->material = mtl_create();
+	sky_ent->material->skin1 = bmap_create(sky_name);
+	bmap_to_cubemap(sky_ent->material->skin1);
+	effect_load(sky_ent->material, "mtl_sky.fx");
+	sky_ent->material->skill1 = floatv(1.5);
+}
+
+void pipeline_sky_remove()
+{
+	if (sky_ent)
+	{
+		safe_remove(sky_ent->material->skin1);
+		effect_load(sky_ent->material, NULL);
+		safe_remove(sky_ent->material);
+		safe_remove(sky_ent);
+	}
+}

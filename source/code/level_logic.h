@@ -7,6 +7,7 @@ typedef struct LEVEL
 {
     char name[128];
     char music[128];
+    char sky[128];
     COLOR fog_color;
 
     ANGLE sun_angle;
@@ -23,7 +24,7 @@ typedef struct LEVEL
 LEVEL map[MAX_LEVELS];
 
 // create new level object
-void level_setup(var num, STRING *str, STRING *snd, COLOR *fog, ANGLE *sun, var lightness, var near, var far, var start, var end);
+void level_setup(var num, STRING *str, STRING *snd, STRING *sky, COLOR *fog, ANGLE *sun, var lightness, var near, var far, var start, var end);
 
 // initialize all levels
 void init_levels();

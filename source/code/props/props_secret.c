@@ -27,7 +27,7 @@ void secret_wall_update(ENTITY *ent)
             {
                 vec_normalize(&props->diff, spd);
             }
-            c_ignore(PUSH_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+            c_ignore(PUSH_GROUP, WATER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
             ent_move(ent, nullvector, &props->diff, IGNORE_WORLD | IGNORE_YOU | IGNORE_PUSH);
 
             // play start sound

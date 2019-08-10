@@ -36,12 +36,12 @@ void player_lasergun_animate(PLAYER *hero)
 
     if (hero->weapon[PLAYER_LASERGUN].animate == true)
     {
-        hero->weapon[PLAYER_LASERGUN].anim_speed += time_step;
-        hero->weapon[PLAYER_LASERGUN].ent->frame = hero->weapon[PLAYER_LASERGUN].anim_speed + 1;
-        if (hero->weapon[PLAYER_LASERGUN].anim_speed >= hero->weapon[PLAYER_LASERGUN].anim_total_frames)
+        hero->weapon[PLAYER_LASERGUN].anim_frame += time_step;
+        hero->weapon[PLAYER_LASERGUN].ent->frame = hero->weapon[PLAYER_LASERGUN].anim_frame + 1;
+        if (hero->weapon[PLAYER_LASERGUN].anim_frame >= hero->weapon[PLAYER_LASERGUN].anim_total_frames)
         {
             hero->weapon[PLAYER_LASERGUN].animate = false;
-            hero->weapon[PLAYER_LASERGUN].anim_speed %= hero->weapon[PLAYER_LASERGUN].anim_total_frames;
+            hero->weapon[PLAYER_LASERGUN].anim_frame %= hero->weapon[PLAYER_LASERGUN].anim_total_frames;
         }
     }
     else

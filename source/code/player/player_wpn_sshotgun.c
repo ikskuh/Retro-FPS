@@ -10,10 +10,13 @@ void player_sshotgun_init(PLAYER *hero)
     hero->weapon[PLAYER_SSHOTGUN].fire_rate = 1.2;
     hero->weapon[PLAYER_SSHOTGUN].recoil_strength = 3.5;
     hero->weapon[PLAYER_SSHOTGUN].damage = 20;
-    hero->weapon[PLAYER_SSHOTGUN].accuracy = 28;
+    hero->weapon[PLAYER_SSHOTGUN].accuracy = 48;
+
+    vec_set(&hero->weapon[PLAYER_SSHOTGUN].casing_pos, vector(8, 0, -3));
 
     hero->weapon[PLAYER_SSHOTGUN].animate = false;
     hero->weapon[PLAYER_SSHOTGUN].anim_total_frames = 12;
+    hero->weapon[PLAYER_SSHOTGUN].anim_casing_frame = 6;
     hero->weapon[PLAYER_SSHOTGUN].ent = ent_create(view_supershotgun_tga, &camera->x, player_weapon_fnc);
     hero->weapon[PLAYER_SSHOTGUN].fnc = player_sshotgun_shoot;
     hero->weapon[PLAYER_SSHOTGUN].snd = weapon_sshotgun_shoot_ogg;
@@ -23,6 +26,11 @@ void player_sshotgun_init(PLAYER *hero)
 void player_sshotgun_shoot(PLAYER *hero)
 {
     // create bullets here
+    var i = 0;
+    for (i = 0; i < 16; i++)
+    {
+        bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, 500, hero->weapon[PLAYER_SSHOTGUN].accuracy);
+    }
 }
 
 // animate super shotgun
@@ -36,12 +44,12 @@ void player_sshotgun_animate(PLAYER *hero)
 
     if (hero->weapon[PLAYER_SSHOTGUN].animate == true)
     {
-        hero->weapon[PLAYER_SSHOTGUN].anim_speed += 0.7 * time_step;
-        hero->weapon[PLAYER_SSHOTGUN].ent->frame = hero->weapon[PLAYER_SSHOTGUN].anim_speed + 1;
-        if (hero->weapon[PLAYER_SSHOTGUN].anim_speed >= hero->weapon[PLAYER_SSHOTGUN].anim_total_frames)
+        hero->weapon[PLAYER_SSHOTGUN].anim_frame += 0.7 * time_step;
+        hero->weapon[PLAYER_SSHOTGUN].ent->frame = hero->weapon[PLAYER_SSHOTGUN].anim_frame + 1;
+        if (hero->weapon[PLAYER_SSHOTGUN].anim_frame >= hero->weapon[PLAYER_SSHOTGUN].anim_total_frames)
         {
             hero->weapon[PLAYER_SSHOTGUN].animate = false;
-            hero->weapon[PLAYER_SSHOTGUN].anim_speed %= hero->weapon[PLAYER_SSHOTGUN].anim_total_frames;
+            hero->weapon[PLAYER_SSHOTGUN].anim_frame %= hero->weapon[PLAYER_SSHOTGUN].anim_total_frames;
         }
     }
     else

@@ -15,16 +15,20 @@
 #define PRAGMA_PATH "code\\fx"
 #define PRAGMA_PATH "code\\player"
 #define PRAGMA_PATH "code\\props"
+#define PRAGMA_PATH "resources"
 #define PRAGMA_PATH "resources\\models"
 #define PRAGMA_PATH "resources\\sounds"
+#define PRAGMA_PATH "resources\\sounds\\explo"
 #define PRAGMA_PATH "resources\\sounds\\player"
 #define PRAGMA_PATH "resources\\sounds\\props"
 #define PRAGMA_PATH "resources\\sounds\\items"
 #define PRAGMA_PATH "resources\\sounds\\weapons"
+#define PRAGMA_PATH "resources\\sounds\\weapons\\casing"
 #define PRAGMA_PATH "resources\\sprites"
 #define PRAGMA_PATH "resources\\sprites\\fx"
 #define PRAGMA_PATH "resources\\sprites\\items"
 #define PRAGMA_PATH "resources\\sprites\\weapons"
+#define PRAGMA_PATH "resources\\sprites\\weapons\\casing"
 
 #include "includes.h"
 
@@ -90,18 +94,11 @@ void on_frame_event()
 
     if (key_e)
     {
-        fps_max = 20;
+        fps_max = 30;
     }
     else
     {
-        if (key_z)
-        {
-            fps_max = 500;
-        }
-        else
-        {
-            fps_max = 60;
-        }
+        fps_max = 60;
     }
 
     if (game_state == GAME_LOADING)
@@ -140,6 +137,18 @@ void on_frame_event()
             FOR_ENT_OF_TYPE(ent, TYPE_PLAYER)
             {
                 player_update(ent);
+            }
+
+            // bullets ?
+            FOR_ENT_OF_TYPE(ent, TYPE_BULLET)
+            {
+                bullet_update(ent);
+            }
+
+            // casings/shells ?
+            FOR_ENT_OF_TYPE(ent, TYPE_CASING)
+            {
+                casing_update(ent);
             }
 
             // cleanup all entities that should be deleted
@@ -185,6 +194,12 @@ void on_ent_remove_event(ENTITY *ent)
     {
         delete_props(ent);
     }
+
+    if (!ent->parent)
+    {
+        ptr_remove(ent->parent);
+        ent->parent = NULL;
+    }
 }
 
 // triggered periodically during a level_load call
@@ -221,23 +236,4 @@ void main()
 #endif
 
     level_load(level_id);
-
-    var shooting_delay = 0, shooting_timer = 0;
-
-    while(!key_esc)
-    {
-
-		if(mouse_left && shooting_delay == 0){				
-			weapon_do_recoil = 1;
-			shooting_delay = 1;
-			
-		}
-		
-		if(shooting_delay == 1){
-			
-
-			
-		}
-        wait(1);
-    }
 }

@@ -186,10 +186,8 @@ void player_update(ENTITY *ent)
         ent->OBJ_HEALTH = -1;
     }
     DEBUG_VAR(ent->OBJ_HEALTH, 10);
-    DEBUG_VAR(cct->air_underwater, 30);
-    DEBUG_VAR(cct->falling_timer, 50);
-    DEBUG_VAR(cct->soil_contact, 70);
-    DEBUG_VAR(cct->is_grounded, 90);
+    DEBUG_VAR(player_ammo, 30);
+    DEBUG_VAR(cct->air_underwater, 50);
 
     // update our health, armor etc
     // used globally - f.e. for gui
@@ -288,6 +286,7 @@ void player_update(ENTITY *ent)
 action player_controller()
 {
     PLAYER *hero = register_player_struct(my);
+    player_weapons_initialize(my, hero);
     CCT *cct = register_cct(my);
 
     set(my, TRANSLUCENT);
@@ -306,7 +305,4 @@ action player_controller()
 
     my->emask |= (ENABLE_PUSH | ENABLE_SHOOT | ENABLE_SCAN);
     my->event = player_event_function;
-
-    // init weapons
-    player_weapons_initialize(my, hero);
 }

@@ -10,10 +10,13 @@ void player_shotgun_init(PLAYER *hero)
     hero->weapon[PLAYER_SHOTGUN].fire_rate = 0.85;
     hero->weapon[PLAYER_SHOTGUN].recoil_strength = 2;
     hero->weapon[PLAYER_SHOTGUN].damage = 10;
-    hero->weapon[PLAYER_SHOTGUN].accuracy = 24;
+    hero->weapon[PLAYER_SHOTGUN].accuracy = 28;
+
+    vec_set(&hero->weapon[PLAYER_SHOTGUN].casing_pos, vector(8, 0, -3));
 
     hero->weapon[PLAYER_SHOTGUN].animate = false;
     hero->weapon[PLAYER_SHOTGUN].anim_total_frames = 8;
+    hero->weapon[PLAYER_SHOTGUN].anim_casing_frame = 6;
     hero->weapon[PLAYER_SHOTGUN].ent = ent_create(view_shotgun_tga, &camera->x, player_weapon_fnc);
     hero->weapon[PLAYER_SHOTGUN].fnc = player_shotgun_shoot;
     hero->weapon[PLAYER_SHOTGUN].snd = weapon_shotgun_shoot_ogg;
@@ -23,6 +26,11 @@ void player_shotgun_init(PLAYER *hero)
 void player_shotgun_shoot(PLAYER *hero)
 {
     // create bullets here
+    var i = 0;
+    for (i = 0; i < 8; i++)
+    {
+        bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, 500, hero->weapon[PLAYER_SHOTGUN].accuracy);
+    }
 }
 
 // animate shotgun
@@ -36,12 +44,12 @@ void player_shotgun_animate(PLAYER *hero)
 
     if (hero->weapon[PLAYER_SHOTGUN].animate == true)
     {
-        hero->weapon[PLAYER_SHOTGUN].anim_speed += 0.75 * time_step;
-        hero->weapon[PLAYER_SHOTGUN].ent->frame = hero->weapon[PLAYER_SHOTGUN].anim_speed + 1;
-        if (hero->weapon[PLAYER_SHOTGUN].anim_speed >= hero->weapon[PLAYER_SHOTGUN].anim_total_frames)
+        hero->weapon[PLAYER_SHOTGUN].anim_frame += 0.75 * time_step;
+        hero->weapon[PLAYER_SHOTGUN].ent->frame = hero->weapon[PLAYER_SHOTGUN].anim_frame + 1;
+        if (hero->weapon[PLAYER_SHOTGUN].anim_frame >= hero->weapon[PLAYER_SHOTGUN].anim_total_frames)
         {
             hero->weapon[PLAYER_SHOTGUN].animate = false;
-            hero->weapon[PLAYER_SHOTGUN].anim_speed %= hero->weapon[PLAYER_SHOTGUN].anim_total_frames;
+            hero->weapon[PLAYER_SHOTGUN].anim_frame %= hero->weapon[PLAYER_SHOTGUN].anim_total_frames;
         }
     }
     else

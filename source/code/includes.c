@@ -5,6 +5,9 @@
 #include "particles.c"
 #include "music.c"
 #include "level_logic.c"
+#include "water_fx.c"
+#include "weapon_projectiles.c"
+#include "weapon_casing.c"
 
 // cct
 #include "cct.c"
@@ -30,7 +33,7 @@
 #include "player_wpn_shotgun.c"
 #include "player_wpn_sshotgun.c"
 #include "player_wpn_chaingun.c"
-#include "player_wpn_rocketlauncher.c"
+#include "player_wpn_rocketl.c"
 #include "player_wpn_lasergun.c"
 #include "player_weapon_logic.c"
 #include "player_camera.c"

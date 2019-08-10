@@ -73,3 +73,25 @@ void bubbles_spawn(VECTOR *pos, var num, VECTOR *range, var water_zone_height)
 		effect(bubbles_particle, 1, &temp_pos, vector(water_zone_height, 0, 0));
 	}
 }
+
+// bullet impact fade event
+void bullet_impact_fade_event(PARTICLE *p)
+{
+	particle_slow_down(p, 0.5);
+}
+
+// impact particle effects
+void bullet_impact_particle(PARTICLE *p)
+{
+	VECTOR temp_vec;
+	vec_randomize(&temp_vec, (2 + random(2)));
+	vec_add(&p->vel_x, &temp_vec);
+	vec_fill(&p->blue, random(96));
+	p->bmap = particle_png;
+	p->size = 1 + random(1);
+	p->gravity = 0.75;
+	p->alpha = 70 + random(30);
+	p->lifespan = 8 + random(1);
+	p->flags |= (MOVE | TRANSLUCENT | NOFILTER | LIGHT);
+	p->event = bullet_impact_fade_event;
+}

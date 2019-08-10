@@ -54,7 +54,7 @@ var platform_move(ENTITY *ent, PROPS *props)
     vec_normalize(&props->diff, minv(props->movement_speed * time_step, props->dist));
     props->diff.z = 0;
 
-    c_ignore(PUSH_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+    c_ignore(PUSH_GROUP, WATER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
     ent_move(ent, nullvector, &props->diff, IGNORE_WORLD | IGNORE_YOU | IGNORE_PUSH);
 
     // get next node

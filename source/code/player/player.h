@@ -23,8 +23,11 @@ typedef struct WEAPON
 	var accuracy;
 
 	var animate;
-	var anim_speed;
+	var anim_frame;
 	var anim_total_frames;
+	var anim_casing_frame;
+
+	VECTOR casing_pos;
 
 	void *fnc;
 	ENTITY *ent;
@@ -64,6 +67,7 @@ typedef struct PLAYER
 {
 	var death_snd_switch;
 	var weapon_snd_switch;
+	var weapon_casing_spawn;
 	var weapon_draw_counter;
 	CAMERA cam;
 	WEAPON weapon[MAX_WEAPONS];

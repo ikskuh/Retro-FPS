@@ -89,6 +89,7 @@ var ent_move(ENTITY *ent, VECTOR *reldist, VECTOR *absdist, var mode)
         diag("\nERROR! Can't move entity.. It doesn't exist!");
         return -1;
     }
+    
     my = ent;
     var distance = c_move(ent, reldist, absdist, MOVE_FLAGS | mode);
     my = NULL;

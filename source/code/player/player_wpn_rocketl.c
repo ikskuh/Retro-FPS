@@ -36,12 +36,12 @@ void player_rocketlauncher_animate(PLAYER *hero)
 
     if (hero->weapon[PLAYER_ROCKETLAUNCHER].animate == true)
     {
-        hero->weapon[PLAYER_ROCKETLAUNCHER].anim_speed += time_step;
-        hero->weapon[PLAYER_ROCKETLAUNCHER].ent->frame = hero->weapon[PLAYER_ROCKETLAUNCHER].anim_speed + 1;
-        if (hero->weapon[PLAYER_ROCKETLAUNCHER].anim_speed >= hero->weapon[PLAYER_ROCKETLAUNCHER].anim_total_frames)
+        hero->weapon[PLAYER_ROCKETLAUNCHER].anim_frame += time_step;
+        hero->weapon[PLAYER_ROCKETLAUNCHER].ent->frame = hero->weapon[PLAYER_ROCKETLAUNCHER].anim_frame + 1;
+        if (hero->weapon[PLAYER_ROCKETLAUNCHER].anim_frame >= hero->weapon[PLAYER_ROCKETLAUNCHER].anim_total_frames)
         {
             hero->weapon[PLAYER_ROCKETLAUNCHER].animate = false;
-            hero->weapon[PLAYER_ROCKETLAUNCHER].anim_speed %= hero->weapon[PLAYER_ROCKETLAUNCHER].anim_total_frames;
+            hero->weapon[PLAYER_ROCKETLAUNCHER].anim_frame %= hero->weapon[PLAYER_ROCKETLAUNCHER].anim_total_frames;
         }
     }
     else
