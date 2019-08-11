@@ -22,6 +22,9 @@ void water_create_medium_impact(VECTOR *pos, var scale);
 // create big water impact effect
 void water_create_big_impact(VECTOR *pos, var scale);
 
+// cct water impact
+void water_cct_impact(VECTOR *pos, var scale);
+
 // water hard impact sound
 void water_hard_impact_snd(ENTITY *ent);
 

@@ -95,3 +95,75 @@ void bullet_impact_particle(PARTICLE *p)
 	p->flags |= (MOVE | TRANSLUCENT | NOFILTER | LIGHT);
 	p->event = bullet_impact_fade_event;
 }
+
+// water splash effect event function
+void water_splash_event(PARTICLE *p)
+{
+	if (abs(p->vel_z) < 0.1 && p->z < p->skill_x)
+	{
+		vec_fill(&p->vel_x, 0);
+		p->z = p->skill_x;
+	}
+	else
+	{
+		p->vel_z -= time_step;
+		if (p->z < p->skill_x)
+		{
+			p->alpha = 0;
+		}
+	}
+
+	p->alpha -= 5 * time_step;
+	if (p->alpha < 0)
+	{
+		p->lifespan = 0;
+	}
+}
+
+// init splash effect
+void water_splash_init(PARTICLE *p, var size_, var size_random)
+{
+	// we recieve water region height
+	// as velocity X
+	p->skill_x = p->vel_x;
+	p->vel_x = 0;
+
+	// XY randomization
+	// as velocity Y
+	p->skill_y = p->vel_y;
+	p->vel_y = 0;
+
+	// Z randomization
+	// as velocity Z
+	p->skill_z = p->vel_z;
+	p->vel_z = 0;
+
+	p->vel_x = random(p->skill_y * 2) - p->skill_y;
+	p->vel_y = random(p->skill_y * 2) - p->skill_y;
+	p->vel_z = p->skill_z + random(3);
+
+	p->bmap = particle_png;
+
+	var random_color = random(32);
+	p->red = 11 + random(20) + random_color;
+	p->green = 32 + random(50) + random_color;
+	p->blue = 7 + random(20) + random_color;
+
+	p->size = size_ + random(size_random);
+	p->lifespan = 50;
+	p->alpha = 100;
+	p->flags |= (MOVE | TRANSLUCENT | NOFILTER);
+	p->event = water_splash_event;
+}
+
+// simple water splash effect
+void water_splash_particle(PARTICLE *p)
+{
+	water_splash_init(p, 0.5, 0.5);
+}
+
+// water splash effect from explosions
+void water_explo_splash_particle(PARTICLE *p)
+{
+	water_splash_init(p, 3, 2);
+}

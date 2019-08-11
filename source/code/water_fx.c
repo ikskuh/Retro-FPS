@@ -69,7 +69,8 @@ var water_get_pos_on_surface(ENTITY *ent, VECTOR *pos)
         return;
     }
 
-    ent_trace(ent, vector(ent->x, ent->y, ent->z + 32), &ent->x, IGNORE_PASSABLE | IGNORE_WORLD);
+    c_ignore(PUSH_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, PLAYER_GROUP, ENEMY_GROUP, SHOOTABLE_GROUP, 0);
+    ent_trace(ent, vector(ent->x, ent->y, ent->z + 32), &ent->x, SCAN_TEXTURE | IGNORE_WORLD);
     if (HIT_TARGET)
     {
         if (you)
@@ -110,8 +111,12 @@ void water_create_small_impact(VECTOR *pos, var scale)
     // create effects
     water_create_ripple_effect(&spawn_pos, scale);
 
+#ifndef PARTICLE_EFFECTS
     you = ent_create(water_splash_small_tga, &spawn_pos, water_splash_effect);
     vec_fill(&you->scale_x, scale);
+#else
+    effect(water_splash_particle, 32, &spawn_pos, vector(spawn_pos.z, 0.5, 1));
+#endif
 }
 
 // create medium water impact effect
@@ -124,8 +129,12 @@ void water_create_medium_impact(VECTOR *pos, var scale)
     // create effects
     water_create_ripple_effect(&spawn_pos, scale);
 
+#ifndef PARTICLE_EFFECTS
     you = ent_create(water_splash_medium_tga, &spawn_pos, water_splash_effect);
     vec_fill(&you->scale_x, scale);
+#else
+    effect(water_splash_particle, 64, &spawn_pos, vector(spawn_pos.z, 1, 3));
+#endif
 }
 
 // create big water impact effect
@@ -138,8 +147,30 @@ void water_create_big_impact(VECTOR *pos, var scale)
     // create effects
     water_create_ripple_effect(&spawn_pos, scale);
 
+#ifndef PARTICLE_EFFECTS
     you = ent_create(water_splash_big_tga, &spawn_pos, water_splash_effect);
     vec_fill(&you->scale_x, scale);
+#else
+    effect(water_explo_splash_particle, 256, &spawn_pos, vector(spawn_pos.z, 2.5, 4));
+#endif
+}
+
+// cct water impact
+void water_cct_impact(VECTOR *pos, var scale)
+{
+    // save position vector
+    VECTOR spawn_pos;
+    vec_set(&spawn_pos, pos);
+
+    // create effects
+    water_create_ripple_effect(&spawn_pos, scale);
+
+#ifndef PARTICLE_EFFECTS
+    you = ent_create(water_splash_medium_tga, &spawn_pos, water_splash_effect);
+    vec_fill(&you->scale_x, scale);
+#else
+    effect(water_splash_particle, 64, &spawn_pos, vector(spawn_pos.z, 1.5, 4));
+#endif
 }
 
 // water hard impact sound

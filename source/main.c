@@ -10,6 +10,9 @@
 // then comment this in order to use shaders
 //#define FREE_VERSION
 
+// comment this, to have sprite based effects (water splashes, bullet impacts etc)
+//#define PARTICLE_EFFECTS
+
 #define PRAGMA_PATH "code"
 #define PRAGMA_PATH "code\\cct"
 #define PRAGMA_PATH "code\\fx"

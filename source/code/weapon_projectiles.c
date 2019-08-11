@@ -1,4 +1,37 @@
 
+// impact sprite animation
+void bullet_impact_sprite()
+{
+    VECTOR temp_vec;
+    vec_fill(&temp_vec, 0);
+    vec_fill(&my->scale_x, 0.25 + random(0.25));
+
+    set(my, PASSABLE | NOFILTER);
+    my->ambient = 100;
+
+#ifndef FREE_VERSION
+    my->material = mtl_z_write;
+#endif
+
+    while (my)
+    {
+        if (my->frame > 4)
+        {
+            break;
+        }
+
+        // rotate towards the camera
+        vec_set(&temp_vec, &camera->x);
+        vec_sub(&temp_vec, &my->x);
+        vec_to_angle(&my->pan, &temp_vec);
+
+        my->skill1 += time_step;
+        my->frame = my->skill1 + 1;
+        wait(1);
+    }
+    ent_delete_later(my);
+}
+
 // ricochet sounds
 // MAX 4 bullet impact sounds !
 void bullet_ric_snd()
@@ -76,8 +109,11 @@ void bullet_impact_fx(ENTITY *ent, var is_alive, VECTOR *hit_vector, VECTOR *sur
         vec_rotate(&impact_vec, &temp_tec);
         vec_add(&impact_vec, &hit_vector->x);
 
+#ifndef PARTICLE_EFFECTS
+        ent_create(bullet_impact_tga, &impact_vec, bullet_impact_sprite);
+#else
         effect(bullet_impact_particle, 8 + random(8), &impact_vec, nullvector);
-
+#endif
         // only if not in water
         if (ent->OBJ_ARMOR != -1)
         {
@@ -188,7 +224,7 @@ void bullet_update(ENTITY *ent)
                 {
                     if (you->OBJ_TYPE == TYPE_WATER_PLANE)
                     {
-                        water_create_medium_impact(&hit->x, 0.5);
+                        water_create_medium_impact(&hit->x, 0.25);
                         ent_create(NULL, &hit->x, bullet_water_impact_snd);
                         ent->OBJ_HEALTH = -2;
                     }

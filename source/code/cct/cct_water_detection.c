@@ -242,7 +242,7 @@ void ent_water_interaction_sounds(ENTITY *ent, CCT *cct)
             }
 
             // create impact on water place
-            water_create_small_impact(vector(ent->x, ent->y, cct->water_z_height + 0.1), 0.5);
+            water_cct_impact(vector(ent->x, ent->y, cct->water_z_height + 0.1), 0.5);
 
             // add some underwater bubbles
             bubbles_spawn(&cct->origin, 64, vector(16, 16, 32), cct->water_z_height);

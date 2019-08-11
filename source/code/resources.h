@@ -49,6 +49,7 @@ STRING *item_suit_tga = "item_suit.tga";
 
 // weapon fx sprites
 STRING *rocket_flying_tga = "rocket_flying+8.tga";
+STRING *bullet_impact_tga = "bullet_impact+4.tga";
 
 // fx
 STRING *water_splash_small_tga = "splash_small+16.tga";

@@ -24,4 +24,16 @@ void bullet_impact_fade_event(PARTICLE *p);
 // impact particle effects
 void bullet_impact_particle(PARTICLE *p);
 
+// water splash effect event function
+void water_splash_event(PARTICLE *p);
+
+// init splash effect
+void water_splash_init(PARTICLE *p, var size_, var size_random);
+
+// simple water splash effect
+void water_splash_particle(PARTICLE *p);
+
+// water splash effect from explosions
+void water_explo_splash_particle(PARTICLE *p);
+
 #endif
