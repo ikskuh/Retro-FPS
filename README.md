@@ -25,7 +25,11 @@ If you want to find out more about the license part, you can read this
 
 https://github.com/3RUN/Retro-FPS/blob/master/FREEDOOM_COPYING.adoc
 
-Few screens
-![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_1.jpg?raw=true "Movement testing level preview")
+Few screen shots
+![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_0.jpg?raw=true "Test level preview.")
 
-![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_2.jpg?raw=true "Underwater fishing")
+![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_1.jpg?raw=true "Water splashes fx.")
+
+![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_5.jpg?raw=true "On water explosion test.")
+
+![Alt text](https://github.com/3RUN/Retro-FPS/blob/master/screenshots/shot_6.jpg?raw=true "Underwater explosion test.")
