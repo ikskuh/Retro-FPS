@@ -44,8 +44,13 @@ void bubbles_particle(PARTICLE *p)
 
 	if (p->z < p->skill_x - 16)
 	{
+#ifndef PARTICLE_EFFECTS
 		p->bmap = bubbles_tga;
 		p->size = 2 + random(4);
+#else
+		p->bmap = particle_png;
+		p->size = 0.5 + random(0.5);
+#endif
 		p->alpha = 25 + random(10);
 	}
 
@@ -87,6 +92,22 @@ void bullet_impact_particle(PARTICLE *p)
 	vec_randomize(&temp_vec, (2 + random(2)));
 	vec_add(&p->vel_x, &temp_vec);
 	vec_fill(&p->blue, random(96));
+	p->bmap = particle_png;
+	p->size = 1 + random(1);
+	p->gravity = 0.75;
+	p->alpha = 70 + random(30);
+	p->lifespan = 8 + random(1);
+	p->flags |= (MOVE | TRANSLUCENT | NOFILTER | LIGHT);
+	p->event = bullet_impact_fade_event;
+}
+
+// blood particles effect
+void blood_impact_particle(PARTICLE *p)
+{
+	VECTOR temp_vec;
+	vec_randomize(&temp_vec, (2 + random(2)));
+	vec_add(&p->vel_x, &temp_vec);
+	vec_set(&p->blue, vector(0, 0, 32 + random(64)));
 	p->bmap = particle_png;
 	p->size = 1 + random(1);
 	p->gravity = 0.75;
@@ -165,5 +186,73 @@ void water_splash_particle(PARTICLE *p)
 // water splash effect from explosions
 void water_explo_splash_particle(PARTICLE *p)
 {
-	water_splash_init(p, 3, 2);
+	water_splash_init(p, 1, 2);
+}
+
+// explosion fading event function
+void explosion_fade_event(PARTICLE *p)
+{
+	particle_slow_down(p, 0.5);
+
+	p->alpha -= 7.5 * time_step;
+	if (p->alpha < 0)
+	{
+		p->lifespan = 0;
+	}
+}
+
+// quake like explosion particles
+void explosion_particle(PARTICLE *p)
+{
+	vec_set(&p->vel_x, vector(random(32) - 16, random(32) - 16, random(32) - 16));
+	p->gravity = 0.25;
+
+	p->bmap = particle_png;
+	vec_set(&p->blue, vector(32, 64 + random(64), 128 + random(128)));
+
+	p->size = 0.5 + random(1);
+	p->lifespan = 50;
+	p->alpha = 100;
+	p->flags |= (MOVE | TRANSLUCENT | NOFILTER);
+	p->event = explosion_fade_event;
+}
+
+// fading event function for underwater explosion
+void explosion_underwater_fade_event(PARTICLE *p)
+{
+	particle_slow_down(p, 0.9);
+
+	if (p->z > p->skill_x)
+	{
+		p->lifespan = 0;
+	}
+
+	p->alpha -= 5 * time_step;
+	if (p->alpha < 0)
+	{
+		p->lifespan = 0;
+	}
+}
+
+// explosion effect underwater
+void explosion_underwater_particle(PARTICLE *p)
+{
+	p->skill_x = p->vel_x;
+	p->vel_x = 0;
+
+	vec_set(&p->vel_x, vector(random(16) - 8, random(16) - 8, random(16) - 8));
+	p->gravity = -1;
+
+#ifndef PARTICLE_EFFECTS
+	p->bmap = bubbles_tga;
+#else
+	p->bmap = particle_png;
+	p->size = 0.5 + random(1);
+	vec_fill(&p->blue, 128 + random(128));
+#endif
+
+	p->lifespan = 50;
+	p->alpha = 100;
+	p->flags |= (MOVE | TRANSLUCENT | NOFILTER);
+	p->event = explosion_underwater_fade_event;
 }

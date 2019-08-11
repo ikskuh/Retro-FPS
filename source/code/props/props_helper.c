@@ -69,3 +69,21 @@ void props_almost_opened_check(ENTITY *ent)
 		ent->OBJ_CHECK = true;
 	}
 }
+
+// place entity on the ground
+// this function uses c_trace instead of ent_trace
+// since it's called in action functions where my already exists !
+void props_place_on_ground(ENTITY *ent)
+{
+	if (!ent)
+	{
+		diag("\nERROR! Can't place entity on the ground! It doesn't exist..");
+		return;
+	}
+
+	c_trace(&ent->x, vector(ent->x, ent->y, ent->z - 1024), TRACE_FLAGS | IGNORE_MODELS);
+	if (HIT_TARGET)
+	{
+		ent->z = hit->z + ent->max_z;
+	}
+}

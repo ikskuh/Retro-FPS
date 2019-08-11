@@ -41,6 +41,10 @@ void set_level_settings()
 	vec_set(&d3d_fogcolor4.blue, &map[level_id].fog_color);
 	vec_set(&sky_color.blue, &d3d_fogcolor4.blue);
 
+	// prevent shadows on top of models below the player
+	shadow_mode |= IGNORE_SPRITES + IGNORE_PASSENTS + IGNORE_PASSABLE + IGNORE_MODELS;
+	mtl_shadow->alpha = 25;
+
 	// create sky
 	pipeline_sky_create(map[level_id].sky);
 }

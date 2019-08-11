@@ -14,6 +14,7 @@
 //#define PARTICLE_EFFECTS
 
 #define PRAGMA_PATH "code"
+#define PRAGMA_PATH "code\\ai"
 #define PRAGMA_PATH "code\\cct"
 #define PRAGMA_PATH "code\\fx"
 #define PRAGMA_PATH "code\\player"
@@ -29,6 +30,7 @@
 #define PRAGMA_PATH "resources\\sounds\\weapons\\casing"
 #define PRAGMA_PATH "resources\\sprites"
 #define PRAGMA_PATH "resources\\sprites\\fx"
+#define PRAGMA_PATH "resources\\sprites\\props"
 #define PRAGMA_PATH "resources\\sprites\\items"
 #define PRAGMA_PATH "resources\\sprites\\weapons"
 #define PRAGMA_PATH "resources\\sprites\\weapons\\casing"

@@ -10,7 +10,8 @@ void player_shotgun_init(PLAYER *hero)
     hero->weapon[PLAYER_SHOTGUN].fire_rate = 0.85;
     hero->weapon[PLAYER_SHOTGUN].recoil_strength = 2;
     hero->weapon[PLAYER_SHOTGUN].damage = 10;
-    hero->weapon[PLAYER_SHOTGUN].accuracy = 28;
+    hero->weapon[PLAYER_SHOTGUN].accuracy = 12;
+    hero->weapon[PLAYER_SHOTGUN].projectile_speed = 150;
 
     vec_set(&hero->weapon[PLAYER_SHOTGUN].casing_pos, vector(8, 0, -3));
 
@@ -27,9 +28,12 @@ void player_shotgun_shoot(PLAYER *hero)
 {
     // create bullets here
     var i = 0;
+    var spd = hero->weapon[PLAYER_SHOTGUN].projectile_speed;
+    var dmg = hero->weapon[PLAYER_SHOTGUN].damage;
+    var acc = hero->weapon[PLAYER_SHOTGUN].accuracy;
     for (i = 0; i < 8; i++)
     {
-        bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, 500, hero->weapon[PLAYER_SHOTGUN].accuracy);
+        bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, dmg, spd, acc);
     }
 }
 

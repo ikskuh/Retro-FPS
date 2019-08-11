@@ -24,6 +24,9 @@ void bullet_impact_fade_event(PARTICLE *p);
 // impact particle effects
 void bullet_impact_particle(PARTICLE *p);
 
+// blood particles effect
+void blood_impact_particle(PARTICLE *p);
+
 // water splash effect event function
 void water_splash_event(PARTICLE *p);
 
@@ -35,5 +38,11 @@ void water_splash_particle(PARTICLE *p);
 
 // water splash effect from explosions
 void water_explo_splash_particle(PARTICLE *p);
+
+// explosion fading event function
+void explosion_fade_event(PARTICLE *p);
+
+// quake like explosion particles
+void explosion_particle(PARTICLE *p);
 
 #endif

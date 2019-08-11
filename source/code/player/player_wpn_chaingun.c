@@ -10,7 +10,8 @@ void player_chaingun_init(PLAYER *hero)
     hero->weapon[PLAYER_CHAINGUN].fire_rate = 0.11;
     hero->weapon[PLAYER_CHAINGUN].recoil_strength = 0.45;
     hero->weapon[PLAYER_CHAINGUN].damage = 5;
-    hero->weapon[PLAYER_CHAINGUN].accuracy = 10;
+    hero->weapon[PLAYER_CHAINGUN].accuracy = 5;
+    hero->weapon[PLAYER_CHAINGUN].projectile_speed = 250;
 
     vec_set(&hero->weapon[PLAYER_CHAINGUN].casing_pos, vector(7, -3, -2));
 
@@ -26,7 +27,10 @@ void player_chaingun_init(PLAYER *hero)
 void player_chaingun_shoot(PLAYER *hero)
 {
     // create bullets here
-    bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, 500, hero->weapon[PLAYER_CHAINGUN].accuracy);
+    var spd = hero->weapon[PLAYER_CHAINGUN].projectile_speed;
+    var dmg = hero->weapon[PLAYER_CHAINGUN].damage;
+    var acc = hero->weapon[PLAYER_CHAINGUN].accuracy;
+    bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, dmg, spd, acc);
 }
 
 // animate chaingun

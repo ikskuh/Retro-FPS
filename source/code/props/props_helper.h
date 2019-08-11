@@ -13,4 +13,9 @@ void props_almost_closed_check(ENTITY *ent, PROPS *props);
 // check if props almost opened
 void props_almost_opened_check(ENTITY *ent);
 
+// place entity on the ground
+// this function uses c_trace instead of ent_trace
+// since it's called in action functions where my already exists !
+void props_place_on_ground(ENTITY *ent);
+
 #endif

@@ -21,6 +21,7 @@ typedef struct WEAPON
 	var recoil_strength;
 	var damage;
 	var accuracy;
+	var projectile_speed;
 
 	var animate;
 	var anim_frame;

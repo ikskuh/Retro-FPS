@@ -502,6 +502,15 @@ void ent_horizontal_movement_on_foot(ENTITY *ent, CCT *cct)
     cct->dist.y = cct->velocity.y * time_step;
     cct->dist.z = 0;
 
+    // push forces from props
+    if (vec_length(vector(cct->push_force.x, cct->push_force.y, 0)) > 0)
+    {
+        cct->abs_force.x += cct->push_force.x;
+        cct->abs_force.y += cct->push_force.y;
+
+        vec_fill(&cct->push_force, 0);
+    }
+
     // calculate absolute distance to move
     cct->abs_dist.x = cct->abs_force.x * time_step;
     cct->abs_dist.y = cct->abs_force.y * time_step;
@@ -513,15 +522,6 @@ void ent_horizontal_movement_on_foot(ENTITY *ent, CCT *cct)
         // if the actor is standing on a moving platform, add it's horizontal displacement
         cct->abs_dist.x += cct->surface_speed.x;
         cct->abs_dist.y += cct->surface_speed.y;
-    }
-
-    // push forces from props
-    if (vec_length(vector(cct->push_force.x, cct->push_force.y, 0)) > 0)
-    {
-        cct->abs_dist.x += cct->push_force.x;
-        cct->abs_dist.y += cct->push_force.y;
-
-        vec_fill(&cct->push_force, 0);
     }
 
     // relative distance
@@ -584,6 +584,15 @@ void ent_horizontal_movement_in_water(ENTITY *ent, CCT *cct)
     cct->dist.x = cct->velocity.x * time_step;
     cct->dist.y = cct->velocity.y * time_step;
     cct->dist.z = 0;
+
+    // push forces from props
+    if (vec_length(vector(cct->push_force.x, cct->push_force.y, 0)) > 0)
+    {
+        cct->abs_force.x += (cct->push_force.x * 0.5);
+        cct->abs_force.y += (cct->push_force.y * 0.5);
+
+        vec_fill(&cct->push_force, 0);
+    }
 
     // calculate absolute distance to move
     cct->abs_dist.x = cct->abs_force.x * time_step;
@@ -769,8 +778,6 @@ void ent_stop_movement_on_foot(CCT *cct)
         diag("\nERROR! Can't stop on foot movement, cct doesn't exist");
         return;
     }
-    // no pushing forces in water
-    vec_fill(&cct->push_force, 0);
 
     // reset absolute distance to move
     cct->abs_force.x -= (cct->abs_force.x - 0) * 0.25 * time_step;

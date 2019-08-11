@@ -5,6 +5,8 @@
 #include "particles.c"
 #include "music.c"
 #include "level_logic.c"
+#include "explosions_helper.c"
+#include "explosions_fx.c"
 #include "water_fx.c"
 #include "weapon_projectiles.c"
 #include "weapon_casing.c"
@@ -18,6 +20,7 @@
 // props
 #include "props.c"
 #include "props_helper.c"
+#include "props_barrel.c"
 #include "props_liquid.c"
 #include "props_switch.c"
 #include "props_trigger.c"
@@ -39,3 +42,6 @@
 #include "player_camera.c"
 #include "player_state_machine.c"
 #include "player_behaviour.c"
+
+// ai
+#include "ai_test.c"

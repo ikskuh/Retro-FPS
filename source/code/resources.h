@@ -2,7 +2,9 @@
 #define _RESOURCES_H_
 
 // bounding boxes
+STRING *bbox_cct_mdl = "bbox_npc.mdl";
 STRING *bbox_casing_mdl = "bbox_casing.mdl";
+STRING *bbox_barrel_mdl = "bbox_barrel.mdl";
 
 // particles
 BMAP *particle_png = "particle.png";
@@ -50,12 +52,23 @@ STRING *item_suit_tga = "item_suit.tga";
 // weapon fx sprites
 STRING *rocket_flying_tga = "rocket_flying+8.tga";
 STRING *bullet_impact_tga = "bullet_impact+4.tga";
+STRING *blood_impact_tga = "blood_impact+4.tga";
 
 // fx
 STRING *water_splash_small_tga = "splash_small+16.tga";
 STRING *water_splash_medium_tga = "splash_medium+16.tga";
 STRING *water_splash_big_tga = "splash_big+16.tga";
 STRING *water_ripple_tga = "water_ripple+16.tga";
+STRING *explo_particle_sprite_tga = "explo_sprite+4.tga";
+STRING *explo_underwater_particle_sprite_tga = "explo_underwater_sprite+4.tga";
+
+// this explosion sprites, are used for 'non particle' effects
+STRING *explo_barrel_tga = "explo_barrel+16.tga";
+STRING *explo_big_tga = "explo_big+16.tga";
+STRING *explo_underwater_tga = "explo_underwater+16.tga";
+
+// props
+STRING *props_barrel_tga = "props_barrel+2.tga";
 
 // fx sounds
 SOUND *water_hard_impact_01_ogg = "water_hard_impact_01.ogg";

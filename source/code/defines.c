@@ -89,7 +89,7 @@ var ent_move(ENTITY *ent, VECTOR *reldist, VECTOR *absdist, var mode)
         diag("\nERROR! Can't move entity.. It doesn't exist!");
         return -1;
     }
-    
+
     my = ent;
     var distance = c_move(ent, reldist, absdist, MOVE_FLAGS | mode);
     my = NULL;
@@ -122,4 +122,15 @@ var ent_scan(ENTITY *ent, VECTOR *pos, ANGLE *ang, VECTOR *sector, var mode)
     var distance = c_scan(pos, ang, sector, mode);
     my = NULL;
     return distance;
+}
+
+// rotate entity towards the camera
+void ent_rotate_to_camera(ENTITY *ent)
+{
+    VECTOR temp_vec;
+    vec_set(&temp_vec, &camera->x);
+    vec_sub(&temp_vec, &ent->x);
+    vec_to_angle(&ent->pan, &temp_vec);
+    ent->tilt = 0;
+    ent->roll = 0;
 }

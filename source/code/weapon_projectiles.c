@@ -21,9 +21,38 @@ void bullet_impact_sprite()
         }
 
         // rotate towards the camera
-        vec_set(&temp_vec, &camera->x);
-        vec_sub(&temp_vec, &my->x);
-        vec_to_angle(&my->pan, &temp_vec);
+        ent_rotate_to_camera(my);
+
+        my->skill1 += time_step;
+        my->frame = my->skill1 + 1;
+        wait(1);
+    }
+    ent_delete_later(my);
+}
+
+// blood impact sprite animation
+void bullet_blood_impact_sprite()
+{
+    VECTOR temp_vec;
+    vec_fill(&temp_vec, 0);
+    vec_fill(&my->scale_x, 0.25 + random(0.25));
+
+    set(my, PASSABLE | NOFILTER);
+    my->ambient = 100;
+
+#ifndef FREE_VERSION
+    my->material = mtl_z_write;
+#endif
+
+    while (my)
+    {
+        if (my->frame > 4)
+        {
+            break;
+        }
+
+        // rotate towards the camera
+        ent_rotate_to_camera(my);
 
         my->skill1 += time_step;
         my->frame = my->skill1 + 1;
@@ -97,17 +126,18 @@ void bullet_water_impact_snd()
 // handle bullet impacts
 void bullet_impact_fx(ENTITY *ent, var is_alive, VECTOR *hit_vector, VECTOR *surf_angle)
 {
+    VECTOR temp_tec;
+    VECTOR impact_vec;
+    vec_fill(&impact_vec, 0);
+    vec_set(&impact_vec, vector(4, 0, 0));
+
+    vec_to_angle(&temp_tec, &surf_angle->x);
+    vec_rotate(&impact_vec, &temp_tec);
+    vec_add(&impact_vec, &hit_vector->x);
+
     // we hit something static here
     if (is_alive == false)
     {
-        VECTOR temp_tec;
-        VECTOR impact_vec;
-        vec_fill(&impact_vec, 0);
-        vec_set(&impact_vec, vector(4, 0, 0));
-
-        vec_to_angle(&temp_tec, &surf_angle->x);
-        vec_rotate(&impact_vec, &temp_tec);
-        vec_add(&impact_vec, &hit_vector->x);
 
 #ifndef PARTICLE_EFFECTS
         ent_create(bullet_impact_tga, &impact_vec, bullet_impact_sprite);
@@ -122,7 +152,13 @@ void bullet_impact_fx(ENTITY *ent, var is_alive, VECTOR *hit_vector, VECTOR *sur
     }
     else
     {
-        beep();
+        // add body hit impact sounds here
+
+#ifndef PARTICLE_EFFECTS
+        ent_create(blood_impact_tga, &impact_vec, bullet_blood_impact_sprite);
+#else
+        effect(blood_impact_particle, 8 + random(8), &impact_vec, nullvector);
+#endif
     }
 }
 
@@ -141,13 +177,14 @@ void bullet_func()
 }
 
 // create bullets
-void bullet_create(VECTOR *pos, VECTOR *angle, var owner_group, var bullet_speed, var accur)
+void bullet_create(VECTOR *pos, VECTOR *angle, var owner_group, var owner_damage, var bullet_speed, var accur)
 {
     you = ent_create(NULL, pos, bullet_func);
     vec_set(&you->ORIGIN_X, pos);
     vec_set(&you->DIR_X, vector(bullet_speed, (accur - random(accur * 2)), (accur - random(accur * 2))));
     vec_rotate(&you->DIR_X, angle);
     you->OWNER_GROUP = owner_group;
+    you->OBJ_TAKE_DAMAGE = owner_damage;
 }
 
 // function to update given bullet
@@ -216,7 +253,7 @@ void bullet_update(ENTITY *ent)
         if (ent->OBJ_HEALTH != -1)
         {
             c_ignore(PUSH_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, ent->OWNER_GROUP, SHOOTABLE_GROUP, 0);
-            ent_trace(ent, &ent->x, &ent->VEL_X, ACTIVATE_SHOOT | SCAN_TEXTURE | USE_POLYGON);
+            ent_trace(ent, &ent->x, &ent->VEL_X, SCAN_TEXTURE | USE_POLYGON);
 
             if (HIT_TARGET)
             {

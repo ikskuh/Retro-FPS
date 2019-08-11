@@ -8,6 +8,8 @@
 #include "particles.h"
 #include "music.h"
 #include "level_logic.h"
+#include "explosions_helper.h"
+#include "explosions_fx.h"
 #include "water_fx.h"
 #include "weapon_projectiles.h"
 #include "weapon_casing.h"
@@ -21,6 +23,7 @@
 // props
 #include "props.h"
 #include "props_helper.h"
+#include "props_barrel.h"
 #include "props_liquid.h"
 #include "props_switch.h"
 #include "props_trigger.h"
@@ -42,6 +45,9 @@
 #include "player_camera.h"
 #include "player_state_machine.h"
 #include "player_behaviour.h"
+
+// ai
+#include "ai_test.h"
 
 // include implementations
 #include "includes.c"

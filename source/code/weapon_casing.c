@@ -172,7 +172,8 @@ void casing_shell_init(var is_shell)
     weapon_casing_snd_counter++;
     vec_fill(&my->scale_x, 0.05);
     c_setminmax(my);
-    set(my, INVISIBLE);
+    set(my, TRANSLUCENT | SHADOW | CAST);
+    my->alpha = 0;
     my->OBJ_TYPE = TYPE_CASING;
 
     vec_set(&my->CASING_VEL_X, vector((4 - random(8)) * time_step, -(5 + random(3)) * time_step, (4 + random(2)) * time_step));

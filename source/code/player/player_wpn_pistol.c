@@ -11,6 +11,7 @@ void player_pistol_init(PLAYER *hero)
     hero->weapon[PLAYER_PISTOL].recoil_strength = 0.75;
     hero->weapon[PLAYER_PISTOL].damage = 15;
     hero->weapon[PLAYER_PISTOL].accuracy = 3;
+    hero->weapon[PLAYER_PISTOL].projectile_speed = 250;
 
     vec_set(&hero->weapon[PLAYER_PISTOL].casing_pos, vector(8, -1, -1));
 
@@ -26,7 +27,10 @@ void player_pistol_init(PLAYER *hero)
 void player_pistol_shoot(PLAYER *hero)
 {
     // create bullets here
-    bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, 500, hero->weapon[PLAYER_PISTOL].accuracy);
+    var spd = hero->weapon[PLAYER_PISTOL].projectile_speed;
+    var dmg = hero->weapon[PLAYER_PISTOL].damage;
+    var acc = hero->weapon[PLAYER_PISTOL].accuracy;
+    bullet_create(&camera->x, &camera->pan, PLAYER_GROUP, dmg, spd, acc);
 }
 
 // animate pistol

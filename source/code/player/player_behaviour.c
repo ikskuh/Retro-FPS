@@ -116,10 +116,25 @@ void player_event_function()
 
     if (event_type == EVENT_SHOOT)
     {
+        // you will take damage according to the weapon type
+        my->OBJ_HEALTH -= you->OBJ_TAKE_DAMAGE;
+        my->OBJ_PAIN_TYPE = TYPE_SHOOT;
     }
 
     if (event_type == EVENT_SCAN)
     {
+        // get player's structure
+        PLAYER *hero = get_player_struct(my);
+
+        // get player's cct structure
+        CCT *cct = get_cct(my);
+
+        // shake camera !
+        var explo_cam_range = (1 - (vec_dist(&my->x, &you->x) / you->OBJ_EXPLO_RANGE)) * you->OBJ_EXPLO_DAMAGE;
+        hero->cam.explo_power = maxv(1, explo_cam_range / 8);
+
+        // check for walls, handle pushing and damage !
+        explo_check_walls(my, &you->x, &cct->origin, you->OBJ_EXPLO_DAMAGE);
     }
 }
 

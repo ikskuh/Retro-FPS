@@ -7,7 +7,7 @@ void water_splash_effect()
     vec_fill(&temp_vec, 0);
     c_setminmax(my);
     my->z += my->max_z;
-    set(my, PASSABLE | NOFILTER | BRIGHT);
+    set(my, PASSABLE | NOFILTER);
     my->ambient = 100;
 
 #ifndef FREE_VERSION
@@ -28,7 +28,7 @@ void water_splash_effect()
         my->tilt = 0;
         my->roll = 0;
 
-        my->skill1 += 1.25 * time_step;
+        my->skill1 += time_step;
         my->frame = my->skill1 + 1;
         wait(1);
     }
@@ -151,7 +151,12 @@ void water_create_big_impact(VECTOR *pos, var scale)
     you = ent_create(water_splash_big_tga, &spawn_pos, water_splash_effect);
     vec_fill(&you->scale_x, scale);
 #else
-    effect(water_explo_splash_particle, 256, &spawn_pos, vector(spawn_pos.z, 2.5, 4));
+    var i = 0;
+    for (i = 0; i < 4; i++)
+    {
+        effect(water_explo_splash_particle, 32, &spawn_pos, vector(spawn_pos.z, 4, 2.5 + random(1)));
+        effect(water_explo_splash_particle, 32, &spawn_pos, vector(spawn_pos.z, 1, 4.5 + random(2)));
+    }
 #endif
 }
 

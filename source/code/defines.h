@@ -96,7 +96,7 @@
 #define PLAYER_ROCKETLAUNCHER 5
 #define PLAYER_LASERGUN 6
 
-// skills used by projectiles
+// skills used by projectiles (and barrels)
 #define ORIGIN_X skill1
 #define ORIGIN_Y skill2
 #define ORIGIN_Z skill3
@@ -151,6 +151,7 @@
 #define TYPE_BULLET 11
 #define TYPE_CASING 12
 #define TYPE_WATER_PLANE 13
+#define TYPE_BARREL 14
 
 #define OBJ_HEALTH skill53
 #define OBJ_ARMOR skill54
@@ -180,6 +181,10 @@
 // custom flags for "more than 8"
 #define OBJ_FLAGS skill64
 #define FLAG_DELETE_LATER 1
+
+#define OBJ_TAKE_DAMAGE skill65
+#define OBJ_EXPLO_DAMAGE skill66
+#define OBJ_EXPLO_RANGE skill67
 
 // sky entity
 ENTITY *sky_ent;
@@ -273,6 +278,11 @@ var weapon_ric_volume = 96;        // volume for ricochet sounds effects
 var weapon_casing_snd_volume = 64; // weapon casing impact sound effect volume
 var weapon_casing_snd_counter = 0; // counts amount of existing casings
 
+// explosion stuff
+var explo_underwater_snd_volume = 1024; // volume for underwater explosion sound effect
+var explo_snd_volume = 1024;            // volume for all explosion sound effects
+var explo_default_range = 128;          // default range for the explosion damage !
+
 // chainsaw hit sounds
 var player_saw_hit_snd_handle = 0;  // handle for player's chainsaw hit sound effect
 var player_saw_hit_snd_volume = 55; // volume of player's chainsaw hit sound effect
@@ -313,5 +323,8 @@ var ent_trace(ENTITY *ent, VECTOR *from, VECTOR *to, var mode);
 
 // alternative for c_scan
 var ent_scan(ENTITY *ent, VECTOR *pos, ANGLE *ang, VECTOR *sector, var mode);
+
+// rotate entity towards the camera
+void ent_rotate_to_camera(ENTITY *ent);
 
 #endif
