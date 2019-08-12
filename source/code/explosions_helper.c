@@ -29,13 +29,19 @@ void explo_check_walls(ENTITY *ent, VECTOR *from, VECTOR *to, var dmg)
     var damage = (1 - (vec_dist(from, to) / explo_default_range)) * temp_damage;
     ent->OBJ_HEALTH -= damage + 20; // to make sure, that you will die, if very close
 
+    // if your health is too low, then you need to spawn gibs
+    if (ent->OBJ_HEALTH <= -20)
+    {
+        ent->OBJ_DEATH_TYPE = TYPE_SMASHED;
+    }
+
     // push away
     VECTOR push_vec;
     vec_diff(&push_vec, to, from);
     vec_normalize(&push_vec, damage * 0.25);
 
-    // if player or npc ?
-    if (ent->OBJ_TYPE == TYPE_PLAYER || ent->OBJ_TYPE == TYPE_NPC)
+    // if player ?
+    if (ent->OBJ_TYPE == TYPE_PLAYER)
     {
         CCT *cct = get_cct(ent);
         vec_set(&cct->push_force, &push_vec);
@@ -46,6 +52,8 @@ void explo_check_walls(ENTITY *ent, VECTOR *from, VECTOR *to, var dmg)
     {
         vec_set(&ent->DIR_X, &push_vec);
     }
+
+    return;
 }
 
 // explosion scan for entities around

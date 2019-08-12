@@ -271,7 +271,7 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
         return;
     }
 
-    // update ammo
+    // update ammo/damage
     player_ammo = hero->weapon[weapon_id].ammo;
 
     // state machine
@@ -376,6 +376,9 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
             // other weapons
             if (weapon_id != PLAYER_SAW)
             {
+                // light flashing
+                ent->lightrange = 192;
+
                 // take ammo away
                 hero->weapon[weapon_id].ammo -= hero->weapon[weapon_id].ammo_per_shoot;
 
@@ -396,6 +399,7 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
             }
 
             // call shooting function here
+            ent->OBJ_C_INDICATOR = SHOOT;
             weapon_function = hero->weapon[weapon_id].fnc;
             if (weapon_function != NULL)
             {
@@ -442,4 +446,8 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
 
     // update weapon's position on screen
     player_weapon_view_pos(hero);
+
+    // light flashing on shoots
+    ent->lightrange -= 50 * time_step;
+    ent->lightrange = clamp(ent->lightrange, 0, 192);
 }

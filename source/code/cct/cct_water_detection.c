@@ -408,13 +408,13 @@ void ent_air_underwater(ENTITY *ent, CCT *cct)
         if (cct->water_state == IN_WATER)
         {
             // create water ripple effect
-            if ((total_frames % 10) == 1 && cct->is_moving == true)
+            if ((total_frames % 25) == 1 && cct->is_moving == true)
             {
                 water_create_ripple_effect(vector(ent->x, ent->y, cct->water_z_height + 0.1), 0.5);
             }
             else
             {
-                if ((total_frames % 50) == 1)
+                if ((total_frames % 100) == 1)
                 {
                     water_create_ripple_effect(vector(ent->x, ent->y, cct->water_z_height + 0.1), 0.5);
                 }

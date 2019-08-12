@@ -87,6 +87,9 @@ SOUND *weapon_saw_idle_ogg = "wp_saw_idle.ogg";
 SOUND *weapon_saw_hit_01_ogg = "wp_saw_hit_01.ogg";
 SOUND *weapon_saw_hit_02_ogg = "wp_saw_hit_02.ogg";
 SOUND *weapon_saw_hit_03_ogg = "wp_saw_hit_03.ogg";
+SOUND *weapon_saw_hit_body_01_ogg = "wp_saw_body_01.ogg";
+SOUND *weapon_saw_hit_body_02_ogg = "wp_saw_body_02.ogg";
+SOUND *weapon_saw_hit_body_03_ogg = "wp_saw_body_03.ogg";
 SOUND *weapon_saw_full_ogg = "wp_saw_full.ogg";
 SOUND *weapon_pistol_shoot_ogg = "wp_pistol_shoot.ogg";
 SOUND *weapon_chaingun_shoot_ogg = "wp_chaingun_shoot.ogg";
@@ -164,5 +167,8 @@ SOUND *teleport_ogg = "teleport.ogg";
 SOUND *bullet_ric_01_ogg = "wp_ric_01.ogg";
 SOUND *bullet_ric_02_ogg = "wp_ric_02.ogg";
 SOUND *bullet_ric_03_ogg = "wp_ric_03.ogg";
+SOUND *bullet_hit_body_01_ogg = "wp_hit_body_01.ogg";
+SOUND *bullet_hit_body_02_ogg = "wp_hit_body_02.ogg";
+SOUND *bullet_hit_body_03_ogg = "wp_hit_body_03.ogg";
 
 #endif

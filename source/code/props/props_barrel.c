@@ -60,7 +60,16 @@ void barrel_event_function()
             ent_rotate_to_camera(my->parent);
         }
 
+        // if dead ?
+        // then count down till explosion
         if (my->OBJ_HEALTH <= 0)
+        {
+            my->OBJ_TIMER -= time_frame / 16;
+
+            // we can add burning fx here
+        }
+
+        if (my->OBJ_TIMER <= 0)
         {
             // explosion effect here !
             explosion_create(&my->x, true);
@@ -81,6 +90,7 @@ action props_barrel()
     my->group = OBSTACLE_GROUP;
     my->push = OBSTACLE_GROUP;
     my->OBJ_HEALTH = 45;
+    my->OBJ_TIMER = 1; // 1 second delay before explosion
     my->OBJ_TYPE = TYPE_BARREL;
 
     // create non passable bbox !

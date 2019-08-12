@@ -15,6 +15,10 @@ void bullet_ric_snd();
 // MAX 4 bullet impact sounds !
 void bullet_water_impact_snd();
 
+// bullet impact body sounds
+// MAX 4 bullet impact sounds !
+void bullet_body_impact_snd();
+
 // handle bullet impacts
 void bullet_impact_fx(ENTITY *ent, var is_alive, VECTOR *hit_vector, VECTOR *surf_angle);
 

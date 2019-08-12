@@ -4,6 +4,9 @@
 // play saw hit sound
 void saw_hit_solid_sfx();
 
+// play saw hit body sound
+void saw_hit_body_sfx();
+
 // play saw impact sound
 void saw_impact_fx(var is_alive, VECTOR *hit_vector, VECTOR *surf_angle);
 
@@ -23,6 +26,12 @@ void player_saw_idle(PLAYER *hero);
 void player_saw_snd_attack(PLAYER *hero);
 
 // saw attack function
+void player_saw_func();
+
+// update saw tracing object
+void player_saw_trace_update(ENTITY *ent);
+
+// create tracing object here
 void player_saw_attack(PLAYER *hero);
 
 // animate saw

@@ -9,7 +9,7 @@ void player_shotgun_init(PLAYER *hero)
     hero->weapon[PLAYER_SHOTGUN].ammo_per_shoot = 1;
     hero->weapon[PLAYER_SHOTGUN].fire_rate = 0.85;
     hero->weapon[PLAYER_SHOTGUN].recoil_strength = 2;
-    hero->weapon[PLAYER_SHOTGUN].damage = 10;
+    hero->weapon[PLAYER_SHOTGUN].damage = 20;
     hero->weapon[PLAYER_SHOTGUN].accuracy = 12;
     hero->weapon[PLAYER_SHOTGUN].projectile_speed = 150;
 

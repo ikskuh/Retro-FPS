@@ -13,7 +13,7 @@ action ai()
 {
     vec_fill(&my->scale_x, 1);
     c_setminmax(my);
-    set(my, POLYGON);
+    set(my, POLYGON | TRANSLUCENT);
 
     my->group = ENEMY_GROUP;
     my->push = ENEMY_GROUP;

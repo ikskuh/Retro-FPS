@@ -21,23 +21,59 @@ void saw_hit_solid_sfx()
     }
 }
 
+// play saw hit body sound
+void saw_hit_body_sfx()
+{
+    if (snd_playing(player_saw_hit_snd_handle))
+    {
+        snd_stop(player_saw_hit_snd_handle);
+    }
+    var rnd_snd = integer(random(3));
+    if (rnd_snd == 0)
+    {
+        player_saw_hit_snd_handle = snd_play(weapon_saw_hit_body_01_ogg, player_saw_hit_snd_volume, 0);
+    }
+    if (rnd_snd == 1)
+    {
+        player_saw_hit_snd_handle = snd_play(weapon_saw_hit_body_02_ogg, player_saw_hit_snd_volume, 0);
+    }
+    if (rnd_snd == 2)
+    {
+        player_saw_hit_snd_handle = snd_play(weapon_saw_hit_body_03_ogg, player_saw_hit_snd_volume, 0);
+    }
+}
+
 // play saw impact sound
 void saw_impact_fx(var is_alive, VECTOR *hit_vector, VECTOR *surf_angle)
 {
+    VECTOR temp_tec;
+    VECTOR impact_vec;
+    vec_fill(&impact_vec, 0);
+    vec_set(&impact_vec, vector(4, 0, 0));
+
+    vec_to_angle(&temp_tec, &surf_angle->x);
+    vec_rotate(&impact_vec, &temp_tec);
+    vec_add(&impact_vec, &hit_vector->x);
+
     // we hit something static here
     if (is_alive == false)
     {
-        VECTOR temp_tec;
-        VECTOR impact_vec;
-        vec_fill(&impact_vec, 0);
-        vec_set(&impact_vec, vector(4, 0, 0));
-
-        vec_to_angle(&temp_tec, &surf_angle->x);
-        vec_rotate(&impact_vec, &temp_tec);
-        vec_add(&impact_vec, &hit_vector->x);
-
+#ifndef PARTICLE_EFFECTS
+        ent_create(bullet_impact_tga, &impact_vec, bullet_impact_sprite);
+#else
         effect(bullet_impact_particle, 8 + random(8), &impact_vec, nullvector);
+#endif
         saw_hit_solid_sfx();
+    }
+    else
+    {
+        // add body hit impact sounds here
+#ifndef PARTICLE_EFFECTS
+        ent_create(blood_impact_tga, &impact_vec, bullet_blood_impact_sprite);
+#else
+        effect(blood_impact_particle, 8 + random(8), &impact_vec, nullvector);
+#endif
+        saw_hit_body_sfx();
     }
 }
 
@@ -60,7 +96,7 @@ void player_saw_init(PLAYER *hero)
     hero->weapon[PLAYER_SAW].ammo_per_shoot = 0;
     hero->weapon[PLAYER_SAW].fire_rate = 0.1;
     hero->weapon[PLAYER_SAW].recoil_strength = 0.25;
-    hero->weapon[PLAYER_SAW].damage = 25;
+    hero->weapon[PLAYER_SAW].damage = 15;
     hero->weapon[PLAYER_SAW].accuracy = 1;
 
     hero->weapon[PLAYER_SAW].animate = false;
@@ -141,14 +177,17 @@ void player_saw_snd_attack(PLAYER *hero)
 }
 
 // saw attack function
-void player_saw_attack(PLAYER *hero)
+void player_saw_func()
 {
-    VECTOR temp_vec;
-    vec_set(&temp_vec, vector(16, 0, 0));
-    vec_rotate(&temp_vec, &camera->pan);
-    vec_add(&temp_vec, &camera->x);
-    c_ignore(PUSH_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
-    c_trace(&camera->x, &temp_vec, TRACE_FLAGS);
+    set(my, PASSABLE | INVISIBLE);
+    my->OBJ_TYPE = TYPE_SAW_TRACE;
+}
+
+// update saw tracing object
+void player_saw_trace_update(ENTITY *ent)
+{
+    c_ignore(PUSH_GROUP, WATER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, PLAYER_GROUP, SHOOTABLE_GROUP, 0);
+    ent_trace(ent, &ent->x, &ent->DIR_X, ACTIVATE_SHOOT | SCAN_TEXTURE | USE_POLYGON);
 
     if (HIT_TARGET)
     {
@@ -160,7 +199,7 @@ void player_saw_attack(PLAYER *hero)
             }
             else
             {
-                saw_impact_fx(true, &hit->x, &normal);
+                saw_impact_fx(false, &hit->x, &normal);
             }
         }
         else
@@ -168,6 +207,21 @@ void player_saw_attack(PLAYER *hero)
             saw_impact_fx(false, &hit->x, &normal);
         }
     }
+
+    ent_delete_later(ent);
+}
+
+// create tracing object here
+void player_saw_attack(PLAYER *hero)
+{
+    var accur = hero->weapon[PLAYER_SAW].accuracy;
+    var damage = hero->weapon[PLAYER_SAW].damage;
+
+    you = ent_create(NULL, &camera->x, player_saw_func);
+    vec_set(&you->DIR_X, vector(16, (accur - random(accur * 2)), (accur - random(accur * 2))));
+    vec_rotate(&you->DIR_X, &camera->pan);
+    vec_add(&you->DIR_X, &camera->x);
+    you->OBJ_TAKE_DAMAGE = damage;
 }
 
 // animate saw

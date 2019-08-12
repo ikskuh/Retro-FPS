@@ -123,6 +123,43 @@ void bullet_water_impact_snd()
     ent_delete_later(my);
 }
 
+// bullet impact body sounds
+// MAX 4 bullet impact sounds !
+void bullet_body_impact_snd()
+{
+    if (proc_status(bullet_body_impact_snd) > 4 || vec_dist(&my->x, &camera->x) > 256)
+    {
+        ptr_remove(my);
+        return;
+    }
+
+    set(my, PASSABLE | INVISIBLE);
+
+    var rnd = integer(random(3));
+    if (rnd == 0)
+    {
+        my->OBJ_SND_HANDLE = ent_playsound(my, bullet_hit_body_01_ogg, weapon_ric_volume);
+    }
+    if (rnd == 1)
+    {
+        my->OBJ_SND_HANDLE = ent_playsound(my, bullet_hit_body_02_ogg, weapon_ric_volume);
+    }
+    if (rnd == 2)
+    {
+        my->OBJ_SND_HANDLE = ent_playsound(my, bullet_hit_body_03_ogg, weapon_ric_volume);
+    }
+
+    while (my)
+    {
+        if (!snd_playing(my->OBJ_SND_HANDLE))
+        {
+            break;
+        }
+        wait(1);
+    }
+    ent_delete_later(my);
+}
+
 // handle bullet impacts
 void bullet_impact_fx(ENTITY *ent, var is_alive, VECTOR *hit_vector, VECTOR *surf_angle)
 {
@@ -159,6 +196,8 @@ void bullet_impact_fx(ENTITY *ent, var is_alive, VECTOR *hit_vector, VECTOR *sur
 #else
         effect(blood_impact_particle, 8 + random(8), &impact_vec, nullvector);
 #endif
+
+        ent_create(NULL, &hit_vector->x, bullet_body_impact_snd);
     }
 }
 

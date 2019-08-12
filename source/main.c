@@ -144,6 +144,12 @@ void on_frame_event()
                 player_update(ent);
             }
 
+            // player's saw tracing ?
+            FOR_ENT_OF_TYPE(ent, TYPE_SAW_TRACE)
+            {
+                player_saw_trace_update(ent);
+            }
+
             // bullets ?
             FOR_ENT_OF_TYPE(ent, TYPE_BULLET)
             {

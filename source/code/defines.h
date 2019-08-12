@@ -152,6 +152,7 @@
 #define TYPE_CASING 12
 #define TYPE_WATER_PLANE 13
 #define TYPE_BARREL 14
+#define TYPE_SAW_TRACE 15
 
 #define OBJ_HEALTH skill53
 #define OBJ_ARMOR skill54
@@ -236,7 +237,7 @@ var cct_snd_volume = 450;                 // cct world sounds volume
 var player_has_red_key = false;    // true if player has red key, otherwise - false
 var player_has_yellow_key = false; // same as above for yellow key
 var player_has_blue_key = false;   // same as above for blue key
-var player_snd_volume = 50;        // volume for player's voice sounds
+var player_snd_volume = 75;        // volume for player's voice sounds
 var player_allow_movement = false; // true - if player is allowed to move, otherwise - false
 var player_always_run = false;     // true - if player is allowed to run always, otherwise - false
 var player_health = 0;             // stores player's health for gui

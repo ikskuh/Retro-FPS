@@ -15,8 +15,32 @@ void player_toggle_run()
     player_always_run %= 2;
 }
 
-// handles all voice sounds made by player
-void player_sounds(ENTITY *ent, CCT *cct, PLAYER *hero)
+// handle player's pain sounds
+void player_pain_sound(ENTITY *ent)
+{
+    // only if alive !
+    if (ent->OBJ_HEALTH <= 0)
+    {
+        return;
+    }
+
+    if (snd_playing(ent->OBJ_SND_HANDLE))
+    {
+        snd_stop(ent->OBJ_SND_HANDLE);
+    }
+    var rnd = integer(random(2));
+    if (rnd == 0)
+    {
+        ent->OBJ_SND_HANDLE = snd_play(player_pain_01_ogg, player_snd_volume, 0);
+    }
+    if (rnd == 1)
+    {
+        ent->OBJ_SND_HANDLE = snd_play(player_pain_02_ogg, player_snd_volume, 0);
+    }
+}
+
+// handles player's death sounds
+void player_death_sound(ENTITY *ent, CCT *cct, PLAYER *hero)
 {
     if (!ent)
     {
@@ -119,6 +143,11 @@ void player_event_function()
         // you will take damage according to the weapon type
         my->OBJ_HEALTH -= you->OBJ_TAKE_DAMAGE;
         my->OBJ_PAIN_TYPE = TYPE_SHOOT;
+
+        // play pain sounds here
+        player_pain_sound(my);
+
+        // we can also show some damage markers and camera damage effects here !
     }
 
     if (event_type == EVENT_SCAN)
@@ -135,6 +164,16 @@ void player_event_function()
 
         // check for walls, handle pushing and damage !
         explo_check_walls(my, &you->x, &cct->origin, you->OBJ_EXPLO_DAMAGE);
+
+        // at this point, we gonna take damage from explosion anyway..
+        // since we are in range
+        if (vec_dist(&my->x, &you->x) <= explo_default_range)
+        {
+            // play pain sounds here
+            player_pain_sound(my);
+
+            // we can also show some damage markers and camera damage effects here !
+        }
     }
 }
 
@@ -282,7 +321,7 @@ void player_update(ENTITY *ent)
     player_handle_state_machine(ent, cct);
 
     // handle sound effects
-    player_sounds(ent, cct, hero);
+    player_death_sound(ent, cct, hero);
 
     // save our fake origin position
     vec_set(&cct->origin, vector(ent->x, ent->y, ent->z + 16));
