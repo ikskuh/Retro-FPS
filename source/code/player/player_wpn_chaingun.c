@@ -2,7 +2,7 @@
 // initialize all chaingun parameters
 void player_chaingun_init(PLAYER *hero)
 {
-    hero->weapon[PLAYER_CHAINGUN].collected = true;
+    hero->weapon[PLAYER_CHAINGUN].collected = false;
     hero->weapon[PLAYER_CHAINGUN].semiauto = false;
 
     hero->weapon[PLAYER_CHAINGUN].ammo = 145;

@@ -70,20 +70,56 @@ void props_almost_opened_check(ENTITY *ent)
 	}
 }
 
-// place entity on the ground
-// this function uses c_trace instead of ent_trace
-// since it's called in action functions where my already exists !
-void props_place_on_ground(ENTITY *ent)
+// simple gravity for some props
+void props_gravity(ENTITY *ent, PROPS *props)
 {
 	if (!ent)
 	{
-		diag("\nERROR! Can't place entity on the ground! It doesn't exist..");
+		diag("\nERROR! No gravity for props! It doesn't exist.");
 		return;
 	}
 
-	c_trace(&ent->x, vector(ent->x, ent->y, ent->z - 1024), TRACE_FLAGS | IGNORE_MODELS);
-	if (HIT_TARGET)
+	if (!props)
 	{
-		ent->z = hit->z + ent->max_z;
+		diag("\nERROR! No gravity for props! It's props strucutre doesn't exist.");
+		return;
+	}
+
+	VECTOR from, to, target_vec;
+	vec_set(&from, &ent->x);
+	vec_set(&to, &from);
+	to.z -= 64 + ent->min_z;
+
+	if (props->speed.z <= 0)
+	{
+		c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+		ent_trace(ent, &from, &to, IGNORE_PUSH | USE_BOX);
+		vec_set(&target_vec, &to);
+		if (HIT_TARGET)
+		{
+			vec_set(&target_vec, &target);
+		}
+		props->soil_height = target_vec.z - ent->min_z;
+	}
+
+	// additional height buffer when ground contact to avoid floating on slopes
+	if (ent->z > props->soil_height + (5 + 20 * props->soil_contact) * time_step)
+	{
+		props->soil_contact = 0;
+		props->speed.z = maxv(props->speed.z - cct_gravity * time_step, -cct_gravity_max);
+	}
+	else
+	{
+		c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+		ent_move(ent, nullvector, vector(0, 0, props->soil_height - ent->z), IGNORE_YOU | GLIDE);
+		props->soil_contact = 1;
+		props->speed.z = 0;
+	}
+
+	// the maxv command makes sure you never move below the desired height
+	if (props->speed.z)
+	{
+		c_ignore(PUSH_GROUP, WATER_GROUP, PLAYER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, 0);
+		ent_move(ent, nullvector, vector(0, 0, maxv(props->speed.z * time_step, props->soil_height - ent->z)), IGNORE_YOU | GLIDE);
 	}
 }

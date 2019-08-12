@@ -119,7 +119,7 @@ SOUND *explo_water_03_ogg = "water_explosion_03.ogg";
 
 // pickup sounds
 SOUND *pickup_weapon_ogg = "pickup_weapon.ogg";
-SOUND *pickup_health_ogg = "pickup_health.ogg";
+SOUND *pickup_small_item_ogg = "pickup_small_item.ogg";
 SOUND *pickup_item_ogg = "pickup_item.ogg";
 SOUND *pickup_key_ogg = "pickup_key.ogg";
 

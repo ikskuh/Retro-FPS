@@ -2,7 +2,7 @@
 // initialize all lasergun parameters
 void player_lasergun_init(PLAYER *hero)
 {
-    hero->weapon[PLAYER_LASERGUN].collected = true;
+    hero->weapon[PLAYER_LASERGUN].collected = false;
     hero->weapon[PLAYER_LASERGUN].semiauto = true;
 
     hero->weapon[PLAYER_LASERGUN].ammo = 45;

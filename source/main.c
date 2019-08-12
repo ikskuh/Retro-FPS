@@ -138,6 +138,11 @@ void on_frame_event()
                 platform_update(ent);
             }
 
+            FOR_ENT_OF_TYPE(ent, TYPE_BARREL)
+            {
+                barrel_update(ent);
+            }
+
             // player ?
             FOR_ENT_OF_TYPE(ent, TYPE_PLAYER)
             {
@@ -202,6 +207,11 @@ void on_ent_remove_event(ENTITY *ent)
     }
 
     if (ent->OBJ_TYPE == TYPE_ELEVATOR || ent->OBJ_TYPE == TYPE_DOOR || ent->OBJ_TYPE == TYPE_PLATFORM || ent->OBJ_TYPE == TYPE_SECRET_WALL)
+    {
+        delete_props(ent);
+    }
+
+    if(ent->OBJ_TYPE == TYPE_BARREL)
     {
         delete_props(ent);
     }

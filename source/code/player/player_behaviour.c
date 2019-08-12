@@ -259,8 +259,10 @@ void player_update(ENTITY *ent)
         ent->OBJ_HEALTH = -1;
     }
     DEBUG_VAR(ent->OBJ_HEALTH, 10);
-    DEBUG_VAR(player_ammo, 30);
-    DEBUG_VAR(cct->air_underwater, 50);
+    DEBUG_VAR(ent->OBJ_ARMOR, 30);
+    DEBUG_VAR(player_ammo, 50);
+    DEBUG_VAR(cct->air_underwater, 70);
+    DEBUG_VAR(player_suit_counter, 90);
 
     // update our health, armor etc
     // used globally - f.e. for gui
@@ -342,6 +344,21 @@ void player_update(ENTITY *ent)
     // handle sound effects
     player_death_sound(ent, cct, hero);
 
+    // suit is used only under water !
+    if (player_has_suit == true)
+    {
+        if (cct->water_state == HEAD_IN_WATER)
+        {
+            player_suit_counter += time_frame / 16;
+        }
+    }
+
+    // if suit was used, then get rid of it
+    if (player_suit_counter >= player_suit_def_time && player_has_suit == true)
+    {
+        player_has_suit = false;
+    }
+
     // save our fake origin position
     vec_set(&cct->origin, vector(ent->x, ent->y, ent->z + 16));
 
@@ -358,6 +375,13 @@ void player_update(ENTITY *ent)
 // main player's action
 action player_controller()
 {
+    // reset player's stuff
+    player_has_red_key = false;
+    player_has_yellow_key = false;
+    player_has_blue_key = false;
+    player_has_suit = false;
+    player_suit_counter = 0;
+
     PLAYER *hero = register_player_struct(my);
     player_weapons_initialize(my, hero);
     CCT *cct = register_cct(my);

@@ -34,6 +34,8 @@
 
 // player
 #include "player.h"
+#include "player_items.h"
+#include "player_wpn_pickups.h"
 #include "player_wpn_saw.h"
 #include "player_wpn_pistol.h"
 #include "player_wpn_shotgun.h"

@@ -2,7 +2,7 @@
 // initialize all rocketlauncher parameters
 void player_rocketlauncher_init(PLAYER *hero)
 {
-    hero->weapon[PLAYER_ROCKETLAUNCHER].collected = true;
+    hero->weapon[PLAYER_ROCKETLAUNCHER].collected = false;
     hero->weapon[PLAYER_ROCKETLAUNCHER].semiauto = false;
 
     hero->weapon[PLAYER_ROCKETLAUNCHER].ammo = 45;

@@ -354,52 +354,90 @@ void ent_air_underwater(ENTITY *ent, CCT *cct)
     // if our head is under water ?
     if (cct->water_state == HEAD_IN_WATER)
     {
-        // decrease air
-        cct->air_underwater = clamp(cct->air_underwater -= 0.5 * time_step, 0, 100);
-
-        // if no air, take damage
-        if (cct->air_underwater <= 0)
+        // if player ?
+        if (ent->OBJ_TYPE == TYPE_PLAYER)
         {
-            cct->air_underwater_timer += time_frame / 16;
-
-            if (cct->air_underwater_timer >= cct->air_underwater_timer_limit)
+            // if player doesn't have suit, then he can't breath underwater..
+            // decrease his air !
+            if (player_has_suit == false)
             {
-                // play drown sound effects for player
-                if (ent->OBJ_TYPE == TYPE_PLAYER)
+                // decrease air
+                cct->air_underwater = clamp(cct->air_underwater -= 0.5 * time_step, 0, 100);
+
+                // if no air, take damage
+                if (cct->air_underwater <= 0)
                 {
-                    if (snd_playing(ent->OBJ_SND_HANDLE))
+                    cct->air_underwater_timer += time_frame / 16;
+
+                    if (cct->air_underwater_timer >= cct->air_underwater_timer_limit)
                     {
-                        snd_stop(ent->OBJ_SND_HANDLE);
-                    }
-                    var rnd = integer(random(2));
-                    if (rnd == 0)
-                    {
-                        ent->OBJ_SND_HANDLE = snd_play(player_drown_01_ogg, player_snd_volume, 0);
-                    }
-                    if (rnd == 1)
-                    {
-                        ent->OBJ_SND_HANDLE = snd_play(player_drown_02_ogg, player_snd_volume, 0);
+                        // play drown sound effects for player
+                        if (snd_playing(ent->OBJ_SND_HANDLE))
+                        {
+                            snd_stop(ent->OBJ_SND_HANDLE);
+                        }
+                        var rnd = integer(random(2));
+                        if (rnd == 0)
+                        {
+                            ent->OBJ_SND_HANDLE = snd_play(player_drown_01_ogg, player_snd_volume, 0);
+                        }
+                        if (rnd == 1)
+                        {
+                            ent->OBJ_SND_HANDLE = snd_play(player_drown_02_ogg, player_snd_volume, 0);
+                        }
+
+                        // add some underwater bubbles
+                        VECTOR bubble_pos;
+                        vec_set(&bubble_pos, vector(8, 0, cct->bbox_z / 2));
+                        vec_rotate(&bubble_pos, vector(cct->pan_rotation, 0, 0));
+                        vec_add(&bubble_pos, &cct->origin);
+                        bubbles_spawn(&bubble_pos, 16, vector(2, 2, 2), cct->water_z_height);
+
+                        ent->OBJ_PAIN_TYPE = TYPE_OUT_OF_AIR;
+                        ent->OBJ_HEALTH -= cct_underwater_no_air_damage + random(5);
+                        cct->air_underwater_timer %= cct->air_underwater_timer_limit;
                     }
                 }
 
-                // add some underwater bubbles
-                VECTOR bubble_pos;
-                vec_set(&bubble_pos, vector(8, 0, cct->bbox_z / 2));
-                vec_rotate(&bubble_pos, vector(cct->pan_rotation, 0, 0));
-                vec_add(&bubble_pos, &cct->origin);
-                bubbles_spawn(&bubble_pos, 16, vector(2, 2, 2), cct->water_z_height);
-
-                ent->OBJ_PAIN_TYPE = TYPE_OUT_OF_AIR;
-                ent->OBJ_HEALTH -= cct_underwater_no_air_damage + random(5);
-                cct->air_underwater_timer %= cct->air_underwater_timer_limit;
+                // allow to play gasp sounds
+                if (cct->air_underwater < 75 && cct->air_underwater_snd_gasp_switch == 1)
+                {
+                    // out of water!
+                    cct->air_underwater_snd_gasp_switch = 0;
+                }
             }
         }
-
-        // allow to play gasp sounds
-        if (cct->air_underwater < 75 && cct->air_underwater_snd_gasp_switch == 1)
+        else
         {
-            // out of water!
-            cct->air_underwater_snd_gasp_switch = 0;
+            // decrease air
+            cct->air_underwater = clamp(cct->air_underwater -= 0.5 * time_step, 0, 100);
+
+            // if no air, take damage
+            if (cct->air_underwater <= 0)
+            {
+                cct->air_underwater_timer += time_frame / 16;
+
+                if (cct->air_underwater_timer >= cct->air_underwater_timer_limit)
+                {
+                    // add some underwater bubbles
+                    VECTOR bubble_pos;
+                    vec_set(&bubble_pos, vector(8, 0, cct->bbox_z / 2));
+                    vec_rotate(&bubble_pos, vector(cct->pan_rotation, 0, 0));
+                    vec_add(&bubble_pos, &cct->origin);
+                    bubbles_spawn(&bubble_pos, 16, vector(2, 2, 2), cct->water_z_height);
+
+                    ent->OBJ_PAIN_TYPE = TYPE_OUT_OF_AIR;
+                    ent->OBJ_HEALTH -= cct_underwater_no_air_damage + random(5);
+                    cct->air_underwater_timer %= cct->air_underwater_timer_limit;
+                }
+            }
+
+            // allow to play gasp sounds
+            if (cct->air_underwater < 75 && cct->air_underwater_snd_gasp_switch == 1)
+            {
+                // out of water!
+                cct->air_underwater_snd_gasp_switch = 0;
+            }
         }
     }
     else

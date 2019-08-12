@@ -7,4 +7,7 @@ void barrel_visual_func();
 // barrel's event function
 void barrel_event_function();
 
+// update barrels
+void barrel_update(ENTITY *ent);
+
 #endif

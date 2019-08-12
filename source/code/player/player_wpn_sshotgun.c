@@ -2,7 +2,7 @@
 // initialize all super shotgun parameters
 void player_sshotgun_init(PLAYER *hero)
 {
-    hero->weapon[PLAYER_SSHOTGUN].collected = true;
+    hero->weapon[PLAYER_SSHOTGUN].collected = false;
     hero->weapon[PLAYER_SSHOTGUN].semiauto = true;
 
     hero->weapon[PLAYER_SSHOTGUN].ammo = 45;

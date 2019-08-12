@@ -28,63 +28,70 @@ void barrel_event_function()
             explo_check_walls(my, &you->x, &my->x, you->OBJ_EXPLO_DAMAGE);
         }
     }
+}
 
-    if (event_type == EVENT_FRAME)
+// update barrels
+void barrel_update(ENTITY *ent)
+{
+    // get props structure
+    PROPS *props = get_props(ent);
+
+    // apply gravity
+    props_gravity(ent, props);
+
+    // push us away (if needed)
+    ent->VEL_X += ent->DIR_X;
+    ent->VEL_Y += ent->DIR_Y;
+
+    ent->VEL_X -= sign(ent->VEL_X) * minv(0.6 * abs(ent->VEL_X) * time_step, abs(ent->VEL_X));
+    ent->VEL_Y -= sign(ent->VEL_Y) * minv(0.6 * abs(ent->VEL_Y) * time_step, abs(ent->VEL_Y));
+
+    if (ent->VEL_X != 0 || ent->VEL_Y != 0)
     {
-        // push us away (if needed)
-        my->VEL_X += my->DIR_X;
-        my->VEL_Y += my->DIR_Y;
+        c_move(ent, nullvector, vector(ent->VEL_X * time_step, ent->VEL_Y * time_step, 0), MOVE_FLAGS);
+    }
 
-        my->VEL_X -= sign(my->VEL_X) * minv(0.6 * abs(my->VEL_X) * time_step, abs(my->VEL_X));
-        my->VEL_Y -= sign(my->VEL_Y) * minv(0.6 * abs(my->VEL_Y) * time_step, abs(my->VEL_Y));
+    ent->DIR_X = 0;
+    ent->DIR_Y = 0;
 
-        if (my->VEL_X != 0 || my->VEL_Y != 0)
-        {
-            c_move(me, nullvector, vector(my->VEL_X * time_step, my->VEL_Y * time_step, 0), MOVE_FLAGS);
-        }
+    if (ent->parent)
+    {
+        vec_set(&ent->parent->x, &ent->x);
 
-        my->DIR_X = 0;
-        my->DIR_Y = 0;
+        ent->parent->skill1 += 0.25 * time_step;
+        ent->parent->skill1 %= 2;
+        ent->parent->frame = ent->parent->skill1;
+        ent->parent->skill43 = floatd(floor(ent->parent->frame), 2);
+        ent->parent->skill44 = floatd(0, 1);
 
-        if (my->parent)
-        {
-            vec_set(&my->parent->x, &my->x);
+        // rotate towards the camera
+        ent_rotate_to_camera(ent->parent);
+    }
 
-            my->parent->skill1 += 0.25 * time_step;
-            my->parent->skill1 %= 2;
-            my->parent->frame = my->parent->skill1;
-            my->parent->skill43 = floatd(floor(my->parent->frame), 2);
-            my->parent->skill44 = floatd(0, 1);
+    // if dead ?
+    // then count down till explosion
+    if (ent->OBJ_HEALTH <= 0)
+    {
+        ent->OBJ_TIMER -= time_frame / 16;
 
-            // rotate towards the camera
-            ent_rotate_to_camera(my->parent);
-        }
+        // we can add burning fx here
+    }
 
-        // if dead ?
-        // then count down till explosion
-        if (my->OBJ_HEALTH <= 0)
-        {
-            my->OBJ_TIMER -= time_frame / 16;
-
-            // we can add burning fx here
-        }
-
-        if (my->OBJ_TIMER <= 0)
-        {
-            // explosion effect here !
-            explosion_create(&my->x, true);
-            ent_delete_later(my->parent);
-            ent_delete_later(my);
-        }
+    if (ent->OBJ_TIMER <= 0)
+    {
+        // explosion effect here !
+        explosion_create(&ent->x, true);
+        ent_delete_later(ent->parent);
+        ent_delete_later(ent);
     }
 }
 
 // main barrels action
 action props_barrel()
 {
+    PROPS *props = register_props(my);
     vec_set(&my->scale_x, vector(0.75, 0.75, 1));
     c_setminmax(my);
-    props_place_on_ground(my);
     set(my, POLYGON | INVISIBLE);
 
     my->group = OBSTACLE_GROUP;
@@ -96,6 +103,6 @@ action props_barrel()
     // create non passable bbox !
     my->parent = ent_create(props_barrel_tga, &my->x, barrel_visual_func);
 
-    my->emask |= (ENABLE_SHOOT | ENABLE_SCAN | ENABLE_FRAME);
+    my->emask |= (ENABLE_SHOOT | ENABLE_SCAN);
     my->event = barrel_event_function;
 }

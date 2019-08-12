@@ -271,6 +271,9 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
         return;
     }
 
+    // supershotgun uses shotgun shells
+    hero->weapon[PLAYER_SSHOTGUN].ammo = hero->weapon[PLAYER_SHOTGUN].ammo;
+
     // update ammo/damage
     player_ammo = hero->weapon[weapon_id].ammo;
 
@@ -310,7 +313,7 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
         // pressed fire button
         if (hero->wpn_shoot)
         {
-            // we have ammo ?
+            // we have ammo left ?
             if (hero->weapon[weapon_id].ammo > hero->weapon[weapon_id].ammo_per_shoot)
             {
                 // fully automatic weapon ?
@@ -379,8 +382,16 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
                 // light flashing
                 ent->lightrange = 192;
 
-                // take ammo away
-                hero->weapon[weapon_id].ammo -= hero->weapon[weapon_id].ammo_per_shoot;
+                // decrease ammo
+                // for supershotgun, we should take shotgun's ammo
+                if (weapon_id == PLAYER_SSHOTGUN)
+                {
+                    hero->weapon[PLAYER_SHOTGUN].ammo -= hero->weapon[weapon_id].ammo_per_shoot;
+                }
+                else
+                {
+                    hero->weapon[weapon_id].ammo -= hero->weapon[weapon_id].ammo_per_shoot;
+                }
 
                 // play shooting sound
                 if (hero->weapon[weapon_id].snd)

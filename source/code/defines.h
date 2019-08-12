@@ -6,7 +6,7 @@
 #define ASSERT(_X) _assert(_X, "assertion failed!")
 
 // max indexes
-#define MAX_WEAPONS 10
+#define MAX_WEAPONS 7
 #define MAX_LEVELS 100
 
 // game states
@@ -122,6 +122,28 @@
 #define CASING_HIT_COUNT skill5
 #define CASING_IS_SHELL skill6
 
+// skills used by all items
+#define ITEM_HEALTH_SMALL 1
+#define ITEM_HEALTH_BIG 2
+#define ITEM_ARMOR_SMALL 3
+#define ITEM_ARMOR_BIG 4
+#define ITEM_AMMO_SMALL 5
+#define ITEM_AMMO_BIG 6
+#define ITEM_PISTOL_AMMO 7
+#define ITEM_ROCKET_BIG 8
+#define ITEM_ROCKET_SMALL 9
+#define ITEM_SHELLS_BIG 10
+#define ITEM_SHELLS_SMALL 11
+#define ITEM_SUIT 12
+#define ITEM_KEY_RED 13
+#define ITEM_KEY_YELLOW 14
+#define ITEM_KEY_BLUE 15
+
+#define ID skill1
+#define ANIM_FRAMES skill2
+#define ANIM_TOTAL_FRAMES skill3
+#define ANIMATED FLAG8
+
 // collusion groups/push values
 #define PUSH_GROUP 2
 #define WATER_GROUP 3
@@ -153,6 +175,14 @@
 #define TYPE_WATER_PLANE 13
 #define TYPE_BARREL 14
 #define TYPE_SAW_TRACE 15
+#define TYPE_WORLD_SAW 16
+#define TYPE_WORLD_PISTOL 17
+#define TYPE_WORLD_SHOTGUN 18
+#define TYPE_WORLD_SSHOTGUN 19
+#define TYPE_WORLD_CHAINGUN 20
+#define TYPE_WORLD_ROCKETLAUNCHER 21
+#define TYPE_WORLD_LASERGUN 22
+#define TYPE_PICKABLE_ITEM 23
 
 #define OBJ_HEALTH skill53
 #define OBJ_ARMOR skill54
@@ -237,7 +267,11 @@ var cct_snd_volume = 450;                 // cct world sounds volume
 var player_has_red_key = false;    // true if player has red key, otherwise - false
 var player_has_yellow_key = false; // same as above for yellow key
 var player_has_blue_key = false;   // same as above for blue key
+var player_has_suit = false;       // true if player gots suit item
+var player_suit_counter = 0;       // timer for suit use
+var player_suit_def_time = 15;     // suit could be used for 15 seconds
 var player_snd_volume = 75;        // volume for player's voice sounds
+var player_pick_snd_handle = 0;    // handle for player's pickup sound effects
 var player_allow_movement = false; // true - if player is allowed to move, otherwise - false
 var player_always_run = false;     // true - if player is allowed to run always, otherwise - false
 var player_health = 0;             // stores player's health for gui
@@ -278,6 +312,39 @@ var weapon_fire_key_busy = false;  // true - if fire button is busy, otherwise -
 var weapon_ric_volume = 96;        // volume for ricochet sounds effects
 var weapon_casing_snd_volume = 64; // weapon casing impact sound effect volume
 var weapon_casing_snd_counter = 0; // counts amount of existing casings
+
+// pickable weapon's stuff
+var wpn_pistol_add_ammo = 25;    // default ammo addition when pistol is picked up
+var wpn_pistol_max_ammo = 200;   // max ammo for pistol
+var wpn_shotgun_add_ammo = 25;   // default ammo addition when shotgun is picked up
+var wpn_shotgun_max_ammo = 100;  // max ammo for shotgun
+var wpn_chaingun_add_ammo = 50;  // default ammo addition when chaingun is picked up
+var wpn_chaingun_max_ammo = 200; // max ammo for chaingun
+var wpn_rocketl_add_ammo = 3;    // default ammo addition when rocket launcher is picked up
+var wpn_rocketl_max_ammo = 50;   // max ammo for rocket launcher
+var wpn_lasergun_add_ammo = 25;  // default ammo addition when laser is picked up
+var wpn_lasergun_max_ammo = 100; // max ammo for lasergun
+var wpn_pickup_snd_volume = 45;  // pickup sfx volume
+
+var item_pickup_snd_volume = 65;  // volume for pickup sfx
+var item_health_small_add = 1;    // each small health adds 1 hp
+var item_health_small_max = 200;  // and can increase health up to 200 hp
+var item_health_big_add = 25;     // big health pack adds 25 hp
+var item_health_big_max = 100;    // and can increase health up to 100 hp
+var item_armor_small_add = 1;     // each small armor adds 1 point to armor
+var item_armor_small_max = 200;   // and can increase armor up to 200 points
+var item_armor_big_add = 25;      // each big armor adds 25 point to armor
+var item_armor_big_max = 100;     // and can increase armor up to 200 points
+var item_small_pistol_add = 15;   // each small pistol clip/ammo adds 15
+var item_big_pistol_add = 25;     // each big pistol ammo adds 25
+var item_small_shotgun_add = 12;  // each small shell ammo adds 12
+var item_big_shotgun_add = 25;    // each big shell ammo adds 25
+var item_small_chaingun_add = 25; // each small chaingun ammo adds 25
+var item_big_chaingun_add = 50;   // each big chaingun ammo adds 50
+var item_small_rocketl_add = 1;   // each small rocket launcher ammo adds 1
+var item_big_rocketl_add = 5;     // each big rocket launcher ammo adds 5
+var item_small_lasergun_add = 10; // each small lasergun ammo adds 10
+var item_big_lasergun_add = 25;   // each big lasergun ammo adds 25
 
 // explosion stuff
 var explo_underwater_snd_volume = 1024; // volume for underwater explosion sound effect
@@ -327,5 +394,10 @@ var ent_scan(ENTITY *ent, VECTOR *pos, ANGLE *ang, VECTOR *sector, var mode);
 
 // rotate entity towards the camera
 void ent_rotate_to_camera(ENTITY *ent);
+
+// place entity on the ground
+// this function uses c_trace instead of ent_trace
+// since it's called in action functions where my already exists !
+void ent_place_on_ground(ENTITY *ent);
 
 #endif

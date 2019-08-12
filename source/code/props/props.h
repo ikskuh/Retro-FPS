@@ -26,6 +26,10 @@ typedef struct
 	var dist;
 	var path_id;
 	var total_nodes;
+
+	VECTOR speed;
+	var soil_contact;
+	var soil_height;
 } PROPS;
 
 // register and initializes new props (f.e. doors, platforms, elevators)
