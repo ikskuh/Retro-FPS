@@ -256,3 +256,41 @@ void explosion_underwater_particle(PARTICLE *p)
 	p->flags |= (MOVE | TRANSLUCENT | NOFILTER);
 	p->event = explosion_underwater_fade_event;
 }
+
+// smoke trail fading event function
+void smoketrail_fade_function(PARTICLE *p)
+{
+	particle_slow_down(p, 0.9);
+
+	p->alpha -= p->skill_z * time_step;
+	if (p->alpha < 0)
+	{
+		p->lifespan = 0;
+	}
+}
+
+// simple smoketrail particles
+void smoketrail_particle(PARTICLE *p)
+{
+
+#ifndef PARTICLE_EFFECTS
+	vec_set(&p->vel_x, vector(random(4) - 2, random(4) - 2, random(4) - 2));
+	p->bmap = smoke_tga;
+	p->size = 10 + random(5);
+	vec_fill(&p->blue, 128 + random(96));
+	p->alpha = 35;
+	p->skill_z = 2;
+#else
+	vec_set(&p->vel_x, vector(random(4) - 2, random(4) - 2, random(4) - 2));
+	p->bmap = particle_png;
+	p->size = 1 + random(1);
+	vec_fill(&p->blue, random(96));
+	p->alpha = 100;
+	p->skill_z = 5;
+#endif
+
+	p->gravity = 0.25;
+	p->lifespan = 50;
+	p->flags |= (MOVE | TRANSLUCENT | NOFILTER);
+	p->event = smoketrail_fade_function;
+}

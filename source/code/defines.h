@@ -171,18 +171,19 @@
 #define TYPE_PLATFORM 9
 #define TYPE_PLAYER_WEAPON 10
 #define TYPE_BULLET 11
-#define TYPE_CASING 12
-#define TYPE_WATER_PLANE 13
-#define TYPE_BARREL 14
-#define TYPE_SAW_TRACE 15
-#define TYPE_WORLD_SAW 16
-#define TYPE_WORLD_PISTOL 17
-#define TYPE_WORLD_SHOTGUN 18
-#define TYPE_WORLD_SSHOTGUN 19
-#define TYPE_WORLD_CHAINGUN 20
-#define TYPE_WORLD_ROCKETLAUNCHER 21
-#define TYPE_WORLD_LASERGUN 22
-#define TYPE_PICKABLE_ITEM 23
+#define TYPE_ROCKET 12
+#define TYPE_CASING 13
+#define TYPE_WATER_PLANE 14
+#define TYPE_BARREL 15
+#define TYPE_SAW_TRACE 16
+#define TYPE_WORLD_SAW 17
+#define TYPE_WORLD_PISTOL 18
+#define TYPE_WORLD_SHOTGUN 19
+#define TYPE_WORLD_SSHOTGUN 20
+#define TYPE_WORLD_CHAINGUN 21
+#define TYPE_WORLD_ROCKETLAUNCHER 22
+#define TYPE_WORLD_LASERGUN 23
+#define TYPE_PICKABLE_ITEM 24
 
 #define OBJ_HEALTH skill53
 #define OBJ_ARMOR skill54
@@ -216,6 +217,7 @@
 #define OBJ_TAKE_DAMAGE skill65
 #define OBJ_EXPLO_DAMAGE skill66
 #define OBJ_EXPLO_RANGE skill67
+#define OBJ_ANIM_STRUCT skill68
 
 // sky entity
 ENTITY *sky_ent;
@@ -399,5 +401,8 @@ void ent_rotate_to_camera(ENTITY *ent);
 // this function uses c_trace instead of ent_trace
 // since it's called in action functions where my already exists !
 void ent_place_on_ground(ENTITY *ent);
+
+// used by animator for 8 directional sprites
+var ang2(var p);
 
 #endif

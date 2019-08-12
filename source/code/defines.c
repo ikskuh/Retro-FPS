@@ -140,15 +140,26 @@ void ent_rotate_to_camera(ENTITY *ent)
 // since it's called in action functions where my already exists !
 void ent_place_on_ground(ENTITY *ent)
 {
-	if (!ent)
-	{
-		diag("\nERROR! Can't place entity on the ground! It doesn't exist..");
-		return;
-	}
+    if (!ent)
+    {
+        diag("\nERROR! Can't place entity on the ground! It doesn't exist..");
+        return;
+    }
 
-	c_trace(&ent->x, vector(ent->x, ent->y, ent->z - 1024), TRACE_FLAGS | IGNORE_MODELS);
-	if (HIT_TARGET)
-	{
-		ent->z = hit->z + ent->max_z;
-	}
+    c_trace(&ent->x, vector(ent->x, ent->y, ent->z - 1024), TRACE_FLAGS | IGNORE_MODELS);
+    if (HIT_TARGET)
+    {
+        ent->z = hit->z + ent->max_z;
+    }
+}
+
+// used by animator for 8 directional sprites
+var ang2(var p)
+{
+    p = ang(p);
+    if (p < 0)
+    {
+        p += 360;
+    }
+    return p;
 }

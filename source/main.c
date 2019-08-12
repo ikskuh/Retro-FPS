@@ -155,10 +155,15 @@ void on_frame_event()
                 player_saw_trace_update(ent);
             }
 
-            // bullets ?
+            // projectiles ?
             FOR_ENT_OF_TYPE(ent, TYPE_BULLET)
             {
                 bullet_update(ent);
+            }
+
+            FOR_ENT_OF_TYPE(ent, TYPE_ROCKET)
+            {
+                rocket_update(ent);
             }
 
             // casings/shells ?
@@ -211,9 +216,14 @@ void on_ent_remove_event(ENTITY *ent)
         delete_props(ent);
     }
 
-    if(ent->OBJ_TYPE == TYPE_BARREL)
+    if (ent->OBJ_TYPE == TYPE_BARREL)
     {
         delete_props(ent);
+    }
+
+    if (ent->OBJ_TYPE == TYPE_ROCKET)
+    {
+        delete_animator(ent);
     }
 
     if (!ent->parent)

@@ -8,6 +8,8 @@
 #include "particles.h"
 #include "music.h"
 #include "level_logic.h"
+#include "animator.h"
+#include "animator_logic.h"
 #include "explosions_helper.h"
 #include "explosions_fx.h"
 #include "water_fx.h"

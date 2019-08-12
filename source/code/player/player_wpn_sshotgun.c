@@ -5,7 +5,7 @@ void player_sshotgun_init(PLAYER *hero)
     hero->weapon[PLAYER_SSHOTGUN].collected = false;
     hero->weapon[PLAYER_SSHOTGUN].semiauto = true;
 
-    hero->weapon[PLAYER_SSHOTGUN].ammo = 45;
+    hero->weapon[PLAYER_SSHOTGUN].ammo = 0;
     hero->weapon[PLAYER_SSHOTGUN].ammo_per_shoot = 2;
     hero->weapon[PLAYER_SSHOTGUN].fire_rate = 1.2;
     hero->weapon[PLAYER_SSHOTGUN].recoil_strength = 3.5;

@@ -5,12 +5,13 @@ void player_rocketlauncher_init(PLAYER *hero)
     hero->weapon[PLAYER_ROCKETLAUNCHER].collected = false;
     hero->weapon[PLAYER_ROCKETLAUNCHER].semiauto = false;
 
-    hero->weapon[PLAYER_ROCKETLAUNCHER].ammo = 45;
+    hero->weapon[PLAYER_ROCKETLAUNCHER].ammo = 0;
     hero->weapon[PLAYER_ROCKETLAUNCHER].ammo_per_shoot = 1;
     hero->weapon[PLAYER_ROCKETLAUNCHER].fire_rate = 0.8;
     hero->weapon[PLAYER_ROCKETLAUNCHER].recoil_strength = 1.5;
     hero->weapon[PLAYER_ROCKETLAUNCHER].damage = 15;
     hero->weapon[PLAYER_ROCKETLAUNCHER].accuracy = 3;
+    hero->weapon[PLAYER_ROCKETLAUNCHER].projectile_speed = 75;
 
     hero->weapon[PLAYER_ROCKETLAUNCHER].animate = false;
     hero->weapon[PLAYER_ROCKETLAUNCHER].anim_total_frames = 4;
@@ -23,6 +24,10 @@ void player_rocketlauncher_init(PLAYER *hero)
 void player_rocketlauncher_shoot(PLAYER *hero)
 {
     // create rockets here
+    var spd = hero->weapon[PLAYER_ROCKETLAUNCHER].projectile_speed;
+    var dmg = hero->weapon[PLAYER_ROCKETLAUNCHER].damage;
+    var acc = hero->weapon[PLAYER_ROCKETLAUNCHER].accuracy;
+    rocket_create(&camera->x, &camera->pan, PLAYER_GROUP, dmg, spd, acc);
 }
 
 // animate rocketlauncher

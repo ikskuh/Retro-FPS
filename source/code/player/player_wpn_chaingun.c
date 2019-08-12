@@ -5,7 +5,7 @@ void player_chaingun_init(PLAYER *hero)
     hero->weapon[PLAYER_CHAINGUN].collected = false;
     hero->weapon[PLAYER_CHAINGUN].semiauto = false;
 
-    hero->weapon[PLAYER_CHAINGUN].ammo = 145;
+    hero->weapon[PLAYER_CHAINGUN].ammo = 0;
     hero->weapon[PLAYER_CHAINGUN].ammo_per_shoot = 1;
     hero->weapon[PLAYER_CHAINGUN].fire_rate = 0.11;
     hero->weapon[PLAYER_CHAINGUN].recoil_strength = 0.45;

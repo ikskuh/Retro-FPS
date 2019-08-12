@@ -323,3 +323,81 @@ void bullet_update(ENTITY *ent)
         ent_delete_later(ent);
     }
 }
+
+// rocket's func
+void rocket_func()
+{
+    set(my, TRANSLUCENT | SHADOW | CAST);
+    my->alpha = 0;
+    my->OBJ_STATE = PROJ_FLY;
+    my->OBJ_TYPE = TYPE_ROCKET;
+    my->OBJ_TIMER = 32;
+
+    ANIMATOR *animator = register_animator(my);
+    animator->frames_per_scene = 1;
+    animator->num_directions = 4;
+
+    my->parent = ent_create(rocket_flying_tga, &my->x, NULL);
+    set(my->parent, PASSABLE | NOFILTER);
+}
+
+// create rocket
+void rocket_create(VECTOR *pos, VECTOR *angle, var owner_group, var owner_damage, var bullet_speed, var accur)
+{
+    you = ent_create(bbox_rocket_mdl, pos, rocket_func);
+    vec_set(&you->pan, angle);
+    you->OBJ_ALLOW_MOVE = bullet_speed;
+    you->OWNER_GROUP = owner_group;
+    you->OBJ_TAKE_DAMAGE = owner_damage;
+}
+
+// function to update rockets
+void rocket_update(ENTITY *ent)
+{
+    // simply flying ?
+    if (ent->OBJ_STATE == PROJ_FLY)
+    {
+        c_ignore(PUSH_GROUP, WATER_GROUP, SWITCH_ITEM_GROUP, PATHFIND_GROUP, ent->OWNER_GROUP, SHOOTABLE_GROUP, 0);
+        ent_move(ent, vector(ent->OBJ_ALLOW_MOVE * time_step, 0, 0), nullvector, IGNORE_YOU);
+        if (HIT_TARGET)
+        {
+            ent->OBJ_STATE = PROJ_DELETE;
+        }
+
+        // check if hit position was out of the water region
+        if (region_check(reg_water_str, &ent->x, &ent->x))
+        {
+            bubbles_spawn(&ent->x, 16, vector(2, 2, 2), ent->z + 16);
+        }
+        else
+        {
+            effect(smoketrail_particle, 10, &ent->x, nullvector);
+        }
+
+        ent->OBJ_TIMER -= time_step;
+        if (ent->OBJ_TIMER <= 0)
+        {
+            ent->OBJ_STATE = 3; // death state
+        }
+    }
+
+    // delete ?
+    if (ent->OBJ_STATE == PROJ_DELETE)
+    {
+        explosion_create(&ent->x, false);
+        ent_delete_later(ent->parent);
+        ent_delete_later(ent);
+    }
+
+    if (ent->parent)
+    {
+        vec_set(&ent->parent->x, &ent->x);
+
+        ent_rotate_to_camera(ent->parent);
+
+        ANIMATOR *animator = get_animator(ent);
+        animator->frames_per_scene = 1;
+        animator->num_directions = 8;
+        anim_cycle(ent, animator, 1);
+    }
+}

@@ -314,7 +314,7 @@ void player_weapons_update(ENTITY *ent, PLAYER *hero)
         if (hero->wpn_shoot)
         {
             // we have ammo left ?
-            if (hero->weapon[weapon_id].ammo > hero->weapon[weapon_id].ammo_per_shoot)
+            if (hero->weapon[weapon_id].ammo >= hero->weapon[weapon_id].ammo_per_shoot)
             {
                 // fully automatic weapon ?
                 if (hero->weapon[weapon_id].semiauto == false)

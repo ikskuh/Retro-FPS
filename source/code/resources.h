@@ -5,9 +5,11 @@
 STRING *bbox_cct_mdl = "bbox_npc.mdl";
 STRING *bbox_casing_mdl = "bbox_casing.mdl";
 STRING *bbox_barrel_mdl = "bbox_barrel.mdl";
+STRING *bbox_rocket_mdl = "bbox_rocket.mdl";
 
 // particles
 BMAP *particle_png = "particle.png";
+BMAP *smoke_tga = "smoke.tga";
 BMAP *bubbles_tga = "bubbles.tga";
 
 // casings sprites

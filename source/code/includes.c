@@ -5,6 +5,8 @@
 #include "particles.c"
 #include "music.c"
 #include "level_logic.c"
+#include "animator.c"
+#include "animator_logic.c"
 #include "explosions_helper.c"
 #include "explosions_fx.c"
 #include "water_fx.c"

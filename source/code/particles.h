@@ -45,4 +45,10 @@ void explosion_fade_event(PARTICLE *p);
 // quake like explosion particles
 void explosion_particle(PARTICLE *p);
 
+// smoke trail fading event function
+void smoketrail_fade_function(PARTICLE *p);
+
+// simple smoketrail particles
+void smoketrail_particle(PARTICLE *p);
+
 #endif
