@@ -24,18 +24,37 @@ void player_pain_sound(ENTITY *ent)
         return;
     }
 
+    // get cct
+    CCT *cct = get_cct(ent);
+
     if (snd_playing(ent->OBJ_SND_HANDLE))
     {
         snd_stop(ent->OBJ_SND_HANDLE);
     }
     var rnd = integer(random(2));
-    if (rnd == 0)
+
+    // if our head under the water ?
+    if (cct->water_state == HEAD_IN_WATER)
     {
-        ent->OBJ_SND_HANDLE = snd_play(player_pain_01_ogg, player_snd_volume, 0);
+        if (rnd == 0)
+        {
+            ent->OBJ_SND_HANDLE = snd_play(player_underwater_pain_01_ogg, player_snd_volume, 0);
+        }
+        if (rnd == 1)
+        {
+            ent->OBJ_SND_HANDLE = snd_play(player_underwater_pain_02_ogg, player_snd_volume, 0);
+        }
     }
-    if (rnd == 1)
+    else
     {
-        ent->OBJ_SND_HANDLE = snd_play(player_pain_02_ogg, player_snd_volume, 0);
+        if (rnd == 0)
+        {
+            ent->OBJ_SND_HANDLE = snd_play(player_pain_01_ogg, player_snd_volume, 0);
+        }
+        if (rnd == 1)
+        {
+            ent->OBJ_SND_HANDLE = snd_play(player_pain_02_ogg, player_snd_volume, 0);
+        }
     }
 }
 
